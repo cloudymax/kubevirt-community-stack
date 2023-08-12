@@ -1,7 +1,9 @@
 virtualMachine:  
+  # -- name of the virtualMachine object
   name: debian-kvm-dedicated
   # -- namespace to deploy the vm
   namespace: default
+  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
   # -- Enable the use of the KVM accelerator
   features:
