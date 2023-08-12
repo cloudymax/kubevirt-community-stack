@@ -42,11 +42,14 @@ Install the Kubevirt Manager UI
 | securityContext.readOnlyRootFilesystem | bool | `true` |  |
 | securityContext.runAsGroup | int | `30000` |  |
 | securityContext.runAsUser | int | `10000` |  |
+| service.name | string | `"http"` |  |
 | service.port | int | `8080` |  |
+| service.protocol | string | `"TCP"` |  |
+| service.targetPort | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| serviceAccount.name | string | `"kubevirt-manager"` |  |
 | tolerations | list | `[]` |  |
 | volumeMounts[0].mountPath | string | `"/var/cache/nginx"` |  |
 | volumeMounts[0].name | string | `"cache-volume"` |  |

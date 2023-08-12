@@ -47,7 +47,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "kubevirt-manager"
 
 podAnnotations: {}
 
@@ -65,6 +65,9 @@ securityContext:
 service:
   type: ClusterIP
   port: 8080
+  targetPort: 80
+  protocol: TCP
+  name: http
 
 ingress:
   enabled: false
