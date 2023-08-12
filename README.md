@@ -1,6 +1,17 @@
-# Kubevirt Charts
 
-A Collection of Helm3 charts for use with [Kubevirt](https://kubevirt.io/)
+<h1 align=center>
+Kubevirt Charts
+</h1>
+<p align="center">
+  <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
+<p>
+<p align=center>
+A Collection of Helm3 charts for use with <a href="https://kubevirt.io/">Kubevirt</a>
+</p>
+
+<br>
+
+## Charts
 
 - [kubevirt](./charts/kubevirt): Installs the Kubevirt Operator, CRDs and CDI.
 
