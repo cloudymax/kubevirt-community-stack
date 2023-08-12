@@ -1,8 +1,8 @@
-# debian12
+# kubevirt-vm
 
 ![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
-Configure a debian12 virtual machine for use with Kubevirt
+Configure a virtual machine for use with Kubevirt
 
 ## Maintainers
 
@@ -14,8 +14,6 @@ Configure a debian12 virtual machine for use with Kubevirt
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| service.port | int | `22` | port to use with k8s service |
-=======
 | disk.accessMode | string | `"ReadWriteOnce"` |  |
 | disk.cloudImage | string | `"https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"` |  |
 | disk.name | string | `"boot-disk"` |  |
@@ -23,7 +21,7 @@ Configure a debian12 virtual machine for use with Kubevirt
 | disk.storageClass | string | `"local-path"` |  |
 | iso.bootFromIso | bool | `false` |  |
 | iso.isoImage | string | `"https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"` |  |
-| service.port | int | `22` |  |
+| service.port | int | `22` | port to use with k8s service |
 | service.type | string | `"NodePort"` |  |
 | virtualMachine.features | object | `{"acpiEnabled":true,"autoattachGraphicsDevice":true,"autoattachPodInterface":true,"autoattachSerialConsole":true,"efiEnabled":true,"kvmEnabled":true,"smmEnabled":true}` | Enable the use of the KVM accelerator |
 | virtualMachine.machine.cpuPassthrough | bool | `true` |  |
