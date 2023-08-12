@@ -1,10 +1,10 @@
 apiVersion: v2
-name: kubevirt-manager
-description: Install the Kubevirt Manager UI
+name: kubevirt-cdi
+description: Install the Containerized Data Importer
 
 type: application
 version: 0.1.1
-appVersion: 1.2.3
+appVersion: "0.1.0"
 
 maintainers:
   - name: "cloudymax"

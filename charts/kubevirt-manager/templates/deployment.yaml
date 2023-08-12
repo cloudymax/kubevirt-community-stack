@@ -1,62 +1,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ include "kubevirt-manager.fullname" . }}
   labels:
     {{- include "kubevirt-manager.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kubevirt.selectorLabels" . | nindent 6 }}
-  replicas: 1
-  strategy:
-    type: Recreate
+      {{- include "kubevirt-manager.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        {{- include "kubevirt-manager.labels" . | nindent 8 }}
+        {{- include "kubevirt-manager.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: kubevirtmgr
-          image: kubevirtmanager/kubevirt-manager:1.2.3
-          imagePullPolicy: IfNotPresent
-          ports:
-          - name: http
-            containerPort: 8080
+        - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsUser: 10000
-            runAsGroup: 30000
           volumeMounts:
-          - name: cache-volume
-            mountPath: /var/cache/nginx
-          - name: run-volume
-            mountPath: /var/run
-          - name: auth-config
-            mountPath: /etc/nginx/auth.d/
-          - name: auth-secret
-            mountPath: /etc/nginx/secret.d/
-         # - name: prometheus-config
-         #   mountPath: /etc/nginx/location.d/
-      serviceAccountName: kubevirt-manager
-      restartPolicy: Always
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
-        - name: cache-volume
-          emptyDir: {}
-        - name: run-volume
-          emptyDir: {}
-        - name: auth-config
-          configMap:
-            name: auth-config
-            optional: true
-        - name: auth-secret
-          secret:
-            secretName: auth-secret
-            optional: true
-        #- name: prometheus-config
-        #  configMap:
-        #    name: prometheus-config
-        #    optional: true
+        {{- toYaml .Values.volumes | nindent 8 }}
+
