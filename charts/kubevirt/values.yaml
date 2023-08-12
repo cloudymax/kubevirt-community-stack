@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 # -- number of replicas
-replicaCount: 2
+replicaCount: 1
 
 image:
   # --  container repository
@@ -10,7 +10,7 @@ image:
   # -- image pull policy
   pullPolicy: IfNotPresent
   # -- image tag, use this to set the version of kubevirt
-  tag: "v0.58.0"
+  tag: "v1.0.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -77,3 +77,18 @@ kubevirt:
     developerConfiguration:
       # -- software emulation enabled by default
       useEmulation: true
+      # -- enable feature gates: https://github.com/kubevirt/kubevirt/blob/main/pkg/virt-config/feature-gates.go#L26
+      featureGates:
+        - ExpandDisks
+        - CPUManager
+        - GPU
+        - HostDevices
+        - VMExport
+        - HotplugVolumes
+        - HostDisk
+        - Macvtap
+        - Passt
+        - HotplugNICs
+        - clientPassthrough
+        - Snapshot
+        - CPUNodeDiscovery

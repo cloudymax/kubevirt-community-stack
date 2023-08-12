@@ -12,8 +12,9 @@ A Helm chart for Kubernetes
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | image.repository | string | `"quay.io/kubevirt/virt-operator"` | container repository |
-| image.tag | string | `"v0.58.0"` | image tag, use this to set the version of kubevirt |
+| image.tag | string | `"v1.0.0"` | image tag, use this to set the version of kubevirt |
 | imagePullSecrets | list | `[]` |  |
+| kubevirt.configuration.developerConfiguration.featureGates | list | `["ExpandDisks","CPUManager","GPU","HostDevices","VMExport","HotplugVolumes","HostDisk","Macvtap","Passt","HotplugNICs","clientPassthrough","Snapshot","CPUNodeDiscovery"]` | enable feature gates: https://github.com/kubevirt/kubevirt/blob/main/pkg/virt-config/feature-gates.go#L26 |
 | kubevirt.configuration.developerConfiguration.useEmulation | bool | `true` | software emulation enabled by default |
 | kubevirt.create | bool | `true` | create kubebvirt object by default |
 | nameOverride | string | `""` |  |
@@ -22,7 +23,7 @@ A Helm chart for Kubernetes
 | podSecurityContext | object | `{}` |  |
 | priorityclass.create | bool | `true` | craete priorityclass by default |
 | priorityclass.value | int | `1000000000` | default priorityclass value |
-| replicaCount | int | `2` | number of replicas |
+| replicaCount | int | `1` | number of replicas |
 | resources | object | `{}` |  |
 | securityContext.privileged | bool | `true` | sets the container to privileged |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
