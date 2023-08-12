@@ -13,9 +13,11 @@ A Collection of Helm3 charts for use with <a href="https://kubevirt.io/">Kubevir
 
 ## Charts
 
-- [kubevirt](./charts/kubevirt): Installs the Kubevirt Operator, CRDs and CDI.
+- [kubevirt](./charts/kubevirt): Installs the Kubevirt Operator.
 
-- [kubevirt-vm](./charts/kubevirt-vm): Create virtual-machines via helm
+- [kubevirt-cdi](./charts/kubevirt-cdi): Install the Containerized Data Importer
+
+- [kubevirt-vm](./charts/kubevirt-vm): Create virtual-machines with Kubevirt via helm
 
 - [kubevirt-manager](./charts/kubevirt-manager): Deploy the Kubevirt-Manager UI
 
