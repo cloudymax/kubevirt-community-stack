@@ -1,0 +1,35 @@
+virtualMachine:  
+  name: debian-kvm-dedicated
+  # -- namespace to deploy the vm
+  namespace: default
+  runStrategy: "RerunOnFailure"
+  # -- Enable the use of the KVM accelerator
+  features:
+    kvmEnabled: true
+    acpiEnabled: true
+    smmEnabled: true
+    efiEnabled: true
+    autoattachPodInterface: true
+    autoattachSerialConsole: true
+    autoattachGraphicsDevice: true
+  machine:
+    machineType: "q35"
+    cpuPassthrough: true
+    vCores: 2
+    # pinCores: true
+    hyperThreadingEnabled: false
+    memory: 4Gi
+    userDataFile: "user-data.yaml" 
+disk:
+  name: boot-disk
+  size: 32G 
+  cloudImage: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+  storageClass: local-path
+  accessMode: ReadWriteOnce
+iso:
+  bootFromIso: false 
+  isoImage: "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"
+service:
+  type: NodePort
+  # -- port to use with k8s service
+  port: 22

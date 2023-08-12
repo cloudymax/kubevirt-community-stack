@@ -1,0 +1,87 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  generation: 1
+  labels:
+    kubevirt.io/os: linux
+    metallb-service: {{ .Values.virtualMachine.name }}
+  namespace: {{ .Values.virtualMachine.namespace }}
+  name: {{ .Values.virtualMachine.name }}
+spec:
+  runStrategy: {{ .Values.virtualMachine.runStrategy }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: {{ .Values.virtualMachine.name }}
+        metallb-service: {{ .Values.virtualMachine.name }}
+    spec:
+      domain:
+        features:
+          {{- if .Values.virtualMachine.features.kvmEnabled -}}
+          {{ "kvm: {}" | nindent 10 }} 
+          {{- end }}
+          {{- if .Values.virtualMachine.features.acpiEnabled -}}
+          {{ "acpi: {}" | nindent 10 }}
+          {{- end }}
+          {{- if .Values.virtualMachine.features.smmEnabled -}}
+          {{ "smm:"  | nindent 10 -}}
+          {{ "enabled: true"  | nindent 12 }}
+          {{- end }}
+        cpu:
+          {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
+          {{ "model: host-passthrough" | nindent 10 }}
+          {{- end }}
+          sockets: 1
+          cores: {{ .Values.virtualMachine.machine.vCores -}}
+          {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
+          {{- "threads: 2" | nindent 10 -}}
+          {{ else }}
+          {{- "threads: 1" | nindent 10 -}}
+          {{- end }}
+        {{- if .Values.virtualMachine.features.efiEnabled -}}
+        {{- "firmware:" | nindent 8 -}}
+        {{- "bootloader:" |nindent 10 -}}
+        {{- "efi: {}" | nindent 12 -}}
+        {{- end }}
+        devices:
+          autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
+          autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
+          autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
+          inputs:
+          - type: tablet
+            bus: virtio
+            name: tablet1
+          disks:
+          - name: harddrive
+            disk:
+              bus: virtio
+            bootOrder: 2
+          - name: cloudinitvolume
+            cdrom:
+              bus: sata
+              readonly: true
+            bootOrder: 1
+          interfaces:
+            - masquerade: {}
+              name: default
+        machine:
+          type: {{ .Values.virtualMachine.machine.machineType }}
+        resources:
+          limits:
+            memory: {{ .Values.virtualMachine.machine.memory }}
+      networks:
+      - name: default
+        pod: {}
+      volumes:
+        - name: harddrive
+          persistentVolumeClaim:
+            claimName: {{ .Values.disk.name }}
+        - name: cloudinitvolume
+          cloudInitNoCloud:
+             {{- $files := .Files }}
+             {{- range tuple "user-data.yaml" }}
+             {{ "userDataBase64:" }} 
+                {{ $files.Get . | b64enc -}}
+             {{- end }}
+

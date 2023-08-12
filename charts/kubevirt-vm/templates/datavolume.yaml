@@ -1,0 +1,25 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: {{ .Values.virtualMachine.name }}
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+spec:
+  source:
+    http:
+      certConfigMap: empty-cert
+      url: {{ .Values.disk.cloudImage }} 
+  pvc:
+    storageClassName: {{ .Values.disk.storageClass }}
+    accessModes: {{ .Values.disk.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.disk.size }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: empty-cert
+data:
+  ca.pem: ""
+

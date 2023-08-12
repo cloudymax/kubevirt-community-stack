@@ -1,0 +1,11 @@
+#cloud-config
+user-data: # Cloud-init starts here
+  disable_root: false
+  users:
+    - name: vmadmin
+      gecos: VM adminsitrator
+      groups: users, admin, docker, sudo
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      shell: /bin/bash
+      lock_passwd: false
+      passwd: "$6$rounds=4096$saltsaltlettuce$Lp/FV.2oOgew7GbM6Nr8KMGMBn7iFM0x9ZwLqtx9Y4QJmKvfcnS.2zx4MKmymCPQGpHS7gqYOiqWjvdCIV2uN."

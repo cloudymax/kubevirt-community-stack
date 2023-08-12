@@ -1,0 +1,12 @@
+apiVersion: v2
+name: okd-dashboard
+description: Install the OpenShift Kubernetes Dashboard
+
+type: application
+version: 0.1.1
+appVersion: "0.1.0"
+
+maintainers:
+  - name: "cloudymax"
+    email: "emax@cloudydev.net"
+    url: "https://github.com/cloudymax/"
