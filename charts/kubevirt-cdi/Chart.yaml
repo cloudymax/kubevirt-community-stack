@@ -4,7 +4,7 @@ description: Install the Containerized Data Importer
 
 type: application
 version: 0.1.1
-appVersion: "0.1.0"
+appVersion: "v1.57.0-rc1"
 
 maintainers:
   - name: "cloudymax"

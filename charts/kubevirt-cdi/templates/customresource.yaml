@@ -1,0 +1,21 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: CDI
+metadata:
+  name: cdi
+spec:
+  config:
+    featureGates:
+      {{- toYaml .Values.cdi.featureGates | nindent 6 }}
+    podResourceRequirements:
+      {{- toYaml .Values.cdi.resources | nindent 6 }}
+  imagePullPolicy: IfNotPresent
+  infra:
+    nodeSelector:
+      kubernetes.io/os: {{ .Values.nodeSelector }}
+    {{- with .Values.tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+  workload:
+    nodeSelector:
+      kubernetes.io/os: {{ .Values.nodeSelector }}

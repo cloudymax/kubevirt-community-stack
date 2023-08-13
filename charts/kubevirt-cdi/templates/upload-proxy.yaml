@@ -2,15 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cdi-uploadproxy-loadbalancer
-  namespace: cdi
+  name: cdi-uploadproxy
   labels:
     cdi.kubevirt.io: "cdi-uploadproxy"
 spec:
-  type: ClusterIP
+  type: {{ .Values.uploadProxy.type }}
   ports:
-    - port: 443
-      targetPort: 8443
-      protocol: TCP
+    - port: {{ .Values.uploadProxy.port }}
+      targetPort: {{ .Values.uploadProxy.targetPort }}
+      protocol: {{ .Values.uploadProxy.protocol }}
   selector:
     cdi.kubevirt.io: cdi-uploadproxy

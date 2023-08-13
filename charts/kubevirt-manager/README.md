@@ -22,7 +22,7 @@ Install the Kubevirt Manager UI
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"kubevirtmanager/kubevirt-manager"` |  |
-| image.tag | string | `"1.2.3"` |  |
+| image.tag | string | `nil` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |

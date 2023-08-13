@@ -4,7 +4,7 @@ image:
   repository: kubevirtmanager/kubevirt-manager
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.2.3"
+  tag:
 
 volumes:
   - name: cache-volume
