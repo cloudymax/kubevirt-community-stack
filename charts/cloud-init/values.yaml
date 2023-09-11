@@ -4,91 +4,90 @@ disable_root: false
 network:
   config: disabled
 
-wireguard:
-  interfaces:
-    - name: wg0
-      config_path: /etc/wireguard/wg0.conf
-      content: |
-        [Interface]
-        PrivateKey = <private_key>
-        Address = <address>
-        [Peer]
-        PublicKey = <public_key>
-        Endpoint = <endpoint_ip>:<endpoint_ip_port>
-        AllowedIPs = <allowedip1>, <allowedip2>, ...
+wireguard: []
+  #interfaces:
+  #  - name: wg0
+  #    config_path: /etc/wireguard/wg0.conf
+  #    content: |
+  #      [Interface]
+  #      PrivateKey = <private_key>
+  #      Address = <address>
+  #      [Peer]
+  #      PublicKey = <public_key>
+  #      Endpoint = <endpoint_ip>:<endpoint_ip_port>
+  #      AllowedIPs = <allowedip1>, <allowedip2>, ...
 
 users:
-  - name: friend
+  - name: admin
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    lock_passwd: false
-    passwd: ${PASSWORD}
-    ssh_import_id:
-      - gh:cloudymax
+  #  lock_passwd: false
+  #  passwd: ${PASSWORD}
+  #  ssh_import_id:
+  #    - gh:cloudymax
 
-ca_certs:
-  remove_defaults: true
-  trusted:
-    - certificate
+ca_certs: []
+#  remove_defaults: true
+#  trusted:
+#    - certificate
 
-boot_cmd:
-  - mkdir -p /home/friend/.config/smol-k8s-lab
+boot_cmd: []
+  #- mkdir -p /home/friend/.config/smol-k8s-lab
 
 write_as_b64: false
 write_files:
-  netplan:
-    path: /etc/netplan/99-cloud-init.yaml
-    permissions: '0644'
-    content: netplan.yaml
-  smol-k8s-config:
-    path: /home/friend/.config/smol-k8s-lab/config.yaml
-    permissions: '0644'
-    content: config.yaml
+  #netplan:
+  #  path: /etc/netplan/99-cloud-init.yaml
+  #  permissions: '0644'
+  #  content: netplan.yaml
+  #smol-k8s-config:
+  #  path: /home/friend/.config/smol-k8s-lab/config.yaml
+  #  permissions: '0644'
+  #  content: config.yaml
   apt-sources-list:
     path: /etc/apt/sources.list
     permissions: '0644'
     content: apt-sources.list
 
 package_update: true
-
 package_upgrade: true
 
-packages:
-  - wireguard
-  - openresolv
-  - ssh-import-id
-  - sudo
-  - curl
-  - tmux
-  - netplan.io
-  - apt-transport-https
-  - ca-certificates
-  - software-properties-common
-  - htop
-  - iotop
-  - git-extras
-  - rsyslog
-  - fail2ban
-  - gpg
-  - open-iscsi
-  - nfs-common
-  - ncdu
-  - nvtop
-  - linux-headers-generic
-  - gcc
-  - kmod
-  - make
-  - pkg-config
-  - libvulkan1
+packages: []
+#  - wireguard
+#  - openresolv
+#  - ssh-import-id
+#  - sudo
+#  - curl
+#  - tmux
+#  - netplan.io
+#  - apt-transport-https
+#  - ca-certificates
+#  - software-properties-common
+#  - htop
+#  - iotop
+#  - git-extras
+#  - rsyslog
+#  - fail2ban
+#  - gpg
+#  - open-iscsi
+#  - nfs-common
+#  - ncdu
+#  - nvtop
+#  - linux-headers-generic
+#  - gcc
+#  - kmod
+#  - make
+#  - pkg-config
+#  - libvulkan1
 
-runcmd:
-  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
-  - chmod +x /usr/bin/make
-  - sudo chown -R friend:friend /home/friend
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  - sudo apt-get update 
-  - sudo apt-get install -y docker-ce
+runcmd: []
+#  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+#  - chmod +x /usr/bin/make
+#  - sudo chown -R friend:friend /home/friend
+#  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+#  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+#  - sudo apt-get update 
+#  - sudo apt-get install -y docker-ce
 
 
