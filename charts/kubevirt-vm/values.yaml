@@ -5,9 +5,8 @@ virtualMachine:
   namespace: default
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
-  # -- Enable the use of the KVM accelerator
+  # -- Enable vm features
   features:
-    ## -- Enable feature gates
      kvmEnabled: true
      acpiEnabled: true
      smmEnabled: true
@@ -16,19 +15,19 @@ virtualMachine:
      autoattachSerialConsole: true
      autoattachGraphicsDevice: true
   machine:
-    ## -- QEMU virtual-machine type
+    # -- QEMU virtual-machine type
     machineType: "q35"
-    ## -- Pass all CPU features and capabilities to Guest
+    # -- Pass all CPU features and capabilities to Guest
     # cpuPassthrough: true
-    ## -- Number of Virtual cores to pass to the Guest 
+    # -- Number of Virtual cores to pass to the Guest 
     vCores: 2
-    ## -- Pin QEMU process to specific physical cores
+    # -- Pin QEMU process to specific physical cores
     # pinCores: true
-    ## -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
+    # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
-    ## -- Amount of RAM to pass the the Guest
+    # -- Amount of RAM to pass the the Guest
     memory: 4Gi
-    ## -- path to the user-data file for use with Cloud-Init
+    # -- path to the user-data file for use with Cloud-Init
     userDataFile: "user-data.yaml"
 
 

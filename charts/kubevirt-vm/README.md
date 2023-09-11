@@ -55,12 +55,12 @@ Configure a virtual machine for use with Kubevirt
 | iso.isoImage | string | `"https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"` |  |
 | service.port | int | `22` | port to use with k8s service |
 | service.type | string | `"NodePort"` |  |
-| virtualMachine.features | object | `{"acpiEnabled":true,"autoattachGraphicsDevice":true,"autoattachPodInterface":true,"autoattachSerialConsole":true,"efiEnabled":true,"kvmEnabled":true,"smmEnabled":true}` | Enable the use of the KVM accelerator |
-| virtualMachine.machine.hyperThreadingEnabled | bool | `false` |  |
-| virtualMachine.machine.machineType | string | `"q35"` |  |
-| virtualMachine.machine.memory | string | `"4Gi"` |  |
-| virtualMachine.machine.userDataFile | string | `"user-data.yaml"` |  |
-| virtualMachine.machine.vCores | int | `2` |  |
+| virtualMachine.features | object | `{"acpiEnabled":true,"autoattachGraphicsDevice":true,"autoattachPodInterface":true,"autoattachSerialConsole":true,"efiEnabled":true,"kvmEnabled":true,"smmEnabled":true}` | Enable vm features |
+| virtualMachine.machine.hyperThreadingEnabled | bool | `false` | Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs. |
+| virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
+| virtualMachine.machine.memory | string | `"4Gi"` | Amount of RAM to pass the the Guest |
+| virtualMachine.machine.userDataFile | string | `"user-data.yaml"` | path to the user-data file for use with Cloud-Init |
+| virtualMachine.machine.vCores | int | `2` | Number of Virtual cores to pass to the Guest  |
 | virtualMachine.name | string | `"kube-virt-vm0"` | name of the virtualMachine object |
 | virtualMachine.namespace | string | `"default"` | namespace to deploy the vm |
 | virtualMachine.runStrategy | string | `"RerunOnFailure"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` |
