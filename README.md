@@ -19,6 +19,8 @@ A Collection of Helm3 charts for use with <a href="https://kubevirt.io/">Kubevir
 
 - [kubevirt-vm](./charts/kubevirt-vm): Create virtual-machines with Kubevirt via helm
 
+- [Cloud-Init](./charts/cloud-init): Generate a cloud-init configuration file
+
 - [kubevirt-manager](./charts/kubevirt-manager): Deploy the Kubevirt-Manager UI
 
 - [okd-dashboard](./charts/okd-dashboard): Deploy the OpenShift Kubernetes Dashboard
