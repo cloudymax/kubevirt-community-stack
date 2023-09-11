@@ -1,0 +1,14 @@
+network:
+  ethernets:
+    ${INTERFACE}:
+      dhcp4: no
+      dhcp6: no
+      addresses: [${STATIC_IP_ADDRESS}/24]
+      routes:
+        - to: default
+          via: ${GATEWAY_IP}
+      mtu: 1500
+      nameservers:
+        addresses: [${DNS_SERVER_IP}]
+  renderer: networkd
+  version: 2

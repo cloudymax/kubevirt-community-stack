@@ -1,0 +1,48 @@
+#cloud-config
+hostname: {{ .Values.hostname }}
+disable_root: {{ .Values.disable_root }}
+{{- with .Values.network }}
+network: 
+    {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.users }}
+users:
+    {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.boot_cmd }}
+boot_cmd:
+    {{- toYaml . | nindent 2 }}
+{{- end }}
+write_files:
+  {{- if .Values.write_as_b64 }}
+  {{- $files := .Files }}
+  {{- range $reg, $props := .Values.write_files }}
+- path: {{ $props.path }}
+  permissions: {{ $props.permissions }}
+  content: |
+  {{- $.Files.Get $props.content | trim |b64enc | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  {{- $files := .Files }}
+  {{- range $reg, $props := .Values.write_files }}
+- path: {{ $props.path }}
+  permissions: {{ $props.permissions }}
+  content: |
+  {{- $.Files.Get $props.content | trim |nindent 4 }}
+  {{- end }}
+{{- end }}
+package_update: {{ .Values.package_update }}
+package_upgrade: {{ .Values.package_upgrade }}
+{{- with .Values.packages }}
+boot_cmd:
+    {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.runcmd }}
+runcmd:
+    {{- toYaml . | nindent 2 }}
+{{- end }}
+
+
+
+
+
