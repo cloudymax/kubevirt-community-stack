@@ -14,23 +14,54 @@ Configure a virtual machine for use with Kubevirt
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| disk.accessMode | string | `"ReadWriteOnce"` |  |
-| disk.cloudImage | string | `"https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"` |  |
-| disk.name | string | `"boot-disk"` |  |
-| disk.size | string | `"32G"` |  |
-| disk.storageClass | string | `"local-path"` |  |
+| cloudinit.boot_cmd[0] | string | `"apt-get update"` |  |
+| cloudinit.boot_cmd[1] | string | `"apt-get install -y ssh-import-id"` |  |
+| cloudinit.ca_certs | list | `[]` |  |
+| cloudinit.disable_root | bool | `false` |  |
+| cloudinit.hostname | string | `"scrapmetal"` |  |
+| cloudinit.network.config | string | `"disabled"` |  |
+| cloudinit.package_update | bool | `true` |  |
+| cloudinit.package_upgrade | bool | `true` |  |
+| cloudinit.packages | list | `[]` |  |
+| cloudinit.runcmd[0] | string | `"who -r"` |  |
+| cloudinit.users[0].groups | string | `"users, admin, docker, sudo, kvm"` |  |
+| cloudinit.users[0].lock_passwd | bool | `false` |  |
+| cloudinit.users[0].name | string | `"admin"` |  |
+| cloudinit.users[0].shell | string | `"/bin/bash"` |  |
+| cloudinit.users[0].ssh_authorized_keys[0] | string | `"id_rsa.pub"` |  |
+| cloudinit.users[0].ssh_import_id[0] | string | `"gh:cloudymax"` |  |
+| cloudinit.users[0].sudo | string | `"ALL=(ALL) NOPASSWD:ALL"` |  |
+| cloudinit.wireguard | list | `[]` |  |
+| cloudinit.write_as_b64 | bool | `false` |  |
+| cloudinit.write_files.apt-sources-list.content | string | `"apt-sources.list"` |  |
+| cloudinit.write_files.apt-sources-list.path | string | `"/etc/apt/sources.list"` |  |
+| cloudinit.write_files.apt-sources-list.permissions | string | `"0644"` |  |
+| disks[0].boot-order | int | `2` |  |
+| disks[0].bus | string | `"virtio"` |  |
+| disks[0].name | string | `"harddrive"` |  |
+| disks[0].pvaccessMode | string | `"ReadWriteOnce"` |  |
+| disks[0].pvsize | string | `"32G"` |  |
+| disks[0].pvstorageClass | string | `"local-path"` |  |
+| disks[0].readonly | bool | `false` |  |
+| disks[0].source | string | `"https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"` |  |
+| disks[0].type | string | `"disk"` |  |
+| disks[1].boot-order | int | `1` |  |
+| disks[1].bus | string | `"sata"` |  |
+| disks[1].name | string | `"cloudinitvolume"` |  |
+| disks[1].pv-enable | bool | `false` |  |
+| disks[1].readonly | bool | `true` |  |
+| disks[1].type | string | `"cdrom"` |  |
 | iso.bootFromIso | bool | `false` |  |
 | iso.isoImage | string | `"https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"` |  |
 | service.port | int | `22` | port to use with k8s service |
 | service.type | string | `"NodePort"` |  |
 | virtualMachine.features | object | `{"acpiEnabled":true,"autoattachGraphicsDevice":true,"autoattachPodInterface":true,"autoattachSerialConsole":true,"efiEnabled":true,"kvmEnabled":true,"smmEnabled":true}` | Enable the use of the KVM accelerator |
-| virtualMachine.machine.cpuPassthrough | bool | `true` |  |
 | virtualMachine.machine.hyperThreadingEnabled | bool | `false` |  |
 | virtualMachine.machine.machineType | string | `"q35"` |  |
 | virtualMachine.machine.memory | string | `"4Gi"` |  |
 | virtualMachine.machine.userDataFile | string | `"user-data.yaml"` |  |
 | virtualMachine.machine.vCores | int | `2` |  |
-| virtualMachine.name | string | `"debian-kvm-dedicated"` | name of the virtualMachine object |
+| virtualMachine.name | string | `"kube-virt-vm0"` | name of the virtualMachine object |
 | virtualMachine.namespace | string | `"default"` | namespace to deploy the vm |
 | virtualMachine.runStrategy | string | `"RerunOnFailure"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` |
 
