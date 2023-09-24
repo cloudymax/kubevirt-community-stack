@@ -3,8 +3,8 @@ kind: RoleBinding
 metadata:
   labels:
     kubevirt.io: ""
-  name: {{ include "kubevirt.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: kubevirt-operator
+  namespace: kubevirt
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

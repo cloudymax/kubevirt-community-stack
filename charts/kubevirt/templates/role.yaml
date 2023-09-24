@@ -4,8 +4,8 @@ metadata:
   labels:
     kubevirt.io: ""
     {{- include "kubevirt.labels" . | nindent 4 }}
-  name: {{ include "kubevirt.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: kubevirt-operator
+  namespace: kubevirt
 rules:
   - apiGroups:
       - ""

@@ -1,22 +1,14 @@
-{{ if .Values.kubevirt.create }}
 ---
 apiVersion: kubevirt.io/v1
 kind: KubeVirt
 metadata:
-  labels:
-    kubevirt.io: ""
-    {{- include "kubevirt.labels" . | nindent 4 }}
-  name: {{ include "kubevirt.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
+  name: kubevirt
+  namespace: kubevirt
 spec:
   certificateRotateStrategy: {}
-  {{- with .Values.kubevirt.configuration }}
   configuration:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    developerConfiguration:
+      featureGates: []
   customizeComponents: {}
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
- {{ end }}

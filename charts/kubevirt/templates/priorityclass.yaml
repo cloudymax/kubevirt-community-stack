@@ -3,7 +3,7 @@ apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: kubevirt-cluster-critical
-  namespace: {{ .Release.Namespace }}
+  namespace: kubevirt
   labels:
     {{- include "kubevirt.labels" . | nindent 4 }}
   annotations:

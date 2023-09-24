@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    {{- include "kubevirt.labels" . | nindent 4 }}
-  name: {{ include "kubevirt.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+    kubevirt.io: virt-operator
+  name: virt-operator
+  namespace: kubevirt
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kubevirt.selectorLabels" . | nindent 6 }}
+      kubevirt.io: virt-operator
   strategy:
     type: RollingUpdate
   template:
@@ -19,9 +19,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "kubevirt.selectorLabels" . | nindent 8 }}
+        kubevirt.io: virt-operator
         prometheus.kubevirt.io: "true"
-      name: {{ include "kubevirt.fullname" . }}-operator
+      name: kubevirt-operator
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
