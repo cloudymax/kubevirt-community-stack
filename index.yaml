@@ -1,0 +1,90 @@
+apiVersion: v1
+entries:
+  cloud-init:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-09-24T10:27:57.99537718Z"
+    description: A Helm chart for Kubernetes
+    digest: 1c5318b099368e4c6b04cdc649cecf0ce4eb4e779c33088f219477d8ceb35d6e
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/cloud-init-0.0.1/cloud-init-0.0.1.tgz
+    version: 0.0.1
+  kubevirt:
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-09-24T10:27:58.208205668Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: ffe8a3d306c904da29f179e119707458f442d0d847185f8d07352bac82890347
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.0.3/kubevirt-0.0.3.tgz
+    version: 0.0.3
+  kubevirt-cdi:
+  - apiVersion: v2
+    appVersion: v1.57.0-rc1
+    created: "2023-09-24T10:27:58.407281584Z"
+    description: Install the Containerized Data Importer
+    digest: 90adfb9ae5a4811458f501ef3ab4d9237142e6fc4a180995c657f50e04845d0a
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-cdi-0.1.1/kubevirt-cdi-0.1.1.tgz
+    version: 0.1.1
+  kubevirt-manager:
+  - apiVersion: v2
+    appVersion: 1.2.3
+    created: "2023-09-24T10:27:58.591127913Z"
+    description: Install the Kubevirt Manager UI
+    digest: 5e07aae0d2e5cfec714a5081724112bfbd93c82e724581d63f767c6c660f3b6f
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-manager-0.1.1/kubevirt-manager-0.1.1.tgz
+    version: 0.1.1
+  kubevirt-vm:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-24T10:27:58.785639073Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: a69ac716cdbc17ffbe68b8b8cb772389c9343a7b67ead0f5cc9eaa48ab143f0a
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.1/kubevirt-vm-0.1.1.tgz
+    version: 0.1.1
+  okd-dashboard:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-24T10:27:58.974608302Z"
+    description: Install the OpenShift Kubernetes Dashboard
+    digest: 7cc6db96ef82936ab58d29bbd905bce6bb608cf88bb210d45ab199b620468ebd
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: okd-dashboard
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
+    version: 0.1.1
+generated: "2023-09-24T10:27:58.974620603Z"
