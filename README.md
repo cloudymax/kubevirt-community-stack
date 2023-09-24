@@ -18,15 +18,15 @@ Kubevirt Charts
 
 <p>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.<br>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer<br>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines with Kubevirt via helm
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines with Kubevirt via helm<br>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Generate a cloud-init configuration file
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Generate a cloud-init configuration file<br>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI<br>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/okd-dashboard">okd-dashboard</a>: Deploy the OpenShift Kubernetes Dashboard
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/okd-dashboard">okd-dashboard</a>: Deploy the OpenShift Kubernetes Dashboard<br>
 </p>
