@@ -23,29 +23,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-      - env:
-        - name: DEPLOY_CLUSTER_RESOURCES
-          value: "true"
-        - name: OPERATOR_VERSION
-          value: {{ .Chart.AppVersion }}
-        - name: CONTROLLER_IMAGE
-          value: quay.io/kubevirt/cdi-controller:{{ .Chart.AppVersion }}
-        - name: IMPORTER_IMAGE
-          value: quay.io/kubevirt/cdi-importer:{{ .Chart.AppVersion }}
-        - name: CLONER_IMAGE
-          value: quay.io/kubevirt/cdi-cloner:{{ .Chart.AppVersion }}
-        - name: APISERVER_IMAGE
-          value: quay.io/kubevirt/cdi-apiserver:{{ .Chart.AppVersion }}
-        - name: UPLOAD_SERVER_IMAGE
-          value: quay.io/kubevirt/cdi-uploadserver:{{ .Chart.AppVersion }}
-        - name: UPLOAD_PROXY_IMAGE
-          value: quay.io/kubevirt/cdi-uploadproxy:{{ .Chart.AppVersion }}
-        - name: VERBOSITY
-          value: "1"
-        - name: PULL_POLICY
-          value: IfNotPresent
-        - name: MONITORING_NAMESPACE
-          name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -64,6 +42,28 @@ spec:
           #    port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: DEPLOY_CLUSTER_RESOURCES
+            value: "true"
+          - name: OPERATOR_VERSION
+            value: {{ .Chart.AppVersion }}
+          - name: CONTROLLER_IMAGE
+            value: quay.io/kubevirt/cdi-controller:{{ .Chart.AppVersion }}
+          - name: IMPORTER_IMAGE
+            value: quay.io/kubevirt/cdi-importer:{{ .Chart.AppVersion }}
+          - name: CLONER_IMAGE
+            value: quay.io/kubevirt/cdi-cloner:{{ .Chart.AppVersion }}
+          - name: APISERVER_IMAGE
+            value: quay.io/kubevirt/cdi-apiserver:{{ .Chart.AppVersion }}
+          - name: UPLOAD_SERVER_IMAGE
+            value: quay.io/kubevirt/cdi-uploadserver:{{ .Chart.AppVersion }}
+          - name: UPLOAD_PROXY_IMAGE
+            value: quay.io/kubevirt/cdi-uploadproxy:{{ .Chart.AppVersion }}
+          - name: VERBOSITY
+            value: "1"
+          - name: PULL_POLICY
+            value: IfNotPresent
+          - name: MONITORING_NAMESPACE
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
