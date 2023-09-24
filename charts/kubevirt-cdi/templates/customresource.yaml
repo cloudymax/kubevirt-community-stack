@@ -5,17 +5,21 @@ metadata:
 spec:
   config:
     featureGates:
-      {{- toYaml .Values.cdi.featureGates | nindent 6 }}
+    - HonorWaitForFirstConsumer
     podResourceRequirements:
-      {{- toYaml .Values.cdi.resources | nindent 6 }}
+      limits:
+        cpu: "4"
+        memory: 4Gi
+      requests:
+        cpu: "1"
+        memory: 250Mi
   imagePullPolicy: IfNotPresent
   infra:
     nodeSelector:
-      kubernetes.io/os: {{ .Values.nodeSelector }}
-    {{- with .Values.tolerations }}
+      kubernetes.io/os: linux
     tolerations:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
+    - key: CriticalAddonsOnly
+      operator: Exists
   workload:
     nodeSelector:
-      kubernetes.io/os: {{ .Values.nodeSelector }}
+      kubernetes.io/os: linux

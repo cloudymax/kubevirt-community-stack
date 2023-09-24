@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/kubevirt/cdi-controller
+  repository: quay.io/kubevirt/cdi-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -63,7 +63,6 @@ nodeSelector:
 tolerations:
 - key: CriticalAddonsOnly
   operator: Exists
-
 
 affinity: {}
 
