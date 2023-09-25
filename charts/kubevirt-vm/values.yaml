@@ -61,10 +61,6 @@ service:
     targetPort: 22
     protocol: TCP
     nodePort: 30001
-  - port: 5900
-    targetPort: 5900
-    protocol: TCP
-    nodePort: 30003
 
 cloudinit:
   hostname: scrapmetal
