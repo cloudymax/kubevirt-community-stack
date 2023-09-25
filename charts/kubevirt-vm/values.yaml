@@ -1,8 +1,8 @@
 virtualMachine:  
   # -- name of the virtualMachine object
-  name: kube-virt-vm0
+  name: vm0
   # -- namespace to deploy the vm
-  namespace: default
+  namespace: vm0
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
   # -- Enable vm features
@@ -35,7 +35,7 @@ disks:
   - name: harddrive
     type: disk
     bus: virtio
-    boot-order: 2
+    bootorder: 2
     readonly: false
     pvsize: 32G
     pvstorageClass: local-path
@@ -45,7 +45,7 @@ disks:
     type: cdrom
     bus: sata
     readonly: true
-    boot-order: 1
+    bootorder: 1
     pv-enable: false
 
 iso:
@@ -53,9 +53,18 @@ iso:
   isoImage: "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"
 
 service:
+  name: ssh
   type: NodePort
-  # -- port to use with k8s service
-  port: 22
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 22
+    targetPort: 22
+    protocol: TCP
+    nodePort: 30001
+  - port: 5900
+    targetPort: 5900
+    protocol: TCP
+    nodePort: 30003
 
 cloudinit:
   hostname: scrapmetal
@@ -63,17 +72,18 @@ cloudinit:
   network:
     config: disabled
   wireguard: []
+  groups:
+    - docker
+    - kvm
   users:
-    - name: admin
-      groups: users, admin, docker, sudo, kvm
+    - name: friend
+      groups: users, admin, sudo
       sudo: ALL=(ALL) NOPASSWD:ALL
       shell: /bin/bash
       lock_passwd: false
-    #  passwd: ${PASSWORD}
-      ssh_import_id:
-        - gh:cloudymax
-      ssh_authorized_keys:
-        - id_rsa.pub
+      passwd: "$6$rounds=4096$saltsaltlettuce$Lp/FV.2oOgew7GbM6Nr8KMGMBn7iFM0x9ZwLqtx9Y4QJmKvfcnS.2zx4MKmymCPQGpHS7gqYOiqWjvdCIV2uN."
+      ssh_import_id: []
+      ssh_authorized_keys: []
   ca_certs: []
   boot_cmd: 
     - apt-get update 
@@ -82,10 +92,11 @@ cloudinit:
   write_files:
     apt-sources-list:
       path: /etc/apt/sources.list
-      permissions: '0644'
+      permissions: "0644"
       content: apt-sources.list
   package_update: true
   package_upgrade: true
-  packages: []
-  runcmd: 
-    - who -r
+  packages: 
+    - sl
+  runcmd:
+    - sudo -u friend ssh-import-id-gh cloudymax

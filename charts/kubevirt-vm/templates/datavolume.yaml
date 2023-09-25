@@ -5,6 +5,7 @@ apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
   name: {{ $props.name }}
+  namespace: {{ $.Values.virtualMachine.namespace }}
   annotations:
     cdi.kubevirt.io/storage.bind.immediate.requested: "true"
 spec:
@@ -12,9 +13,9 @@ spec:
     http:
       certConfigMap: empty-cert
       url: {{ $props.source }}
-pvc:
-    storageClassName: {{ $props.pvstorageClass }}
-    accessModes: {{ $props.pvaccessMode }}
+  pvc:
+    accessModes: 
+      - {{ $props.pvaccessMode }}
     resources:
       requests:
         storage: {{ $props.pvsize }}

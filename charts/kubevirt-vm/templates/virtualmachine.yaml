@@ -53,12 +53,12 @@ spec:
             bus: virtio
             name: tablet1
           disks:
-            {{- range $reg, $props := .Values.cloudinit.disks }}
-           - name: {{ $props.name }}
-             {{ $props.type }}:
-               bus: {{ $props.bus }}
-               boot-order: {{ $props.permissions }}
-               readonly: {{ $props.readonly }}
+            {{- range $reg, $props := .Values.disks }}
+          - name: {{ $props.name }}
+            {{ $props.type }}:
+              bus: {{ $props.bus }}
+              readonly: {{ $props.readonly }}
+            bootOrder: {{ $props.bootorder }}
             {{- end }}
           interfaces:
             - masquerade: {}
@@ -72,10 +72,12 @@ spec:
       - name: default
         pod: {}
       volumes:
-        {{- range $reg, $props := .Values.cloudinit.disks }}
+        {{- range $reg, $props := .Values.disks }}
+        {{- if ne "cloudinitvolume" $props.name }}
         - name: {{ $props.name }}
           persistentVolumeClaim:
             claimName: {{ $props.name }}
+        {{- end }}
         {{- end }}
         - name: cloudinitvolume
           cloudInitNoCloud:
@@ -87,6 +89,10 @@ spec:
               network:
                   {{- toYaml . | nindent 16 }}
               {{- end }}
+              {{- with .Values.cloudinit.groups }}
+              groups:
+                  {{- toYaml . | nindent 16 }}
+              {{- end }}
               users: 
                 {{- range $reg, $props := .Values.cloudinit.users }}
                 - name: {{ $props.name }}
@@ -94,8 +100,17 @@ spec:
                   sudo: {{ $props.sudo }}
                   shell: {{ $props.shell }}
                   lock_passwd: {{ $props.lock_passwd }}
-                  ssh_import_id: {{ $props.ssh_import_id }}
-                  ssh_authorized_keys: {{ $props.ssh_authorized_keys }}
+                  {{- if $props.passwd }}
+                  passwd: {{ $props.passwd | quote }}
+                  {{- end }}
+                  {{- if $props.ssh_import_id }}
+                  ssh_import_id: 
+                    - {{ $props.ssh_import_id }}
+                  {{- end }}
+                  {{- if $props.ssh_authorized_keys }}
+                  ssh_authorized_keys: 
+                    - {{ $props.ssh_authorized_keys }}
+                  {{- end }}
                 {{- end }}
               {{- with .Values.cloudinit.boot_cmd }}
               boot_cmd:
@@ -105,14 +120,14 @@ spec:
                 {{- if .Values.cloudinit.write_as_b64 }}
                 {{- range $reg, $props := .Values.cloudinit.write_files }}
               - path: {{ $props.path }}
-                permissions: {{ $props.permissions }}
+                permissions: {{ $props.permissions | quote }}
                 content: |
                 {{- $.Files.Get $props.content | trim |b64enc | nindent 18 }}
                 {{- end }}
                 {{- else }}
                 {{- range $reg, $props := .Values.cloudinit.write_files }}
               - path: {{ $props.path }}
-                permissions: {{ $props.permissions }}
+                permissions: {{ $props.permissions | quote }}
                 content: |
                 {{- $.Files.Get $props.content | trim |nindent 18 }}
                 {{- end }}
@@ -120,13 +135,10 @@ spec:
               package_update: {{ .Values.cloudinit.package_update }}
               package_upgrade: {{ .Values.cloudinit.package_upgrade }}
               {{- with .Values.cloudinit.packages }}
-              boot_cmd:
+              packages:
                   {{- toYaml . | nindent 16 }}
               {{- end }}
               {{- with .Values.cloudinit.runcmd }}
               runcmd:
                   {{- toYaml . | nindent 16 }}
               {{- end }}
-
-
-              
