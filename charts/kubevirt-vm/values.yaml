@@ -56,11 +56,10 @@ service:
   name: ssh
   type: NodePort
   externalTrafficPolicy: Cluster
-  ports:
-  - port: 22
-    targetPort: 22
-    protocol: TCP
-    nodePort: 30001
+  port: 22
+  targetPort: 22
+  protocol: TCP
+  nodePort: 30001
 
 cloudinit:
   hostname: scrapmetal
