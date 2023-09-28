@@ -1,6 +1,6 @@
 # kubevirt-cdi
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.57.0-rc1](https://img.shields.io/badge/AppVersion-v1.57.0--rc1-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.57.0](https://img.shields.io/badge/AppVersion-v1.57.0-informational?style=flat-square)
 
 Install the Containerized Data Importer
 
@@ -21,7 +21,7 @@ Install the Containerized Data Importer
 | cdi.resources.requests.cpu | string | `"1"` |  |
 | cdi.resources.requests.memory | string | `"250Mi"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"quay.io/kubevirt/cdi-controller"` |  |
+| image.repository | string | `"quay.io/kubevirt/cdi-operator"` |  |
 | image.tag | string | `""` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
@@ -44,7 +44,7 @@ Install the Containerized Data Importer
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| serviceAccount.name | string | `"kubevirt-cdi-service-account"` |  |
 | tolerations[0].key | string | `"CriticalAddonsOnly"` |  |
 | tolerations[0].operator | string | `"Exists"` |  |
 | uploadProxy.port | int | `443` |  |

@@ -82,6 +82,9 @@ spec:
         - name: cloudinitvolume
           cloudInitNoCloud:
             userData: |
+              {{- if .Values.cloudinitPath }}
+              {{- $.Files.Get .Values.cloudinitPath | trim | nindent 14 }}
+              {{- else }}
               #cloud-config
               hostname: {{ .Values.cloudinit.hostname }}
               disable_root: {{ .Values.cloudinit.disable_root }}
@@ -141,4 +144,5 @@ spec:
               {{- with .Values.cloudinit.runcmd }}
               runcmd:
                   {{- toYaml . | nindent 16 }}
+              {{- end }}
               {{- end }}

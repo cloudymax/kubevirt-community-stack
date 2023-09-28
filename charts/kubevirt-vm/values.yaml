@@ -18,29 +18,39 @@ virtualMachine:
     # -- QEMU virtual-machine type
     machineType: "q35"
     # -- Pass all CPU features and capabilities to Guest
-    # cpuPassthrough: true
+    cpuPassthrough: false
     # -- Number of Virtual cores to pass to the Guest 
     vCores: 2
     # -- Pin QEMU process to specific physical cores
-    # pinCores: true
+    # Requires `--cpu-manager-policy` enabled in kubelet
+    pinCores: false
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
     # -- Amount of RAM to pass the the Guest
     memory: 4Gi
-    # -- path to the user-data file for use with Cloud-Init
-    userDataFile: "user-data.yaml"
 
-
+# -- List of disks to create for the VM. Will be used to create a Datavolume.
 disks:
+  # -- Disk Name
   - name: harddrive
+    # -- Disk type: disk, cdrom, filesystem, or lun
     type: disk
+    # -- Bus type: sata or virtio
     bus: virtio
+    # -- Sets disk position in boot order, lower numbers are checked earlier
     bootorder: 2
+    # -- Set disk to be Read-only
     readonly: false
+    # -- Size of disk in GB
     pvsize: 32G
+    # -- Storage class to use for the pvc
     pvstorageClass: local-path
+    # -- Access mode for the PVC
     pvaccessMode: ReadWriteOnce
+    # -- URL of cloud-image
     source: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+  # -- cloud-init volume which holds your user-data file. 
+    # Required to be first boot option
   - name: cloudinitvolume
     type: cdrom
     bus: sata
@@ -49,27 +59,52 @@ disks:
     pv-enable: false
 
 iso:
-  bootFromIso: false 
+  bootFromIso: false
   isoImage: "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-12.0.0-amd64-DVD-1.iso"
 
-service:
-  name: ssh
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  port: 22
-  targetPort: 22
-  protocol: TCP
-  nodePort: 30001
+# -- Service objects are used to expose the VM to the outside world.
+  # Just like int he cloud each VM starts off isolated and will need
+  # to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
+service: []
 
+# NodePort Example:
+#service:
+#  name: ssh
+#  type: NodePort
+#  externalTrafficPolicy: Cluster
+#  port: 22
+#  targetPort: 22
+#  protocol: TCP
+#  nodePort: 30001
+
+# LoadBalancer Example:
+#service:
+#  name: ssh
+#  type: LoadBalancer
+#  externalTrafficPolicy: Cluster
+#  port: 22
+#  targetPort: 22
+#  protocol: TCP
+
+# -- Provide a path to an existing cloud-init file
+# will be genrated from values below if no file specified
+cloudinitPath:
+
+# -- Values used to generate a cloud-init user-data file
+# Not all modules yet supported
 cloudinit:
+  # -- Set hostname of VM
   hostname: scrapmetal
   disable_root: false
   network:
     config: disabled
+  # -- provide a wireguard config
   wireguard: []
+  # -- Create Groups
   groups:
     - docker
     - kvm
+  # -- Create users
   users:
     - name: friend
       groups: users, admin, sudo
@@ -77,21 +112,32 @@ cloudinit:
       shell: /bin/bash
       lock_passwd: false
       passwd: "$6$rounds=4096$saltsaltlettuce$Lp/FV.2oOgew7GbM6Nr8KMGMBn7iFM0x9ZwLqtx9Y4QJmKvfcnS.2zx4MKmymCPQGpHS7gqYOiqWjvdCIV2uN."
+      # -- import ssh public-keys from github or lanchpad
+      # doesnt work on Debian12
       ssh_import_id: []
+      # -- manually add a ssh public-key
       ssh_authorized_keys: []
   ca_certs: []
+  # -- Commands to run early in boot process
   boot_cmd: 
     - apt-get update 
     - apt-get install -y ssh-import-id
+  # -- base64 encode content of written files
   write_as_b64: false
+  # -- list of files to embed in the user-data
   write_files:
     apt-sources-list:
+      # -- Destination to write file on boot
       path: /etc/apt/sources.list
+      # -- Permissions to assign the file
       permissions: "0644"
+      # -- path to the source file for helm to read
       content: apt-sources.list
+  # -- Update apt package cache
   package_update: true
+  # -- Perform apt package upgrade
   package_upgrade: true
-  packages: 
-    - sl
-  runcmd:
-    - sudo -u friend ssh-import-id-gh cloudymax
+  # -- apt packages to install
+  packages: []
+  # -- commands to run in final step
+  runcmd: []
