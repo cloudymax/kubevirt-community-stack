@@ -1,23 +1,23 @@
-{{- if .Values.service }}
+{{- range $reg, $props := .Values.service }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.virtualMachine.name }}-service
-  namespace: {{ .Values.virtualMachine.namespace }}
-  labels:
-    metallb-service: {{ .Values.virtualMachine.name }}
+  name: {{ $props.name }}
+  namespace: {{ $.Values.virtualMachine.namespace }}
 spec:
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
-  type: {{ .Values.service.type }}
+  externalTrafficPolicy: {{ $props.externalTrafficPolicy }}
+  type: {{ $props.type }}
   ports:
-    - name: {{ .Values.service.name }}
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: {{ .Values.service.protocol }}
-      {{- if eq .Values.service.type "NodePort" }}
-      nodePort: {{ .Values.service.nodePort }}
+    {{- range $key, $value := $props.ports }}
+    - name: {{ $value.name }}
+      port: {{ $value.port }}
+      targetPort: {{ $value.targetPort }}
+      protocol: {{ $value.protocol }}
+      {{- if eq $value.type "NodePort" }}
+      nodePort: {{ $value.nodePort }}
       {{- end }}
+    {{- end }}
   selector:
-    metallb-service: {{ .Values.virtualMachine.name }}
+    kubevirt-service: {{ $.Values.virtualMachine.name }}
 {{- end }}
-

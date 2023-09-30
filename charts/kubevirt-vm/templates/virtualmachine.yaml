@@ -14,7 +14,7 @@ spec:
       creationTimestamp: null
       labels:
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
-        metallb-service: {{ .Values.virtualMachine.name }}
+        kubevirt-service: {{ .Values.virtualMachine.name }}
     spec:
       domain:
         features:
@@ -45,6 +45,10 @@ spec:
         {{- "efi: {}" | nindent 12 -}}
         {{- end }}
         devices:
+          {{- with .Values.virtualMachine.gpus }}
+          gpus:
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
           autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
           autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
@@ -54,11 +58,13 @@ spec:
             name: tablet1
           disks:
             {{- range $reg, $props := .Values.disks }}
+            {{- if ne "hostDisk" $props.type }} 
           - name: {{ $props.name }}
             {{ $props.type }}:
               bus: {{ $props.bus }}
               readonly: {{ $props.readonly }}
             bootOrder: {{ $props.bootorder }}
+            {{- end }}
             {{- end }}
           interfaces:
             - masquerade: {}
@@ -74,9 +80,25 @@ spec:
       volumes:
         {{- range $reg, $props := .Values.disks }}
         {{- if ne "cloudinitvolume" $props.name }}
+        {{- if ne "hostDisk" $props.type }}
+        {{- if not $props.image }}
         - name: {{ $props.name }}
           persistentVolumeClaim:
             claimName: {{ $props.name }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if eq "hostDisk" $props.type }}
+        - hostDisk:
+            capacity: {{ $props.capacity }}
+            path: {{ $props.path }}
+            type: {{ $props.type }}
+          name: {{ $props.name }}
+        {{- end}}
+        {{- if $props.image }}
+        - containerDisk:
+            image: {{ $props.image }}
+          name: {{ $props.name }}
         {{- end }}
         {{- end }}
         - name: cloudinitvolume

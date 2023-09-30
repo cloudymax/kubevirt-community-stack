@@ -1,14 +1,21 @@
 {{- range $reg, $props := .Values.disks }}
 {{- if $props.pvsize }}
 ---
+{{ if ne "containerDisk" $props.type }}
+{{ if $props.source }}
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
+{{- else }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+{{- end}}
 metadata:
   name: {{ $props.name }}
   namespace: {{ $.Values.virtualMachine.namespace }}
   annotations:
     cdi.kubevirt.io/storage.bind.immediate.requested: "true"
 spec:
+  {{- if $props.source }}
   source:
     http:
       certConfigMap: empty-cert
@@ -19,6 +26,14 @@ spec:
     resources:
       requests:
         storage: {{ $props.pvsize }}
+  {{- else }}
+  accessModes: 
+    - {{ $props.pvaccessMode }}
+  resources:
+    requests:
+      storage: {{ $props.pvsize }}
+  {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 ---
