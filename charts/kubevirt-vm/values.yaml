@@ -35,6 +35,12 @@ virtualMachine:
   #  - name: gpu0
   #      device: a343049c-e890-4ebf-ad06-8fcd3c214606
 
+#########################
+# Create a Virtual Machine Pool
+virtualMachinePool: 
+  enabled: true
+  size: 3
+
 ########################################
 # -- List of disks to create for the VM. 
     # Will be used to create Datavolumes or PVCs.
