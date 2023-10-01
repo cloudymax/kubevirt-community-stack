@@ -8,8 +8,9 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: kubevirt
+  name: kubevirt-operator
 subjects:
-  - kind: ServiceAccount
-    name: {{ include "kubevirt.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: kubevirt-operator
+  namespace: kubevirt
+
