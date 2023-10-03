@@ -17,6 +17,8 @@ spec:
         kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
         kubevirt-service: {{ .Values.virtualMachine.name }}
+    spec:
+      running: true
       template:
         metadata:
           creationTimestamp: null
@@ -28,30 +30,30 @@ spec:
           domain:
             features:
               {{- if .Values.virtualMachine.features.kvmEnabled -}}
-              {{ "kvm: {}" | nindent 10 }}
+              {{ "kvm: {}" | nindent 14 }}
               {{- end }}
               {{- if .Values.virtualMachine.features.acpiEnabled -}}
-              {{ "acpi: {}" | nindent 10 }}
+              {{ "acpi: {}" | nindent 14 }}
               {{- end }}
               {{- if .Values.virtualMachine.features.smmEnabled -}}
-              {{ "smm:"  | nindent 10 -}}
-              {{ "enabled: true"  | nindent 12 }}
+              {{ "smm:"  | nindent 14 -}}
+              {{ "enabled: true"  | nindent 16 }}
               {{- end }}
             cpu:
               {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
-              {{ "model: host-passthrough" | nindent 10 }}
+              {{ "model: host-passthrough" | nindent 14 }}
               {{- end }}
               sockets: 1
               cores: {{ .Values.virtualMachine.machine.vCores -}}
               {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
-              {{- "threads: 2" | nindent 10 -}}
+              {{- "threads: 2" | nindent 14 -}}
               {{ else }}
-              {{- "threads: 1" | nindent 10 -}}
+              {{- "threads: 1" | nindent 14 -}}
               {{- end }}
             {{- if .Values.virtualMachine.features.efiEnabled -}}
-            {{- "firmware:" | nindent 8 -}}
-            {{- "bootloader:" |nindent 10 -}}
-            {{- "efi: {}" | nindent 12 -}}
+            {{- "firmware:" | nindent 12 -}}
+            {{- "bootloader:" |nindent 14 -}}
+            {{- "efi: {}" | nindent 16 -}}
             {{- end }}
             devices:
               {{- with .Values.virtualMachine.gpus }}
@@ -61,121 +63,121 @@ spec:
               autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
               autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
               autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
-            inputs:
+              inputs:
               - type: tablet
                 bus: virtio
                 name: tablet1
-            disks:
-              {{- range $reg, $props := .Values.disks }}
-              {{- if ne "hostDisk" $props.type }}
+              disks:
+                {{- range $reg, $props := .Values.disks }}
+                {{- if ne "hostDisk" $props.type }}
+              - name: {{ $props.name }}
+                {{ $props.type }}:
+                  bus: {{ $props.bus }}
+                  readonly: {{ $props.readonly }}
+                bootOrder: {{ $props.bootorder }}
+                {{- end }}
+                {{- end }}
+            resources:
+              limits:
+                memory: {{ .Values.virtualMachine.machine.memory }}
+          terminationGracePeriodSeconds: 0
+          volumes:
+            {{- range $reg, $props := .Values.disks }}
+            {{- if ne "cloudinitvolume" $props.name }}
+            {{- if ne "hostDisk" $props.type }}
+            {{- if not $props.epehemeral }}
+            {{- if not $props.image }}
             - name: {{ $props.name }}
-              {{ $props.type }}:
-                bus: {{ $props.bus }}
-                readonly: {{ $props.readonly }}
-              bootOrder: {{ $props.bootorder }}
-              {{- end }}
-              {{- end }}
-            interfaces:
-              - masquerade: {}
-                name: default
-          machine:
-            type: {{ .Values.virtualMachine.machine.machineType }}
-          resources:
-            limits:
-              memory: {{ .Values.virtualMachine.machine.memory }}
-        terminationGracePeriodSeconds: 0
-        networks:
-        - name: default
-          pod: {}
-        volumes:
-          {{- range $reg, $props := .Values.disks }}
-          {{- if ne "cloudinitvolume" $props.name }}
-          {{- if ne "hostDisk" $props.type }}
-          {{- if not $props.image }}
-          - name: {{ $props.name }}
-            persistentVolumeClaim:
-              claimName: {{ $props.name }}
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- if eq "hostDisk" $props.type }}
-          - hostDisk:
-              capacity: {{ $props.capacity }}
-              path: {{ $props.path }}
-              type: {{ $props.type }}
-            name: {{ $props.name }}
-          {{- end}}
-          {{- if $props.image }}
-          - containerDisk:
-              image: {{ $props.image }}
-            name: {{ $props.name }}
-          {{- end }}
-          {{- end }}
-          - name: cloudinitvolume
-            cloudInitNoCloud:
-              userData: |
-                {{- if .Values.cloudinitPath }}
-                {{- $.Files.Get .Values.cloudinitPath | trim | nindent 14 }}
-                {{- else }}
-                #cloud-config
-                hostname: {{ .Values.cloudinit.hostname }}
-                disable_root: {{ .Values.cloudinit.disable_root }}
-                {{- with .Values.cloudinit.network }}
-                network:
-                    {{- toYaml . | nindent 16 }}
-                {{- end }}
-                {{- with .Values.cloudinit.groups }}
-                groups:
-                    {{- toYaml . | nindent 16 }}
-                {{- end }}
-                users:
-                  {{- range $reg, $props := .Values.cloudinit.users }}
-                  - name: {{ $props.name }}
-                    groups: {{ $props.groups }}
-                    sudo: {{ $props.sudo }}
-                    shell: {{ $props.shell }}
-                    lock_passwd: {{ $props.lock_passwd }}
-                    {{- if $props.passwd }}
-                    passwd: {{ $props.passwd | quote }}
-                    {{- end }}
-                    {{- if $props.ssh_import_id }}
-                    ssh_import_id:
-                      - {{ $props.ssh_import_id }}
-                    {{- end }}
-                    {{- if $props.ssh_authorized_keys }}
-                    ssh_authorized_keys:
-                      - {{ $props.ssh_authorized_keys }}
-                    {{- end }}
-                  {{- end }}
-                {{- with .Values.cloudinit.boot_cmd }}
-                boot_cmd:
-                    {{- toYaml . | nindent 16 }}
-                {{- end }}
-                write_files:
-                  {{- if .Values.cloudinit.write_as_b64 }}
-                  {{- range $reg, $props := .Values.cloudinit.write_files }}
-                - path: {{ $props.path }}
-                  permissions: {{ $props.permissions | quote }}
-                  content: |
-                  {{- $.Files.Get $props.content | trim |b64enc | nindent 18 }}
-                  {{- end }}
+              persistentVolumeClaim:
+                claimName: {{ $props.name }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if eq "hostDisk" $props.type }}
+            - hostDisk:
+                capacity: {{ $props.capacity }}
+                path: {{ $props.path }}
+                type: {{ $props.type }}
+              name: {{ $props.name }}
+            {{- end}}
+            {{- if $props.image }}
+            - containerDisk:
+                image: {{ $props.image }}
+              name: {{ $props.name }}
+            {{- end }}
+            {{- if $props.ephemeral }}
+            - name: {{ $props.name }}
+              ephemeral:
+                persistentVolumeClaim:
+                  claimName: {{ $props.pvc }}
+            {{- end }}
+            {{- end }}
+            - name: cloudinitvolume
+              cloudInitNoCloud:
+                userData: |
+                  {{- if .Values.cloudinitPath }}
+                  {{- $.Files.Get .Values.cloudinitPath | trim | nindent 14 }}
                   {{- else }}
-                  {{- range $reg, $props := .Values.cloudinit.write_files }}
-                - path: {{ $props.path }}
-                  permissions: {{ $props.permissions | quote }}
-                  content: |
-                  {{- $.Files.Get $props.content | trim |nindent 18 }}
+                  #cloud-config
+                  hostname: {{ .Values.cloudinit.hostname }}
+                  disable_root: {{ .Values.cloudinit.disable_root }}
+                  {{- with .Values.cloudinit.network }}
+                  network:
+                    {{- toYaml . | nindent 20 }}
                   {{- end }}
-                {{- end }}
-                package_update: {{ .Values.cloudinit.package_update }}
-                package_upgrade: {{ .Values.cloudinit.package_upgrade }}
-                {{- with .Values.cloudinit.packages }}
-                packages:
-                    {{- toYaml . | nindent 16 }}
-                {{- end }}
-                {{- with .Values.cloudinit.runcmd }}
-                runcmd:
-                    {{- toYaml . | nindent 16 }}
-                {{- end }}
-                {{- end }}
+                  {{- with .Values.cloudinit.groups }}
+                  groups:
+                    {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  users:
+                    {{- range $reg, $props := .Values.cloudinit.users }}
+                    - name: {{ $props.name }}
+                      groups: {{ $props.groups }}
+                      sudo: {{ $props.sudo }}
+                      shell: {{ $props.shell }}
+                      lock_passwd: {{ $props.lock_passwd }}
+                      {{- if $props.passwd }}
+                      passwd: {{ $props.passwd | quote }}
+                      {{- end }}
+                      {{- if $props.ssh_import_id }}
+                      ssh_import_id:
+                        - {{ $props.ssh_import_id }}
+                      {{- end }}
+                      {{- if $props.ssh_authorized_keys }}
+                      ssh_authorized_keys:
+                        - {{ $props.ssh_authorized_keys }}
+                      {{- end }}
+                    {{- end }}
+                  {{- with .Values.cloudinit.boot_cmd }}
+                  boot_cmd:
+                    {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  write_files:
+                    {{- if .Values.cloudinit.write_as_b64 }}
+                    {{- range $reg, $props := .Values.cloudinit.write_files }}
+                  - path: {{ $props.path }}
+                    permissions: {{ $props.permissions | quote }}
+                    content: |
+                    {{- $.Files.Get $props.content | trim |b64enc | nindent 22 }}
+                    {{- end }}
+                    {{- else }}
+                    {{- range $reg, $props := .Values.cloudinit.write_files }}
+                  - path: {{ $props.path }}
+                    permissions: {{ $props.permissions | quote }}
+                    content: |
+                    {{- $.Files.Get $props.content | trim |nindent 22 }}
+                    {{- end }}
+                  {{- end }}
+                  package_update: {{ .Values.cloudinit.package_update }}
+                  package_upgrade: {{ .Values.cloudinit.package_upgrade }}
+                  {{- with .Values.cloudinit.packages }}
+                  packages:
+                    {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  {{- with .Values.cloudinit.runcmd }}
+                  runcmd:
+                  {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  {{- end }}
 {{- end }}

@@ -1,144 +1,193 @@
 ##########################
 # Virtual Machine settings
 virtualMachine:  
-  # -- name of the virtualMachine object
+  # -- name of the virtualMachine or virtualMachinePool object
   name: vm0
-  # -- namespace to deploy the vm
+  
+  # -- namespace to deploy
   namespace: vm0
+  
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
-  # -- Enable vm features
+  
   features:
-     kvmEnabled: true
-     acpiEnabled: true
-     smmEnabled: true
-     efiEnabled: true
-     autoattachPodInterface: true
-     autoattachSerialConsole: true
-     autoattachGraphicsDevice: true
+    # -- Enable KVM acceleration
+    kvmEnabled: true
+
+    # Enable ACPI platform event device
+    acpiEnabled: true
+
+    # Enable System Management Mode (required for secureboot)
+    smmEnabled: true
+
+    # -- Enable EFI bios
+    efiEnabled: true
+    
+    # -- Make pod network interface the default for the VM
+    autoattachPodInterface: true
+    
+    # -- Attach a serial console device 
+    autoattachSerialConsole: true
+    
+    # -- Attach a basic graphics device for VNC access
+    autoattachGraphicsDevice: true
+  
   machine:
     # -- QEMU virtual-machine type
     machineType: "q35"
+    
     # -- Pass all CPU features and capabilities to Guest
     cpuPassthrough: false
+    
     # -- Number of Virtual cores to pass to the Guest 
     vCores: 2
+    
     # -- Pin QEMU process to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
+    
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
+    
     # -- Amount of RAM to pass to the Guest
     memory: 2Gi
-  # -- GPUs to pass to guest
+  
+  # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the 
+    # kubevirt custom resource.
   gpus: []
   #  - name: gpu0
   #      device: a343049c-e890-4ebf-ad06-8fcd3c214606
 
 #########################
 # Create a Virtual Machine Pool
-virtualMachinePool: 
+# Vm pools should be used with ephemeral disks or containerdisks
+# otherwise they would all fight over the same PVC
+virtualMachinePool:
   enabled: true
   size: 3
 
-########################################
-# -- List of disks to create for the VM. 
-    # Will be used to create Datavolumes or PVCs.
-disks:
-#########################
-# DataVolume disk example
-  # -- Disk Name
-  # - name: harddrive
-  #   # -- Disk type: disk, cdrom, filesystem, or lun
-  #   type: disk
-  #   # -- Bus type: sata or virtio
-  #   bus: virtio
-  #   # -- Sets disk position in boot order, lower numbers are checked earlier
-  #   bootorder: 2
-  #   # -- Set disk to be Read-only
-  #   readonly: false
-  #   # -- Size of disk in GB
-  #   pvsize: 32G
-  #   # -- Storage class to use for the pvc
-  #   pvstorageClass: local-path
-  #   # -- Access mode for the PVC
-  #   pvaccessMode: ReadWriteOnce
-  #   # -- URL of cloud-image
-  #   source: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
-
-########################
-# ISO live-image example
-  - name: iso
-    # -- Disk type: disk, cdrom, filesystem, or lun
-    type: cdrom
-    # -- Bus type: sata or virtio
-    bus: sata
-    # -- Sets disk position in boot order, lower numbers are checked earlier
-    bootorder: 1
-    # -- Set disk to be Read-only
-    readonly: true
-    # -- Size of disk in GB
-    pvsize: 8G
-    # -- Storage class to use for the pvc
-    pvstorageClass: local-path
-    # -- Access mode for the PVC
-    pvaccessMode: ReadWriteOnce
-    # -- URL of cloud-image/ISO file
-    source: "https://www.itechtics.com/?dl_id=173"
-
-##############################
-# Empty PVC as disk example
-  - name: harddrive
-    # -- Disk type: disk, cdrom, filesystem, or lun
-    type: disk
-    # -- Bus type: sata or virtio
-    bus: virtio
-    # -- Sets disk position in boot order, lower numbers are checked earlier
-    bootorder: 2
-    # -- Set disk to be Read-only
-    readonly: false
-    # -- Size of disk in GB
-    pvsize: 32G
-    # -- Storage class to use for the pvc
-    pvstorageClass: local-path
-    # -- Access mode for the PVC
-    pvaccessMode: ReadWriteOnce
-
 #############################
+# -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
+disks:
+#############################
+# Cloud-init no-cloud example
+# hold your user-data file
+# Must be the first boot device
+- name: cloudinitvolume
+  type: cdrom
+  bus: sata
+  readonly: true
+  bootorder: 1
+  pv-enable: false
+
+#################################################
+# DataVolume disk with URL source example
+#################################################
+- name: harddrive
+
+  # -- Disk type: disk, cdrom, filesystem, or lun
+  type: disk
+  
+  # -- Bus type: sata or virtio
+  bus: virtio
+
+  # -- Sets disk position in boot order, lower numbers are checked earlier
+  bootorder: 2
+  
+  # -- Set disk to be Read-only
+  readonly: false
+  
+  # -- Size of disk in GB
+  pvsize: 32G
+  
+  # -- Storage class to use for the pvc
+  pvstorageClass: local-path
+  
+  # -- Access mode for the PVC
+  pvaccessMode: ReadWriteOnce
+   
+  # -- source type of the disk image. One of `url`, `pvc`
+  source: url
+
+  # -- URL of cloud-image
+  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+
+#########################################################
+# Ephemeral disk example
+# no persistance, these are deleted after the VM exists
+# requires an existing PVC as a backing file
+#########################################################
+#- name: harddrive
+#  type: disk
+#  bus: virtio
+#  bootorder: 2
+#  readonly: false
+#  pvc: debian12
+#  ephemeral: true
+
+
+########################################################
+# DataVolume disk with existing PVC source example
+########################################################
+#- name: harddrive
+#  type: disk
+#  bus: virtio
+#  bootorder: 2
+#  readonly: false
+#  pvsize: 32G
+#  pvstorageClass: local-path
+#  pvaccessMode: ReadWriteOnce
+#  source: pvc
+#  pvcnamespace: default
+#  pvcname: debian12
+
+##########################################################
+# ISO live-image example
+##########################################################
+#- name: iso
+#  type: cdrom
+#  bus: sata
+#  bootorder: 1
+#  readonly: true
+#  pvsize: 8G
+#  pvstorageClass: local-path
+#  pvaccessMode: ReadWriteOnce
+#  source: "https://www.itechtics.com/?dl_id=173"
+
+##########################################################
+# Empty PVC as disk example
+##########################################################
+#- name: harddrive
+#  type: disk
+#  bus: virtio
+#  bootorder: 2
+#  readonly: false
+#  pvsize: 32G
+#  pvstorageClass: local-path
+#  pvaccessMode: ReadWriteOnce
+
+##########################################################
 # Container Disk Example
-  - name: virtio-drivers
-    # -- Disk type: disk, cdrom, filesystem, lun
-    type: cdrom
-    # -- Bus type: sata or virtio
-    bus: sata
-    # -- Sets disk position in boot order, lower numbers are checked earlier
-    bootorder: 3
-    readonly: true
-    image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
+##########################################################
+#- name: virtio-drivers
+#  type: cdrom
+#  bus: sata
+#  bootorder: 3
+#  readonly: true
+#  image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
 
-
-#############################    
+###########################################################
 # Local Disk example
 # Not working, will have to open a ticket
 # disks need to be owned by 107:messagebus
 # disks cannot be mounted, file systems unidentifiable
-  #  - name: localfile
-  #    type: hostDisk
-  #    # -- Enter a capacity amount to create a new disk
-  #    # otherwise expects an existing disk
-  #    capacity: 500G
-  #    path: /mnt/raid1/hdd2.img
-
-#############################
-# Cloud-init no-cloud example
-  # -- cloud-init volume which holds your user-data file. 
-  #    # Required to be first boot option
-  #  - name: cloudinitvolume
-  #    type: cdrom
-  #    bus: sata
-  #    readonly: true
-  #    bootorder: 1
-  #    pv-enable: false
+###########################################################
+#- name: localfile
+#  type: hostDisk
+#  # -- Enter a capacity amount to create a new disk
+#  # otherwise expects an existing disk
+#  capacity: 500G
+#  path: /mnt/raid1/hdd2.img
 
 
 # -- Service objects are used to expose the VM to the outside world.
@@ -146,38 +195,32 @@ disks:
   # to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
 
 service:
-  # NodePort Example
-  - name: vm0-service
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    ports:
-      - name: ssh
-        port: 22
-        targetPort: 22
-        protocol: TCP
-        nodePort: 30001
-      - name: vnc
-        port: 5900
-        targetPort: 5900
-        protocol: TCP
-        nodePort: 30005
-  - name: vm0-lb
-    type: LoadBalancer
-    externalTrafficPolicy: Cluster
-    ports:
-      - name: vnc
-        port: 5900
-        targetPort: 5900
-        protocol: TCP
-
-#####################
-# LoadBalancer Example:
-#  name: ssh
+#########################
+# NodePort Example
+- name: vm0-service
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+      protocol: TCP
+      nodePort: 30001
+    - name: vnc
+      port: 5900
+      targetPort: 5900
+      protocol: TCP
+      nodePort: 30005
+#########################
+# LaodBalancer Example
+#- name: vm0-lb
 #  type: LoadBalancer
 #  externalTrafficPolicy: Cluster
-#  port: 22
-#  targetPort: 22
-#  protocol: TCP
+#  ports:
+#    - name: vnc
+#      port: 5900
+#      targetPort: 5900
+#      protocol: TCP
 
 # -- Provide a path to an existing cloud-init file
 # will be genrated from values below if no file specified
@@ -211,12 +254,12 @@ cloudinit:
       ssh_authorized_keys: []
   ca_certs: []
   # -- Commands to run early in boot process
-  boot_cmd: [] 
+  boot_cmd: []
   # -- base64 encode content of written files
   write_as_b64: false
   # -- list of files to embed in the user-data
   write_files:
-    apt-sources-list:
+    - apt-sources-list:
       # -- Destination to write file on boot
       path: /etc/apt/sources.list
       # -- Permissions to assign the file

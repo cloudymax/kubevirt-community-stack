@@ -17,9 +17,16 @@ metadata:
 spec:
   {{- if $props.source }}
   source:
+    {{- if eq "url" $props.source }}
     http:
       certConfigMap: empty-cert
-      url: {{ $props.source }}
+      url: {{ $props.url }}
+    {{- end }}
+    {{- if eq "pvc" $props.source }}
+    pvc:
+      namespace: {{ $props.pvcnamespace }}
+      name: {{ $props.pvcname }}
+    {{- end }}
   pvc:
     accessModes: 
       - {{ $props.pvaccessMode }}
