@@ -1,4 +1,4 @@
-name: Release Kubevirt-VM
+name: Release Charts
 
 on:
   workflow_dispatch:
