@@ -70,25 +70,33 @@ priorityclass:
   # -- default priorityclass value
   value: 1000000000
 
-kubevirt:
-  # -- create kubebvirt object by default
-  create: true
-  configuration:
-    developerConfiguration:
-      # -- software emulation enabled by default
-      useEmulation: true
-      # -- enable feature gates: https://github.com/kubevirt/kubevirt/blob/main/pkg/virt-config/feature-gates.go#L26
-      featureGates:
-        - ExpandDisks
-        - CPUManager
-        - GPU
-        - HostDevices
-        - VMExport
-        - HotplugVolumes
-        - HostDisk
-        - Macvtap
-        - Passt
-        - HotplugNICs
-        - clientPassthrough
-        - Snapshot
-        - CPUNodeDiscovery
+permittedHostDevices:
+# PCI device passthrough
+   pciHostDevices: []
+#  - pciVendorSelector: "10DE:1EB8"
+#    resourceName: "nvidia.com/TU104GL_Tesla_T4"
+
+# vGPU mdev device passthrough
+   mediatedDevices: []
+# - mdevNameSelector: "GRID T4-1Q"
+#   resourceName: "nvidia.com/GRID_T4-1Q"
+
+mediatedDevicesTypes:
+- nvidia-436
+  
+useEmulation: false
+
+featureGates:
+  - ExpandDisks
+  - CPUManager
+  - GPU
+  - HostDevices
+  - VMExport
+  - HotplugVolumes
+  - HostDisk
+  - Macvtap
+  - Passt
+  - HotplugNICs
+  - clientPassthrough
+  - Snapshot
+  - CPUNodeDiscovery
