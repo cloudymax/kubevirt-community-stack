@@ -85,7 +85,7 @@ spec:
             {{- range $reg, $props := .Values.disks }}
             {{- if ne "cloudinitvolume" $props.name }}
             {{- if ne "hostDisk" $props.type }}
-            {{- if not $props.epehemeral }}
+            {{- if not $props.ephemeral }}
             {{- if not $props.image }}
             - name: {{ $props.name }}
               persistentVolumeClaim:
