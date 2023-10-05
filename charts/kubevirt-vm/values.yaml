@@ -83,47 +83,47 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
-- name: harddrive
-
-  # -- Disk type: disk, cdrom, filesystem, or lun
-  type: disk
-  
-  # -- Bus type: sata or virtio
-  bus: virtio
-
-  # -- Sets disk position in boot order, lower numbers are checked earlier
-  bootorder: 2
-  
-  # -- Set disk to be Read-only
-  readonly: false
-  
-  # -- Size of disk in GB
-  pvsize: 32G
-  
-  # -- Storage class to use for the pvc
-  pvstorageClass: local-path
-  
-  # -- Access mode for the PVC
-  pvaccessMode: ReadWriteOnce
-   
-  # -- source type of the disk image. One of `url`, `pvc`
-  source: url
-
-  # -- URL of cloud-image
-  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+#- name: harddrive
+#
+#  # -- Disk type: disk, cdrom, filesystem, or lun
+#  type: disk
+#  
+#  # -- Bus type: sata or virtio
+#  bus: virtio
+#
+#  # -- Sets disk position in boot order, lower numbers are checked earlier
+#  bootorder: 2
+#  
+#  # -- Set disk to be Read-only
+#  readonly: false
+#  
+#  # -- Size of disk in GB
+#  pvsize: 32G
+#  
+#  # -- Storage class to use for the pvc
+#  pvstorageClass: local-path
+#  
+#  # -- Access mode for the PVC
+#  pvaccessMode: ReadWriteOnce
+#   
+#  # -- source type of the disk image. One of `url`, `pvc`
+#  source: url
+#
+#  # -- URL of cloud-image
+#  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvc: debian12
-#  ephemeral: true
+- name: harddrive
+  type: disk
+  bus: virtio
+  bootorder: 2
+  readonly: false
+  pvc: debian12
+  ephemeral: true
 
 
 ########################################################
