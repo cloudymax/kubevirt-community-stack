@@ -29,7 +29,9 @@ Kubevirt Charts
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
-    helm install kubevirt-cdi kubevirt/kubevirt-cdi
+    helm install kubevirt-cdi kubevirt/kubevirt-cdi \
+      --namespace cdi \
+      --create-namespace
     ```
     
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines with Kubevirt via helm
