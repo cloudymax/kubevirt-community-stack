@@ -4,6 +4,13 @@
 
 Deploy Kebivirt on Kubernetes
 
+```bash
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+helm install kubevirt kubevirt/kubevirt
+```
+
+
+
 ## Maintainers
 
 | Name | Email | Url |
