@@ -20,6 +20,11 @@ Kubevirt Charts
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
+    ```bash
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm install kubevirt kubevirt/kubevirt
+    ```
+
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines with Kubevirt via helm
