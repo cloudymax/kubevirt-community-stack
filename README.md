@@ -27,6 +27,11 @@ Kubevirt Charts
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer
 
+    ```bash
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm install kubevirt-cdi kubevirt/kubevirt-cdi
+    ```
+    
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines with Kubevirt via helm
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Generate a cloud-init configuration file
