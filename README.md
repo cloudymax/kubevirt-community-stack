@@ -18,6 +18,9 @@ Kubevirt Charts
 
 <p>
 
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-crds">kubevirt</a>: Installs the CRDS needed for the Operator and CDI.
+
+
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
     ```bash
