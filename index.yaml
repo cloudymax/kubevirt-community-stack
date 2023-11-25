@@ -125,6 +125,17 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-cdi-0.1.1/kubevirt-cdi-0.1.1.tgz
     version: 0.1.1
+  kubevirt-crds:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-25T09:04:17.524140472Z"
+    description: Install CRDS required for Kubevirt and the CDI
+    digest: af354e2706f08aee2f52d49c110e3923325d739079d3fbe791bb3f42192dedea
+    name: kubevirt-crds
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-crds-0.1.0/kubevirt-crds-0.1.0.tgz
+    version: 0.1.0
   kubevirt-manager:
   - apiVersion: v2
     appVersion: 1.2.3
@@ -254,4 +265,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2023-11-24T10:01:02.91224014Z"
+generated: "2023-11-25T09:04:17.524249605Z"
