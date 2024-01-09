@@ -40,6 +40,7 @@ spec:
           {{ else }}
           {{- "threads: 1" | nindent 10 -}}
           {{- end }}
+          dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
         {{- if .Values.virtualMachine.features.efiEnabled -}}
         {{- "firmware:" | nindent 8 -}}
         {{- "bootloader:" |nindent 10 -}}
