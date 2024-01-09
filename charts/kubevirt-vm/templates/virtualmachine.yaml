@@ -69,7 +69,7 @@ spec:
             {{- end }}
             {{- end }}
           interfaces:
-            - masquerade: {}
+            - bridge: {}
               name: default
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
