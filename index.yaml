@@ -154,6 +154,20 @@ entries:
   kubevirt-vm:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-01-09T11:41:25.879204785Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: aebb482dc50863320061cff8eab7dc6b79e31f32f419e535d4c3438befd4bfbd
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.1.10/kubevirt-vm-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2023-10-05T16:22:30.364474026Z"
     description: Configure a virtual machine for use with Kubevirt
     digest: d4db6394bafb43db137f9e9b572af12e7697128ac40f9d7878141ac1568cdd6c
@@ -265,4 +279,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2023-11-25T09:04:17.524249605Z"
+generated: "2024-01-09T11:41:25.879256091Z"
