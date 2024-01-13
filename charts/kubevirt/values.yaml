@@ -33,10 +33,6 @@ securityContext:
   privileged: true
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -70,19 +66,10 @@ priorityclass:
   # -- default priorityclass value
   value: 1000000000
 
+mediatedDevicesTypes: []
 permittedHostDevices:
-# PCI device passthrough
-   pciHostDevices: []
-#  - pciVendorSelector: "10DE:1EB8"
-#    resourceName: "nvidia.com/TU104GL_Tesla_T4"
-
-# vGPU mdev device passthrough
-   mediatedDevices: []
-# - mdevNameSelector: "GRID T4-1Q"
-#   resourceName: "nvidia.com/GRID_T4-1Q"
-
-mediatedDevicesTypes:
-- nvidia-436
+  pciHostDevices: []
+  mediatedDevices: []
   
 useEmulation: false
 
