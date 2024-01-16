@@ -41,10 +41,13 @@ spec:
           {{- "threads: 1" | nindent 10 -}}
           {{- end }}
           dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
-        {{- if .Values.virtualMachine.features.efiEnabled -}}
-        {{- "firmware:" | nindent 8 -}}
-        {{- "bootloader:" |nindent 10 -}}
-        {{- "efi: {}" | nindent 12 -}}
+        firmware:  
+        {{- if .Values.virtualMachine.features.efiEnabled }}
+          bootloader:
+            efi:
+              secureBoot: {{ .Values.virtualMachine.features.secureBoot }}
+        {{ else }}
+          bootloader: {}
         {{- end }}
         devices:
           {{- with .Values.virtualMachine.gpus }}

@@ -3,6 +3,7 @@ apiVersion: pool.kubevirt.io/v1alpha1
 kind: VirtualMachinePool
 metadata:
   name: {{ .Values.virtualMachine.name }}
+  namespace: {{ .Values.virtualMachine.namespace }}
 spec:
   replicas: {{ .Values.virtualMachinePool.size }}
   selector:
@@ -58,7 +59,7 @@ spec:
             devices:
               {{- with .Values.virtualMachine.gpus }}
               gpus:
-                {{- toYaml . | nindent 10 }}
+              {{- toYaml . | nindent 14 }}
               {{- end }}
               autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
               autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}

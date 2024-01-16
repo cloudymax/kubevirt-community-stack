@@ -1,3 +1,4 @@
+{{ if .Values.virtualMachinePool.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -17,7 +18,7 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 50
+        averageUtilization: 75
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 300
@@ -26,7 +27,7 @@ spec:
         value: 100
         periodSeconds: 15
     scaleUp:
-      stabilizationWindowSeconds: 0
+      stabilizationWindowSeconds: 60
       policies:
       - type: Percent
         value: 100
@@ -34,5 +35,4 @@ spec:
       - type: Pods
         value: 4
         periodSeconds: 15
-        selectPolicy: Max 
-
+{{- end }}

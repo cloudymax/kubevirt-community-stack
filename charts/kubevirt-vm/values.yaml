@@ -5,7 +5,7 @@ virtualMachine:
   name: vm0
   
   # -- namespace to deploy
-  namespace: vm0
+  namespace: default
   
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
@@ -22,6 +22,9 @@ virtualMachine:
 
     # -- Enable EFI bios
     efiEnabled: true
+
+    # -- Enable Secure boot (Requires EFI)
+    secureBoot: false
     
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
@@ -37,7 +40,7 @@ virtualMachine:
     machineType: "q35"
     
     # -- Pass all CPU features and capabilities to Guest
-    cpuPassthrough: false
+    cpuPassthrough: true
     
     # -- Number of Virtual cores to pass to the Guest 
     vCores: 2
@@ -50,13 +53,13 @@ virtualMachine:
     hyperThreadingEnabled: false
     
     # -- Amount of RAM to pass to the Guest
-    memory: 2Gi
+    memory: 8Gi
   
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the 
     # kubevirt custom resource.
   gpus: []
   # - name: gpu0
-  #   deviceName: nvidia.com/GM200GL_Tesla_M40
+  # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
 
 #########################
 # Create a Virtual Machine Pool
@@ -64,7 +67,7 @@ virtualMachine:
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
   enabled: false
-  size: 1
+  size: 3
 
 #############################
 # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
@@ -271,6 +274,8 @@ cloudinit:
   # -- Perform apt package upgrade
   package_upgrade: false
   # -- apt packages to install
-  packages: []
+  packages: 
+    - ssh-import-id
   # -- commands to run in final step
-  runcmd: []
+  runcmd:
+    - sudo -u friend -i ssh-import-id-gh cloudymax
