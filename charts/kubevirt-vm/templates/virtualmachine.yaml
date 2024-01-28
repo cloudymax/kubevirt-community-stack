@@ -77,7 +77,7 @@ spec:
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
         resources:
-          limits:
+          requests:
             memory: {{ .Values.virtualMachine.machine.memory }}
       networks:
       - name: default
