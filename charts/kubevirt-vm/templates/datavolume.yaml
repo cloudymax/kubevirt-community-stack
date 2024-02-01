@@ -19,7 +19,7 @@ spec:
   source:
     {{- if eq "url" $props.source }}
     http:
-      certConfigMap: empty-cert
+      certConfigMap: {{ $.Values.virtualMachine.name }}-empty-cert
       url: {{ $props.url }}
     {{- end }}
     {{- if eq "pvc" $props.source }}
@@ -47,7 +47,8 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: empty-cert
+  name: {{ .Values.virtualMachine.name }}-empty-cert
+  namespace: {{ .Values.virtualMachine.namespace }}
 data:
   ca.pem: ""
 
