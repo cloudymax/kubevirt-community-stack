@@ -47,7 +47,20 @@ Kubevirt Charts (Work in Progress)
   
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines and vm-pools with Kubevirt via helm
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
+    ```bash
+    # Customize your own values.yaml before deploying
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm install kubevirt-cdi kubevirt/kubevirt-vm \
+      --file values.yaml  \
+      --create-namespace
+    ```
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/okd-dashboard">okd-dashboard</a>: Deploy the OpenShift Kubernetes Dashboard
-</p>
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
+    
+    ```bash
+    # Customize your own values.yaml before deploying
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm install kubevirt-cdi kubevirt/kubevirt-manager \
+      --file values.yaml  \
+      --create-namespace
+    ```
