@@ -104,7 +104,7 @@ disks:
   pvsize: 8G
   
   # -- Storage class to use for the pvc
-  pvstorageClass: local-path
+  pvstorageClassName: local-path
   
   # -- Node where the PVC will be hosted (optional) 
   # nodePlacement: bradley
@@ -141,7 +141,7 @@ disks:
 #  bootorder: 2
 #  readonly: false
 #  pvsize: 32G
-#  pvstorageClass: local-path
+#  pvstorageClassName: local-path
 #  nodePlacement: node0
 #  pvaccessMode: ReadWriteOnce
 #  source: pvc
@@ -157,7 +157,7 @@ disks:
 #  bootorder: 1
 #  readonly: true
 #  pvsize: 8G
-#  pvstorageClass: local-path
+#  pvstorageClassName: local-path
 #  nodePlacement: node0
 #  pvaccessMode: ReadWriteOnce
 #  source: "https://www.itechtics.com/?dl_id=173"
@@ -171,7 +171,7 @@ disks:
 #  bootorder: 2
 #  readonly: false
 #  pvsize: 32G
-#  pvstorageClass: local-path
+#  pvstorageClassName: local-path
 #  nodePlacement: node0
 #  pvaccessMode: ReadWriteOnce
 
@@ -237,7 +237,7 @@ service:
 
 # -- enable or disable usage of cloud-init
 cloudinitEnabled: true
-
+cloudinitFromSecret: true
 # -- Provide a path to an existing cloud-init file
 # will be genrated from values below if no file specified
 cloudinitPath:

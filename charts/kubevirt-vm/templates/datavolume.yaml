@@ -31,14 +31,14 @@ spec:
       name: {{ $props.pvcname }}
     {{- end }}
   pvc:
-    storageClass: {{ $props.pvstorageClass }}
+    storageClassName: {{ $props.pvstorageClassName }}
     accessModes: 
       - {{ $props.pvaccessMode }}
     resources:
       requests:
         storage: {{ $props.pvsize }}
   {{- else }}
-  storageClassName: {{ $props.pvstorageClass }}
+  storageClassName: {{ $props.pvstorageClassName }}
   accessModes: 
     - {{ $props.pvaccessMode }}
   resources:
