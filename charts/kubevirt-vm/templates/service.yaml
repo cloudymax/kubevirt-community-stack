@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $props.name }}
+  name: {{ $.Values.virtualMachine.name }}-{{ $props.name }}
   namespace: {{ $.Values.virtualMachine.namespace }}
 spec:
   externalTrafficPolicy: {{ $props.externalTrafficPolicy }}

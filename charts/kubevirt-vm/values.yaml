@@ -101,10 +101,13 @@ disks:
   readonly: false
   
   # -- Size of disk in GB
-  pvsize: 32G
+  pvsize: 8G
   
   # -- Storage class to use for the pvc
   pvstorageClass: local-path
+  
+  # -- Node where the PVC will be hosted (optional) 
+  # nodePlacement: bradley
   
   # -- Access mode for the PVC
   pvaccessMode: ReadWriteOnce
@@ -200,7 +203,7 @@ disks:
 service:
 #########################
 # NodePort Example
-- name: vm0-service
+- name: service
   type: NodePort
   externalTrafficPolicy: Cluster
   ports:
@@ -220,6 +223,10 @@ service:
 #  type: LoadBalancer
 #  externalTrafficPolicy: Cluster
 #  ports:
+#    - name: ssh
+#      port: 22
+#      targetPort: 22
+#      protocol: TCP
 #    - name: vnc
 #      port: 5900
 #      targetPort: 5900

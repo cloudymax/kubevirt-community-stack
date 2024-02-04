@@ -14,6 +14,9 @@ metadata:
   namespace: {{ $.Values.virtualMachine.namespace }}
   annotations:
     cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+    {{- if $props.nodePlacement }}
+    volume.kubernetes.io/selected-node: {{ $props.nodePlacement }}
+    {{- end }}
 spec:
   {{- if $props.source }}
   source:
@@ -28,12 +31,14 @@ spec:
       name: {{ $props.pvcname }}
     {{- end }}
   pvc:
+    storageClass: {{ $props.pvstorageClass }}
     accessModes: 
       - {{ $props.pvaccessMode }}
     resources:
       requests:
         storage: {{ $props.pvsize }}
   {{- else }}
+  storageClassName: {{ $props.pvstorageClass }}
   accessModes: 
     - {{ $props.pvaccessMode }}
   resources:
