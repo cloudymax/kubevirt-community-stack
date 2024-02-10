@@ -44,6 +44,7 @@ spec:
         - name: PULL_POLICY
           value: IfNotPresent
         - name: MONITORING_NAMESPACE
+          value: prometheus
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: cdi-operator
