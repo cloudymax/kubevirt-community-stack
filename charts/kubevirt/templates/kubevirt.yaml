@@ -6,6 +6,8 @@ metadata:
   namespace: kubevirt
 spec:
   certificateRotateStrategy: {}
+  monitorNamespace: {{ .Values.monitorNamespace }}
+  monitorAccount: {{ .Values.monitorAccount }}
   configuration:
     permittedHostDevices:
       {{- if .Values.permittedHostDevices.pciHostDevices }}

@@ -1,6 +1,6 @@
 # kubevirt
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Deploy Kebivirt on Kubernetes
 
@@ -34,7 +34,9 @@ Deploy Kebivirt on Kubernetes
 | image.repository | string | `"quay.io/kubevirt/virt-operator"` | container repository |
 | image.tag | string | `"v1.0.0"` | image tag, use this to set the version of kubevirt |
 | imagePullSecrets | list | `[]` |  |
-| mediatedDevicesTypes[0] | string | `"nvidia-436"` |  |
+| mediatedDevicesTypes | list | `[]` |  |
+| monitorAccount | string | `""` |  |
+| monitorNamespace | string | `""` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | permittedHostDevices.mediatedDevices | list | `[]` |  |

@@ -70,7 +70,10 @@ mediatedDevicesTypes: []
 permittedHostDevices:
   pciHostDevices: []
   mediatedDevices: []
-  
+
+monitorNamespace: ""
+monitorAccount: ""
+
 useEmulation: false
 
 featureGates:
