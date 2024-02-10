@@ -1,0 +1,23 @@
+{{ if eq .Values.prometheus.enabled true }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kubevirt-rules
+  namespace: {{ .Values.prometheus.serviceNamesapce }}
+  labels:
+    prometheus.kubevirt.io: "true"
+spec:
+  endpoints:
+  - honorLabels: true
+    port: metrics
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: true
+  jobLabel: prometheus.kubevirt.io
+  namespaceSelector:
+    matchNames:
+    - kubevirt
+  selector:
+    matchLabels:
+      prometheus.kubevirt.io: "true"
+{{- end }}
