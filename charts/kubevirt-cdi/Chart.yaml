@@ -3,7 +3,7 @@ name: kubevirt-cdi
 description: Install the Containerized Data Importer
 
 type: application
-version: 0.1.2
+version: 0.1.3
 appVersion: "v1.57.0"
 
 maintainers:
