@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -32,13 +32,14 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.write_files[0].path | string | `"/etc/apt/sources.list"` | Destination to write file on boot |
 | cloudinit.write_files[0].permissions | string | `"0644"` | Permissions to assign the file |
 | cloudinitEnabled | bool | `true` | enable or disable usage of cloud-init |
+| cloudinitFromSecret | bool | `true` |  |
 | cloudinitPath | string | `nil` | Provide a path to an existing cloud-init file will be genrated from values below if no file specified |
-| disks | list | `[{"bootorder":1,"bus":"sata","name":"cloudinitvolume","pv-enable":false,"readonly":true,"type":"cdrom"},{"bootorder":2,"bus":"virtio","name":"harddrive","pvaccessMode":"ReadWriteOnce","pvsize":"8G","pvstorageClass":"local-path","readonly":false,"source":"url","type":"disk","url":"https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
+| disks | list | `[{"bootorder":1,"bus":"sata","name":"cloudinitvolume","pv-enable":false,"readonly":true,"type":"cdrom"},{"bootorder":2,"bus":"virtio","name":"harddrive","pvaccessMode":"ReadWriteOnce","pvsize":"8G","pvstorageClassName":"local-path","readonly":false,"source":"url","type":"disk","url":"https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
 | disks[1].bootorder | int | `2` | Sets disk position in boot order, lower numbers are checked earlier |
 | disks[1].bus | string | `"virtio"` | Bus type: sata or virtio |
 | disks[1].pvaccessMode | string | `"ReadWriteOnce"` | Access mode for the PVC |
 | disks[1].pvsize | string | `"8G"` | Size of disk in GB |
-| disks[1].pvstorageClass | string | `"local-path"` | Storage class to use for the pvc |
+| disks[1].pvstorageClassName | string | `"local-path"` | Storage class to use for the pvc |
 | disks[1].readonly | bool | `false` | Set disk to be Read-only |
 | disks[1].source | string | `"url"` | source type of the disk image. One of `url`, `pvc` |
 | disks[1].type | string | `"disk"` | Disk type: disk, cdrom, filesystem, or lun |
