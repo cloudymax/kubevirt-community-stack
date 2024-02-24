@@ -51,14 +51,25 @@ disks:
   pvstorageClass: local-path
   pvaccessMode: ReadWriteOnce
   source: url
-  url: "https://f004.backblazeb2.com/file/buildstar-public-share/windows10.iso"
+  url: "https://f004.backblazeb2.com/file/buildstar-public-share/19041.1_PROFESSIONAL_X64_EN-US.ISO"
+
+- name: answers
+  type: cdrom
+  bus: sata
+  bootorder: 2
+  readonly: true
+  pvsize: 1G
+  pvstorageClass: local-path
+  pvaccessMode: ReadWriteOnce
+  source: url
+  url: "https://f004.backblazeb2.com/file/buildstar-public-share/config.iso"
 
 ##########################################################
 # Empty PVC as disk example
 ##########################################################
 - name: harddrive
   type: disk
-  bus: virtio
+  bus: sata
   bootorder: 2
   readonly: false
   pvsize: 16G
