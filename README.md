@@ -21,14 +21,14 @@ Kubevirt Charts
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
     ```bash
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt kubevirt/kubevirt
     ```
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
     ```bash
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-cdi kubevirt/kubevirt-cdi \
       --namespace cdi \
       --create-namespace
@@ -37,7 +37,7 @@ Kubevirt Charts
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Generate a standalone cloud-init configuration file for use with other tools.
 
     ```bash
-    git clone https://github.com/cloudymax/kubevirt-charts.git
+    git clone https://github.com/cloudymax/kubevirt-community-stack.git
     cd kubevirt-charts/charts/cloud-init
     helm template . -f values.yaml > cloud-init.yaml
     ```
@@ -46,7 +46,7 @@ Kubevirt Charts
 
     ```bash
     # Customize your own values.yaml before deploying
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-cdi kubevirt/kubevirt-vm \
       --file values.yaml  \
       --create-namespace
