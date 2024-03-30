@@ -1,6 +1,6 @@
 
 <h1 align=center>
-Kubevirt Charts
+Kubevirt Community Stack
 </h1>
 <p align="center">
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
