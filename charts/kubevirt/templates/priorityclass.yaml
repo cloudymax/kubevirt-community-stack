@@ -3,8 +3,10 @@ kind: PriorityClass
 metadata:
   name: kubevirt-cluster-critical
   annotations:
-    app.kubernetes.io/managed-by: "Helm"
-    meta.helm.sh/release-name: 
+    meta.helm.sh/release-name: {{ include "kubevirt.name" }}
+    meta.helm.sh/release-namespace: kubevirt
+  labels:
+    app.kubernetes.io/managed-by: Helm
 value: 1000000000
 globalDefault: false
 description: "This priority class should be used for core kubevirt components only."
