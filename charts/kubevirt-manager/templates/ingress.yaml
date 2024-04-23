@@ -1,4 +1,4 @@
-{{ if .Values.ingress.enabled }}
+{{- if eq .Values.ingress.enabled true }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -13,9 +13,12 @@ metadata:
 {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
+{{- if eq .Values.ingress.tls.enabled true }}
   tls:
    - hosts:
      - {{ .Values.ingress.hostname }}
+     secretName: {{ .Values.ingress.tls.secretName | quote }}
+{{- end }}
   rules:
   - host: {{ .Values.ingress.hostname }}
     http:
@@ -27,5 +30,4 @@ spec:
             name: kubevirt-manager
             port:
               number: {{ .Values.service.port }}
-
 {{- end }}
