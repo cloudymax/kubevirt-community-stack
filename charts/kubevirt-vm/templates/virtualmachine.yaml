@@ -69,6 +69,7 @@ spec:
               bus: {{ $props.bus }}
               readonly: {{ $props.readonly }}
             bootOrder: {{ $props.bootorder }}
+            errorPolicy: {{ $.Values.diskErrorPolicy }}
             {{- end }}
             {{- end }}
           interfaces:
