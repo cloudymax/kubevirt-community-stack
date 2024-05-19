@@ -1,7 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ include "kubevirt.name" }}
+    meta.helm.sh/release-namespace: kubevirt
   labels:
+    app.kubernetes.io/managed-by: Helm
     kubevirt.io: ""
   name: kubevirt-operator
 rules:

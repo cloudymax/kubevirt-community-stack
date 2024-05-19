@@ -1,6 +1,5 @@
-
 <h1 align=center>
-Kubevirt Charts
+Kubevirt Community Stack
 </h1>
 <p align="center">
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
@@ -22,7 +21,9 @@ Kubevirt Charts
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
-    helm install kubevirt kubevirt/kubevirt
+    
+    helm install kubevirt kubevirt/kubevirt \
+      -n kubevirt --crate-namespace
     ```
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
