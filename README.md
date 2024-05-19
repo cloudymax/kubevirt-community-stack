@@ -1,4 +1,3 @@
-
 <h1 align=center>
 Kubevirt Community Stack
 </h1>
