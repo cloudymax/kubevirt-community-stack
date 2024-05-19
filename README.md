@@ -8,7 +8,7 @@ Kubevirt Charts
 <p align=center>
   A Collection of Helm3 charts for use with Kubevirt
   <br>
-  <a href="https://cloudymax.github.io/kubevirt-charts/">cloudymax.github.io/kubevirt-charts</a>
+  <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
 </p>
 <br>
 
