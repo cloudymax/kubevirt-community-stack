@@ -138,7 +138,8 @@ service:
       targetPort: 48010
   
 # -- enable or disable usage of cloud-init
-cloudinitEnabled: false
+cloudinitEnabled: true
+cloudinitFromSecret: false
 
 # -- Provide a path to an existing cloud-init file
 # will be genrated from values below if no file specified
