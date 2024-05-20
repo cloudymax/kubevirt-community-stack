@@ -77,16 +77,16 @@ monitorAccount: ""
 useEmulation: false
 
 featureGates:
-  - ExpandDisks
-  - CPUManager
-  - GPU
-  - HostDevices
-  - VMExport
-  - HotplugVolumes
+#  - ExpandDisks
+#  - CPUManager
+#  - GPU
+#  - HostDevices
+#  - VMExport
+#  - HotplugVolumes
   - HostDisk
   - Macvtap
   - Passt
   - HotplugNICs
   - clientPassthrough
-  - Snapshot
+#  - Snapshot
   - CPUNodeDiscovery
