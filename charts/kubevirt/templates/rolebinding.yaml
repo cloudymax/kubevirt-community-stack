@@ -4,7 +4,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator-rolebinding
-  namespace: kubevirt
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
