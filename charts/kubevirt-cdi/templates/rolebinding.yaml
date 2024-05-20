@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/managed-by: cdi-operator
     cdi.kubevirt.io: ""
   name: cdi-operator
-  namespace: cdi
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

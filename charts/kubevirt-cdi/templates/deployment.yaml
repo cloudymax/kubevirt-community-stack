@@ -6,7 +6,6 @@ metadata:
     operator.cdi.kubevirt.io: ""
     prometheus.cdi.kubevirt.io: "true"
   name: cdi-operator
-  namespace: cdi
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
