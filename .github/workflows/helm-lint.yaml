@@ -50,7 +50,7 @@ jobs:
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --chart-dirs kubevirt --namespace kubevirt --target-branch ${{ github.event.repository.default_branch }}
+        run: ct install --charts kubevirt --namespace kubevirt --target-branch ${{ github.event.repository.default_branch }}
 
   kubevirtCDI:
     name: KubevirtCDI
@@ -98,5 +98,5 @@ jobs:
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --chart-dirs kubevirt-cdi --namespace cdi --target-branch ${{ github.event.repository.default_branch }}
+        run: ct install --charts kubevirt-cdi --namespace cdi --target-branch ${{ github.event.repository.default_branch }}
 
