@@ -6,7 +6,7 @@ Kubevirt Charts
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  A Collection of Helm3 charts for use with Kubevirt
+  A Collection of Helm3 charts for use with Kubevirt <br> (Work In Progress)
   <br>
   <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
 </p>
