@@ -47,10 +47,11 @@ jobs:
         id: install
         if: steps.list-changed.outputs.changed == 'true'
         run: |
+          kubecet create namespace kubevirt 
           ct install --charts charts/kubevirt \
             --namespace kubevirt \
             --target-branch ${{ github.event.repository.default_branch }} \
-            --helm-extra-args "--create-namespace"
+            
 
   kubevirtCDI:
     name: KubevirtCDI
@@ -91,14 +92,15 @@ jobs:
 
       - name: Test on k3s
         run: |
-          helm install kubevirt kubevirt/kubevirt --namespace kubevirt --create-namespace --wait
+          kubecet create namespace kubevirt 
+          helm install kubevirt kubevirt/kubevirt --namespace kubevirt --wait
 
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
         run: |
+          kubecet create namespace dci
           ct install --charts charts/kubevirt-cdi \
             --namespace cdi \
-            --target-branch ${{ github.event.repository.default_branch }} \
-            --helm-extra-args "--create-namespace"
+            --target-branch ${{ github.event.repository.default_branch }}
 
