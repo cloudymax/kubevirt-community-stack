@@ -93,7 +93,7 @@ jobs:
       - name: Test on k3s
         run: |
           kubectl create namespace kubevirt 
-          helm install kubevirt kubevirt/kubevirt --namespace kubevirt --wait
+          helm install kubevirt charts/kubevirt --namespace kubevirt --wait
 
       - name: Run chart-testing (install)
         id: install
