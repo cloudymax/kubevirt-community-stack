@@ -6237,7 +6237,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator
-  namespace: kubevirt
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -6245,7 +6244,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator
-  namespace: kubevirt
 rules:
 - apiGroups:
   - ""
@@ -6314,7 +6312,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator-rolebinding
-  namespace: kubevirt
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -6322,7 +6319,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubevirt-operator
-  namespace: kubevirt
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -7454,8 +7450,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubevirt-operator
-  namespace: kubevirt
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -7463,7 +7457,6 @@ metadata:
   labels:
     kubevirt.io: virt-operator
   name: virt-operator
-  namespace: kubevirt
 spec:
   replicas: 2
   selector:
