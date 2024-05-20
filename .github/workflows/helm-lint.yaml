@@ -47,6 +47,11 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Test on k3s
+        run: |
+          kubectl create namespace cdi
+          kubectl create namespace kubevirt
+
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
