@@ -15,6 +15,7 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+nameapace: kubevirt
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -77,16 +78,16 @@ monitorAccount: ""
 useEmulation: false
 
 featureGates:
-  - ExpandDisks
-  - CPUManager
-  - GPU
-  - HostDevices
-  - VMExport
-  - HotplugVolumes
   - HostDisk
   - Macvtap
   - Passt
   - HotplugNICs
   - clientPassthrough
-  - Snapshot
   - CPUNodeDiscovery
+#  - ExpandDisks
+#  - CPUManager
+#  - GPU
+#  - HostDevices
+#  - VMExport
+#  - HotplugVolumes
+#  - Snapshot

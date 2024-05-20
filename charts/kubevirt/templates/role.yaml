@@ -5,7 +5,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator
-  namespace: kubevirt
 rules:
 - apiGroups:
   - ""

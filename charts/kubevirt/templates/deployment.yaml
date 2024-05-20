@@ -4,7 +4,7 @@ metadata:
   labels:
     kubevirt.io: virt-operator
   name: virt-operator
-  namespace: kubevirt
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: 2
   selector:
