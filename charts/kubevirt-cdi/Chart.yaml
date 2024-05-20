@@ -5,6 +5,7 @@ description: Install the Containerized Data Importer
 type: application
 version: 0.1.4
 appVersion: "v1.57.0"
+icon: https://kubevirt.io/assets/images/KubeVirt_logo_color.svg
 
 maintainers:
   - name: "cloudymax"
