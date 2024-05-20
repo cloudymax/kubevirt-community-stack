@@ -1,4 +1,5 @@
 replicaCount: 1
+namespace: cdi
 
 image:
   repository: quay.io/kubevirt/cdi-operator

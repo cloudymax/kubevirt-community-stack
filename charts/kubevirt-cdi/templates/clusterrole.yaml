@@ -5,6 +5,7 @@ metadata:
   labels:
     operator.cdi.kubevirt.io: ""
   name: cdi-operator-cluster
+  namespace: {{ .Values.namespace }}
 rules:
 - apiGroups:
   - rbac.authorization.k8s.io

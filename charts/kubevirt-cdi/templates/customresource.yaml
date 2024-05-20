@@ -2,6 +2,7 @@ apiVersion: cdi.kubevirt.io/v1beta1
 kind: CDI
 metadata:
   name: cdi
+  namespace: {{ .Values.namespace }}
 spec:
   config:
     featureGates:
