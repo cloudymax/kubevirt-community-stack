@@ -7,4 +7,5 @@ metadata:
     pod-security.kubernetes.io/enforce: "privileged"
     app.kubernetes.io/managed-by: "Helm"
     meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Values.namespace }}
   name: kubevirt
