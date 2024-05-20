@@ -50,7 +50,7 @@ jobs:
           ct install --charts charts/kubevirt \
             --namespace kubevirt \
             --target-branch ${{ github.event.repository.default_branch }} \
-            --helm-extra-args "--create-namesapce"
+            --helm-extra-args "--create-namespace"
 
   kubevirtCDI:
     name: KubevirtCDI
@@ -91,7 +91,7 @@ jobs:
 
       - name: Test on k3s
         run: |
-          helm install kubevirt kubevirt/kubevirt --namespace kubevirt --create-namesapce --wait
+          helm install kubevirt kubevirt/kubevirt --namespace kubevirt --create-namespace --wait
 
       - name: Run chart-testing (install)
         id: install
@@ -100,5 +100,5 @@ jobs:
           ct install --charts charts/kubevirt-cdi \
             --namespace cdi \
             --target-branch ${{ github.event.repository.default_branch }} \
-            --helm-extra-args "--create-namesapce"
+            --helm-extra-args "--create-namespace"
 
