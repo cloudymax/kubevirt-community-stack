@@ -144,7 +144,7 @@ jobs:
       - name: Test on k3s
         run: |
           kubectl create namespace kubevirt
-          kubectl create namespace kubevirt-cdi
+          kubectl create namespace cdi
           helm install kubevirt charts/kubevirt --namespace kubevirt --wait
           helm install kubevirt charts/kubevirt-cdi --namespace cdi --wait
 
@@ -197,7 +197,7 @@ jobs:
       - name: Test on k3s
         run: |
           kubectl create namespace kubevirt
-          kubectl create namespace kubevirt-cdi
+          kubectl create namespace cdi
           helm install kubevirt charts/kubevirt --namespace kubevirt --wait
           helm install kubevirt charts/kubevirt-cdi --namespace cdi --wait
 
