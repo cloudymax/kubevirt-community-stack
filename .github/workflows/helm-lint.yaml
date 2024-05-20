@@ -48,7 +48,9 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           ct install --charts charts/kubevirt \
-            --namespace kubevirt --target-branch ${{ github.event.repository.default_branch }} --helm-extra-args '--create-namesapce'
+            --namespace kubevirt \
+            --target-branch ${{ github.event.repository.default_branch }} \
+            --helm-extra-args "--create-namesapce"
 
   kubevirtCDI:
     name: KubevirtCDI
@@ -98,5 +100,5 @@ jobs:
           ct install --charts charts/kubevirt-cdi \
             --namespace cdi \
             --target-branch ${{ github.event.repository.default_branch }} \
-            --helm-extra-args '--create-namesapce '
+            --helm-extra-args "--create-namesapce"
 
