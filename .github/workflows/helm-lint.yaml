@@ -6,8 +6,54 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  kubevirt:
+    name: Kubevirt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Add dependency chart repos
+        run: |
+          helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        id: lint
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+
+      - uses: debianmaster/actions-k3s@master
+        id: k3s
+        with:
+          version: 'latest'
+
+      - name: Test on k3s
+        run: |
+          kubectl create namespace kubevirt
+
+      - name: Run chart-testing (install)
+        id: install
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --chart-dirs charts/kubevirt --namespace kubevirt --target-branch ${{ github.event.repository.default_branch }}
+
+  kubevirtCDI:
+    name: KubevirtCDI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,8 +93,10 @@ jobs:
         run: |
           kubectl create namespace kubevirt
           kubectl create namespace cdi
+          helm install kubevirt kubevirt/kubevirt
 
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --all --target-branch ${{ github.event.repository.default_branch }}
+        run: ct install --chart-dirs charts/kubevirt-cdi --namespace cdi --target-branch ${{ github.event.repository.default_branch }}
+
