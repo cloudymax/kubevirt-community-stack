@@ -1,9 +1,6 @@
 name: Lint and Test Chart
 
-on:
-  pull_request:
-    paths:
-      - 'charts/*'
+on: pull_request
 
 permissions:
   contents: read
