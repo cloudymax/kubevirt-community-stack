@@ -3,8 +3,7 @@ name: Lint and Test Chart
 on:
   pull_request:
     paths:
-      - 'charts/kubevirt'
-      - 'charts/kubevirt-cdi'
+      - 'charts/*'
 
 permissions:
   contents: read
