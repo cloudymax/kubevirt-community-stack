@@ -46,6 +46,7 @@ jobs:
       - name: Test on k3s
         run: |
           kubectl create namespace kubevirt
+          kubectl create namespace cdi
 
       - name: Run chart-testing (install)
         id: install
