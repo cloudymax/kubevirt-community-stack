@@ -49,7 +49,8 @@ jobs:
         run: |
           ct install --charts charts/kubevirt \
             --namespace kubevirt \
-            --target-branch ${{ github.event.repository.default_branch }}
+            --target-branch ${{ github.event.repository.default_branch }} \
+            --helm-extra-args "--create-namespace"
 
   kubevirtCDI:
     name: KubevirtCDI
