@@ -21,6 +21,7 @@ jobs:
       - name: Add dependency chart repos
         run: |
           helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add cluster-api-operator https://kubernetes-sigs.github.io/cluster-api-operator
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
