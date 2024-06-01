@@ -23,6 +23,24 @@ entries:
   kubevirt:
   - apiVersion: v2
     appVersion: v1.2.0
+    created: "2024-06-01T11:37:00.614099537Z"
+    dependencies:
+    - condition: cluster-api-operator.enabled
+      name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: v0.10.1
+    description: Deploy Kebivirt on Kubernetes
+    digest: 2be8d030f7e43d23449aabb67a65c7521ec54dfef6388461d790eb2912eefe0a
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.3/kubevirt-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: v1.2.0
     created: "2024-05-31T16:50:02.837456934Z"
     dependencies:
     - condition: cluster-api-operator.enabled
@@ -563,4 +581,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2024-05-31T16:50:03.191915112Z"
+generated: "2024-06-01T11:37:00.614225953Z"
