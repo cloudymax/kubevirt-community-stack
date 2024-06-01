@@ -73,7 +73,7 @@ Kubevirt Charts
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
     helm install kubevirt-cdi kubevirt/kubevirt-manager \
-      --file values.yaml  \
+      --fnamespace kubevirt-manager \
       --create-namespace
     ```
 
