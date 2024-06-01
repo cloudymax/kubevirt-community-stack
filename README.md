@@ -32,14 +32,12 @@ Kubevirt Charts
     ```bash
     helm repo add capi-operator https://kubernetes-sigs.github.io/cluster-api-operator
     helm install capi-operator capi-operator/cluster-api-operator \
-      --set "image.manager.tag=main" \
       --set "core=cluster-api:v1.4.2" \
       --set "bootstrap=kubeadm:v1.4.2" \
       --set "controlPlane=kubeadm:v1.4.2" \
       --set "infrastructure:=kubevirt" \
       --create-namespace \
       -n capi-operator-system
-
     ```
     
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
