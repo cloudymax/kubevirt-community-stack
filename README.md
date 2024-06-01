@@ -22,7 +22,9 @@ Kubevirt Charts
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
-    helm install kubevirt kubevirt/kubevirt
+    helm install kubevirt kubevirt/kubevirt \
+      --namespace kubevirt \
+      --create-namespace
     ```
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
