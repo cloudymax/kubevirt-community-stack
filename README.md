@@ -13,7 +13,7 @@ Kubevirt Charts
 <br>
 
 <h2>
-  Charts
+  Install Charts via Helm
 </h2>
 
 <p>
