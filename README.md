@@ -162,6 +162,15 @@ Kubevirt is made up of several pieces:
         kubectl krew install virt
         ```
 
+3. clusterctl
+
+    The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
+   
+    ```bash
+    curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
+    sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
+    ```
+
 ## Uninstall
 
 In the event that Kubevirt does not uninstall gracefully, you may need to perform the following steps:
