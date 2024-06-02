@@ -1,12 +1,12 @@
 
 <h1 align=center>
-Kubevirt Charts
+Kubevirt Community Stack
 </h1>
 <p align="center">
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  A Collection of Helm3 charts for use with Kubevirt <br> (Work In Progress)
+  A Collection of community-developed Helm3 charts for use with Kubevirt <br> (Work In Progress)
   <br>
   <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
 </p>
@@ -99,6 +99,27 @@ Kubevirt is made up of several pieces:
       <img src="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72" alt="Screenshot showing the default page of Kubevirt-manager. The screen is devided into 2 sections. On the left, there is a vertical navigation tab with a grey background. The options in this bar are Dashboard, Virtual Machines, VM Pools, Auto Scaling, Nodes, Data Volumes, Instance Types, and Load Balancers.  On the right, there is a grid of blue rectangular icons each representing one of the option in the navigation tab, but with an icon and text representing metrics about that option." width=500>
   </a>
 </p>
+
+4. **Cluster API Operator + Kubevirt Provider**
+
+   [Cluster API](https://cluster-api.sigs.k8s.io/) provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The [Cluster API Operator](https://cluster-api-operator.sigs.k8s.io/) can be installed via Helm and configured to bootstrap the [Cluster API Kubevirt Provider](https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt) which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs.
+
+   Example:
+
+   ```bash
+   export CAPK_GUEST_K8S_VERSION="v1.23.10"
+   export CRI_PATH="/var/run/containerd/containerd.sock"
+   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
+   
+   clusterctl generate cluster capi-quickstart \
+   --infrastructure="kubevirt:v0.1.8" \
+   --flavor lb \
+   --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
+   --control-plane-machine-count=1 \
+   --worker-machine-count=1 > capi-quickstart.yaml
+
+   kubectl apply -f capi-quickstart.yaml
+   ```
 
 
 ## Utilities
