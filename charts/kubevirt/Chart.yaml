@@ -3,15 +3,11 @@ name: kubevirt
 description: Deploy Kebivirt on Kubernetes
 
 type: application
-version: 0.2.5
+version: 0.2.6
 appVersion: "v1.2.0"
 
 maintainers:
   - name: "cloudymax"
     url: "https://github.com/cloudymax/"
 
-dependencies:
-- name: cluster-api-operator
-  version: "v0.10.1"
-  repository: "https://kubernetes-sigs.github.io/cluster-api-operator"
-  condition: cluster-api-operator.enabled
+
