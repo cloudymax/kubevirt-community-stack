@@ -76,6 +76,7 @@ Kubevirt Community Stack
       --fnamespace kubevirt-manager \
       --create-namespace
     ```
+</p>
 
 # Components
 
