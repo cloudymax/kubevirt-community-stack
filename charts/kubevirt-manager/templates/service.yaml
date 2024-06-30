@@ -11,7 +11,7 @@ spec:
   selector:
     app: kubevirt-manager
   ports:
-    - name: {{ .Values.service.name }} 
+    - name: {{ .Values.service.name }}
       protocol: {{ .Values.service.protocol }}
       port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      targetPort: 8001
