@@ -23,6 +23,19 @@ entries:
   kubevirt:
   - apiVersion: v2
     appVersion: v1.2.0
+    created: "2024-06-30T11:36:30.689461541Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: def10822c22d668b7a6880b2361e78ead57650377998505a038ee857327b8536
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.7/kubevirt-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    appVersion: v1.2.0
     created: "2024-06-02T09:21:51.822856823Z"
     description: Deploy Kebivirt on Kubernetes
     digest: 7a9bd851d3b01f3af931fad9d31fc1cf55b86741e08b162e2719433c740b75b7
@@ -630,4 +643,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2024-06-02T09:21:51.82301002Z"
+generated: "2024-06-30T11:36:30.689853479Z"
