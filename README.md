@@ -17,7 +17,6 @@ Kubevirt Community Stack
 </h2>
 
 <p>
-
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
     ```bash
