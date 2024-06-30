@@ -253,6 +253,20 @@ entries:
   kubevirt-cdi:
   - apiVersion: v2
     appVersion: v1.59.0
+    created: "2024-06-30T13:13:23.177283496Z"
+    description: Install the Containerized Data Importer
+    digest: da31b53f33f0c2d3ce5e244adc6267821803cc16382d56a6a05e8c62f8008359
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.1.5/kubevirt-cdi-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: v1.59.0
     created: "2024-06-30T12:53:33.273098399Z"
     description: Install the Containerized Data Importer
     digest: 5785e1f70733f0d6815bde95c35aa327f7ecca75c1c4fc262761e2c630d59ed6
@@ -671,4 +685,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2024-06-30T12:53:33.273206351Z"
+generated: "2024-06-30T13:13:23.177400627Z"
