@@ -10,6 +10,6 @@ roleRef:
   kind: ClusterRole
   name: cdi-operator-cluster
 subjects:
-- kind: ServiceAccount
-  name: cdi-operator
-  namespace: cdi
+  - kind: ServiceAccount
+    name: cdi-operator
+    namespace: cdi
