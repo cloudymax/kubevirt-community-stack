@@ -3,11 +3,10 @@ replicaCount: 1
 service:
   type: ClusterIP
   port: 8080
-  targetPort: 80
   protocol: TCP
   name: http
 
-prometheus: 
+prometheus:
   enabled: false
   serviceName: "prometheus-prometheus"
   serviceNamesapce: "prometheus"
@@ -15,7 +14,7 @@ prometheus:
 ingress:
   enabled: false
   className: "nginx"
-  hostname: "kubevirt.domain.com"
+  hostname: "kubevirt.example.com"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
   tls:

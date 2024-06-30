@@ -1,6 +1,6 @@
 # kubevirt-manager
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.1](https://img.shields.io/badge/AppVersion-1.3.1-informational?style=flat-square)
+![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.3](https://img.shields.io/badge/AppVersion-1.3.3-informational?style=flat-square)
 
 Install the Kubevirt Manager UI
 
@@ -17,7 +17,7 @@ Install the Kubevirt Manager UI
 | ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-staging"` |  |
 | ingress.className | string | `"nginx"` |  |
 | ingress.enabled | bool | `false` |  |
-| ingress.hostname | string | `"kubevirt.domain.com"` |  |
+| ingress.hostname | string | `"kubevirt.example.com"` |  |
 | ingress.tls.enabled | bool | `false` |  |
 | ingress.tls.secretName | string | `"tls-kubevirt-manager"` |  |
 | prometheus.enabled | bool | `false` |  |
@@ -27,7 +27,6 @@ Install the Kubevirt Manager UI
 | service.name | string | `"http"` |  |
 | service.port | int | `8080` |  |
 | service.protocol | string | `"TCP"` |  |
-| service.targetPort | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 
 ----------------------------------------------
