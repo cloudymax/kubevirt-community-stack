@@ -195,4 +195,10 @@ kubectl delete validatingwebhookconfigurations virt-operator-validator
 kubectl delete validatingwebhookconfigurations virt-api-validator
 
 kubectl delete -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml --wait=false
+
+# Find hanging resources
+kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n kubevirt
+
+# If namespace is stuck
+kubectl get namespace "kubevirt" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
 ```
