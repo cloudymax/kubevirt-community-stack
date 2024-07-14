@@ -4,6 +4,9 @@ kind: VirtualMachinePool
 metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
+  labels:
+    kubevirt-manager.io/managed: "true"
+    kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
 spec:
   replicas: {{ .Values.virtualMachinePool.size }}
   selector:
@@ -11,6 +14,7 @@ spec:
       kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
       kubevirt.io/domain: {{ .Values.virtualMachine.name }}
       kubevirt-service: {{ .Values.virtualMachine.name }}
+      kubevirt-manager.io/managed: "true"
   virtualMachineTemplate:
     metadata:
       creationTimestamp: null
@@ -18,6 +22,7 @@ spec:
         kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
         kubevirt-service: {{ .Values.virtualMachine.name }}
+        kubevirt-manager.io/managed: "true"
     spec:
       running: true
       template:
@@ -27,6 +32,7 @@ spec:
             kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
             kubevirt.io/domain: {{ .Values.virtualMachine.name }}
             kubevirt-service: {{ .Values.virtualMachine.name }}
+            kubevirt-manager.io/managed: "true"
         spec:
           domain:
             features:
