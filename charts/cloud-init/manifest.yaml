@@ -1,0 +1,127 @@
+---
+# Source: cloud-init/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloud-init
+---
+# Source: cloud-init/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scrapmetal-userdata
+  namespace: kubevirt
+data:
+  user-data.yaml: |-
+    #cloud-config
+    hostname: scrapmetal
+    disable_root: false
+    network:
+      config: disabled
+    users:
+      - name: admin
+        groups: users, admin, docker, sudo, kvm
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        shell: /bin/bash
+        lock_passwd: false
+        ssh_import_id:
+          - gh:cloudymax
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUTNigmB9CbSE3WaTeqsEgJzkdftozwcpduuv1EXWFNFcdohARabubYw1Kz14sXg5wSz+MXMgo/XMBu+EtuF8zlEpYp9tuY5M9+X6i/vLilih0eVMFRZAx9Exj3Rwwn1Sjqk4iUxW9VaH1SS7MpWsO+qN4aGeXtkkSvkts2dLAGVIf2Hto/09+f8Pe8dKqnsNYk0rrKjBP2ZPPLcA1tc3bcYzK3/6OwOZaPOgD+bQiFnr2fSj+D8AtEnM2gpetmPhL2I+WNQnm90JH16+S899ZWvSM3cKwN9zkGq4SgFWwLfBP5z6yQRIVcxL9lMF3A0Dqc/qkzP30hUhunXT7oGGzo5U5yqrgjv/0RsAwwpCf7mCWreV/SrFpoPcoiZCiHd2xoiVhb4lArNtxqXlnCFHh+ZvtI0otAkf3hE7OzRxEZw04TXIePdiMi1LOXgU1++r7Qs0kEhP0bVCbnA4Rpev/11uYm9GeNl9WAwAlc9/tKu/6zWTO3/9jBNbADqm6qG8= friend
+    boot_cmd:
+      - mkdir -p /home/friend/.config/smol-k8s-lab
+    write_files:
+      - path: /etc/ssh/ssh_config
+        permissions: "0644"
+        url: "https://raw.githubusercontent.com/cloudymax/linux_notes/main/sshd_config"
+      - path: /tmp/test.yaml
+        permissions: "0644"
+        content: |-
+          foo: bar
+    package_update: true
+    package_upgrade: true
+    packages:
+      - wireguard
+      - openresolv
+      - ssh-import-id
+      - sudo
+      - curl
+      - tmux
+      - netplan.io
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - htop
+      - iotop
+      - git-extras
+      - rsyslog
+      - fail2ban
+      - gpg
+      - open-iscsi
+      - nfs-common
+      - ncdu
+      - nvtop
+      - linux-headers-generic
+      - gcc
+      - kmod
+      - make
+      - pkg-config
+      - libvulkan1
+    runcmd:
+      - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O
+        /usr/bin/yq &&\
+      - chmod +x /usr/bin/make
+      - sudo chown -R friend:friend /home/friend
+      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg]
+        https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+        > /dev/null
+      - sudo apt-get update
+      - sudo apt-get install -y docker-ce
+---
+# Source: cloud-init/templates/cluster-role-binding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cloud-init
+subjects:
+- kind: ServiceAccount
+  name: cloud-init
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: cloud-init/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: scrapmetal-cloud-init-job
+  namespace: kubevirt
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: cloud-init
+          image: jessebot/onboardme:debian12
+          env:
+          - name: ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: admin-password
+                key: password
+          command:
+            - /bin/sleep
+            - 3650d
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: userdata
+              mountPath: /secrets/user-data.yaml
+              subPath: user-data.yaml
+      volumes:
+        - name: userdata
+          configMap:
+            name: scrapmetal-userdata

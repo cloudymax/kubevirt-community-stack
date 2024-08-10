@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.hostname}}-userdata
+  namespace: {{ .Values.namespace }}
+data:
+  user-data.yaml: |-
+    #cloud-config
+    hostname: {{ .Values.hostname }}
+    disable_root: {{ .Values.disable_root }}
+    {{- with .Values.network }}
+    network:
+        {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.groups }}
+    groups:
+        {{- toYaml . | nindent 4 }}
+    {{- end }}
+    users:
+      {{- range $reg, $props := .Values.users }}
+      - name: {{ $props.name }}
+        groups: {{ $props.groups }}
+        sudo: {{ $props.sudo }}
+        shell: {{ $props.shell }}
+        lock_passwd: {{ $props.lock_passwd }}
+        {{- if $props.passwd }}
+        password:
+          random: true
+          existingSecret:
+            name: {{ $props.name }}-password
+            key: password
+        {{- end }}
+        {{- range $id := $props.ssh_import_id }}
+        ssh_import_id:
+          - {{ $id }}
+        {{- end }}
+        ssh_authorized_keys:
+        {{- range $key := $props.ssh_authorized_keys }}
+          - {{ $key }}
+        {{- end }}
+      {{- end }}
+    {{- with .Values.boot_cmd }}
+    boot_cmd:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    write_files:
+      {{- range $reg, $props := .Values.write_files }}
+      - path: {{ $props.path }}
+        permissions: {{ $props.permissions | quote }}
+      {{- if $props.url }}
+        url: {{ $props.url | quote }}
+      {{- end}}
+      {{- if $props.content }}
+        content: |-
+          {{ $props.content}}
+      {{- end }}
+      {{- end }}
+    package_update: {{ .Values.package_update }}
+    package_upgrade: {{ .Values.package_upgrade }}
+    {{- with .Values.packages }}
+    packages:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.runcmd }}
+    runcmd:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
