@@ -21,7 +21,7 @@ jobs:
         with:
           images: deserializeme/kv-cloud-init
           tags: |
-            "${{github.event.inputs.release_version}}"
+            ${{ github.event.inputs.tag }}
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
