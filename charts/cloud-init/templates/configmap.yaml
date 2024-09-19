@@ -23,12 +23,8 @@ data:
         sudo: {{ $props.sudo }}
         shell: {{ $props.shell }}
         lock_passwd: {{ $props.lock_passwd }}
-        {{- if $props.passwd }}
-        password:
-          random: true
-          existingSecret:
-            name: {{ $props.name }}-password
-            key: password
+        {{- if $props.password }}
+        passwd: ""
         {{- end }}
         {{- range $id := $props.ssh_import_id }}
         ssh_import_id:
