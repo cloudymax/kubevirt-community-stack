@@ -98,4 +98,3 @@ admin_password
 download_files
 validate
 create_secret
-log "Done."

@@ -12,7 +12,7 @@ spec:
       serviceAccountName: cloud-init
       containers:
         - name: cloud-init
-          image: deserializeme/kv-cloud-init:v0.0.0
+          image: {{ .Values.image }}
           env:
           - name: SECRET_NAME
             value: {{ .Values.secret_name }}

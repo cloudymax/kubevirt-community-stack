@@ -1,4 +1,5 @@
 secret_name: max-scrapmetal-user-data
+image: deserializeme/kv-cloud-init:v0.0.1
 hostname: scrapmetal
 namespace: kubevirt
 disable_root: false
