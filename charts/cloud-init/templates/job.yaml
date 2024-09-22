@@ -14,6 +14,8 @@ spec:
         - name: cloud-init
           image: deserializeme/kv-cloud-init:v0.0.0
           env:
+          - name: SECRET_NAME
+            value: {{ .Values.secret_name }}
  	  {{- range $reg, $props := .Values.users }}
           {{- if $props.password.existingSecret }}
           - name: {{ upper $props.name }}_PASSWORD
@@ -32,7 +34,7 @@ spec:
 	  {{- end }}
           {{- if .Values.envsubst }}
           - name: ENVSUBST
-            value: true
+            value: "true"
  	  {{- range $reg, $props := .Values.envsubst }}
           - name: {{ $props.var }}
             value: {{ $props.value }}
@@ -41,16 +43,19 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
           - |
-            export HASHED_PASSWORD=$(mkpasswd --method=SHA-512 --rounds=4096 $ADMIN_PASSWORD)
-            cat /secrets/user-data.yaml |yq '.users[0].passwd = env(HASHED_PASSWORD)' > user-data.yaml
-            kubectl create secret generic my-secret --from-file=user-data.yaml
             sleep 3650d
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: userdata
               mountPath: /secrets/user-data.yaml
               subPath: user-data.yaml
+            - name: optimizer-script
+              mountPath: /optimize.sh
+              subPath: optimize.sh
       volumes:
         - name: userdata
           configMap:
             name: {{ .Values.hostname }}-userdata
+        - name: optimizer-script
+          configMap:
+            name: optimizer-script

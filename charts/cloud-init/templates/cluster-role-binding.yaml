@@ -5,7 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cloud-init
-  namespace: default
+  namespace: {{ .Values.namespace }}
 roleRef:
   kind: ClusterRole
   name: cluster-admin

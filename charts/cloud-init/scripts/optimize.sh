@@ -16,12 +16,12 @@ log() {
     echo >&2 -e "[$(date +"%Y-%m-%d %H:%M:%S")] ${1-}"
 }
 
-export ADMIN_PASSWORD="password"
-export MAX_PASSWORD="password1"
-export USER_DATA_SECRET_PATH="./manifests.yaml"
-export USER_DATA_PATH="./user-data.yaml"
+#export ADMIN_PASSWORD="password"
+#export MAX_PASSWORD="password1"
+export USER_DATA_SECRET_PATH="/secrets/user-data.yaml"
+export USER_DATA_PATH="/user-data.yaml"
 export SALT="saltsaltlettuce"
-export ENVSUBST=true
+#export ENVSUBST=true
 
 # Run envsubst against the user-data file
 run_envsubst(){
@@ -85,6 +85,11 @@ validate(){
     log "$CONFIG_VALID"
 }
 
+create_secret(){
+    log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
+    kubectl create secret generic ${SECRET_NAME} --from-file="${USER_DATA_PATH}"
+}
+
 log "Starting Cloud-Init Optomizer"
 cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
 check_size
@@ -92,4 +97,5 @@ run_envsubst
 admin_password
 download_files
 validate
+create_secret
 log "Done."

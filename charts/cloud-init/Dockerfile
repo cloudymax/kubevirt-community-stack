@@ -12,7 +12,8 @@ RUN apt-get update \
     curl \
     apt-transport-https \
     ca-certificates \
-    gnupg
+    gnupg \
+    bc
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
