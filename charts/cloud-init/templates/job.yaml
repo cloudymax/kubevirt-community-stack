@@ -30,6 +30,14 @@ spec:
                 key: password
 	  {{- end }}
 	  {{- end }}
+          {{- if .Values.envsubst }}
+          - name: ENVSUBST
+            value: true
+ 	  {{- range $reg, $props := .Values.envsubst }}
+          - name: {{ $props.var }}
+            value: {{ $props.value }}
+	  {{- end }}
+          {{- end }}
           command: ["/bin/bash", "-c"]
           args:
           - |

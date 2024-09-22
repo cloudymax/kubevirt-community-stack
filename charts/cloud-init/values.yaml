@@ -20,9 +20,23 @@ users:
     lock_passwd: false
     password:
       random: "false"
-      externalSecret:
+      existingSecret:
         name: admin-password
         key: password
+    # Doesnt work on Debian
+    # run it in a cmd instead
+    ssh_import_id:
+      - gh:cloudymax
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUTNigmB9CbSE3WaTeqsEgJzkdftozwcpduuv1EXWFNFcdohARabubYw1Kz14sXg5wSz+MXMgo/XMBu+EtuF8zlEpYp9tuY5M9+X6i/vLilih0eVMFRZAx9Exj3Rwwn1Sjqk4iUxW9VaH1SS7MpWsO+qN4aGeXtkkSvkts2dLAGVIf2Hto/09+f8Pe8dKqnsNYk0rrKjBP2ZPPLcA1tc3bcYzK3/6OwOZaPOgD+bQiFnr2fSj+D8AtEnM2gpetmPhL2I+WNQnm90JH16+S899ZWvSM3cKwN9zkGq4SgFWwLfBP5z6yQRIVcxL9lMF3A0Dqc/qkzP30hUhunXT7oGGzo5U5yqrgjv/0RsAwwpCf7mCWreV/SrFpoPcoiZCiHd2xoiVhb4lArNtxqXlnCFHh+ZvtI0otAkf3hE7OzRxEZw04TXIePdiMi1LOXgU1++r7Qs0kEhP0bVCbnA4Rpev/11uYm9GeNl9WAwAlc9/tKu/6zWTO3/9jBNbADqm6qG8= friend
+  - name: ${USERNAME}
+    groups: users, admin, docker, sudo, kvm
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock_passwd: false
+    password:
+      random: "true"
+      existingSecret: []
     # Doesnt work on Debian
     # run it in a cmd instead
     ssh_import_id:
@@ -39,12 +53,25 @@ boot_cmd:
   - mkdir -p /home/friend/.config/smol-k8s-lab
 
 write_files:
-  apt-sources-list:
-    path: /etc/ssh/ssh_config
-    permissions: '0644'
-    url: https://raw.githubusercontent.com/cloudymax/linux_notes/main/sshd_config
-  test:
-    path: /tmp/test.yaml
+  - path: /etc/ssh/ssh_config
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
+  - path: /etc/apt/sources.list
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-apt-sources.list"
+  - path: /etc/default/keyboard
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-keyboard"
+  - path: /etc/gdm3/daemon.conf
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-gdm3-daemon.conf"
+  - path: /etc/default/locale
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-locale"
+  - path: /home/${USERNAME}/.config/systemd/user/sunshine.service
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/home-USERNAME-.config-systemd-user-sunshine.service"
+  - path: /tmp/test.yaml
     permissions: '0644'
     content: |-
       foo: bar
@@ -83,10 +110,12 @@ packages:
 runcmd:
   - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
   - chmod +x /usr/bin/make
-  - sudo chown -R friend:friend /home/friend
+  - sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   - sudo apt-get update
   - sudo apt-get install -y docker-ce
 
-
+envsubst:
+  - var: USERNAME
+    value: max

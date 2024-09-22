@@ -24,7 +24,7 @@ data:
         shell: {{ $props.shell }}
         lock_passwd: {{ $props.lock_passwd }}
         {{- if $props.password }}
-        passwd: ""
+        passwd:
         {{- end }}
         {{- range $id := $props.ssh_import_id }}
         ssh_import_id:
