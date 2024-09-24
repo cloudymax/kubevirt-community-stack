@@ -40,10 +40,7 @@ spec:
             value: {{ $props.value }}
 	  {{- end }}
           {{- end }}
-          command: ["/bin/bash", "-c"]
-          args:
-          - |
-            sleep 3650d
+          command: ["/bin/bash", "sleep 365d"]
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: userdata
@@ -52,6 +49,13 @@ spec:
             - name: optimizer-script
               mountPath: /optimize.sh
               subPath: optimize.sh
+            {{- if .Values.wireguard }}
+            {{- range $reg, $props := .Values.wireguard.interfaces }}
+            - name: {{ $props.name }}
+              mountPath: /secrets
+              readOnly: true
+            {{- end }}
+            {{- end }}
       volumes:
         - name: userdata
           configMap:
@@ -59,3 +63,13 @@ spec:
         - name: optimizer-script
           configMap:
             name: optimizer-script
+        {{- if .Values.wireguard }}
+        {{- range $reg, $props := .Values.wireguard.interfaces }}
+        - name: {{ $props.name }}
+          secret:
+            secretName: {{ $props.existingSecret.name }}
+            items:
+            - key: {{ $props.existingSecret.key }}
+              path: {{ $props.name }}.conf
+        {{- end }}
+        {{- end }}

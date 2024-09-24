@@ -10,8 +10,9 @@ network:
 wireguard:
   interfaces:
     - name: wg0
+      config_path: /etc/wireguard/wg0.conf
       existingSecret:
-        name: wg0-crednetials
+        name: wg0-credentials
         key: wg0.conf
 
 users:
@@ -21,20 +22,10 @@ users:
     shell: /bin/bash
     lock_passwd: false
     password:
-      random: "true"
-      existingSecret: []
-    ssh_import_id:
-      - gh:cloudymax
-    ssh_authorized_keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUTNigmB9CbSE3WaTeqsEgJzkdftozwcpduuv1EXWFNFcdohARabubYw1Kz14sXg5wSz+MXMgo/XMBu+EtuF8zlEpYp9tuY5M9+X6i/vLilih0eVMFRZAx9Exj3Rwwn1Sjqk4iUxW9VaH1SS7MpWsO+qN4aGeXtkkSvkts2dLAGVIf2Hto/09+f8Pe8dKqnsNYk0rrKjBP2ZPPLcA1tc3bcYzK3/6OwOZaPOgD+bQiFnr2fSj+D8AtEnM2gpetmPhL2I+WNQnm90JH16+S899ZWvSM3cKwN9zkGq4SgFWwLfBP5z6yQRIVcxL9lMF3A0Dqc/qkzP30hUhunXT7oGGzo5U5yqrgjv/0RsAwwpCf7mCWreV/SrFpoPcoiZCiHd2xoiVhb4lArNtxqXlnCFHh+ZvtI0otAkf3hE7OzRxEZw04TXIePdiMi1LOXgU1++r7Qs0kEhP0bVCbnA4Rpev/11uYm9GeNl9WAwAlc9/tKu/6zWTO3/9jBNbADqm6qG8= friend
-  - name: max
-    groups: users, admin, docker, sudo, kvm
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    shell: /bin/bash
-    lock_passwd: false
-    password:
-      random: "true"
-      existingSecret: []
+      random: "false"
+      existingSecret:
+        name: admin-password
+        key: password
     ssh_import_id:
       - gh:cloudymax
     ssh_authorized_keys:

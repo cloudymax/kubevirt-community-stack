@@ -61,3 +61,12 @@ data:
     runcmd:
       {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- if .Values.wireguard }}
+    wireguard:
+      interfaces:
+        {{- range $reg, $props := .Values.wireguard.interfaces }}
+        - name: {{ $props.name }}
+          config_path: {{ $props.config_path }}
+          content: ""
+        {{- end }}
+    {{- end }}

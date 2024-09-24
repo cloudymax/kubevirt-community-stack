@@ -16,12 +16,13 @@ log() {
     echo >&2 -e "[$(date +"%Y-%m-%d %H:%M:%S")] ${1-}"
 }
 
-#export ADMIN_PASSWORD="password"
-#export MAX_PASSWORD="password1"
-export USER_DATA_SECRET_PATH="/secrets/user-data.yaml"
-export USER_DATA_PATH="/user-data.yaml"
+export ADMIN_PASSWORD="password"
+export USER_DATA_SECRET_PATH="/home/friend/repos/kubevirt-community-stack/charts/cloud-init/manifests.yaml"
+export USER_DATA_PATH="user-data.yaml"
 export SALT="saltsaltlettuce"
-#export ENVSUBST=true
+export ENVSUBST=true
+export SECRET_NAME="my-secret"
+export USER_NAME="max"
 
 # Run envsubst against the user-data file
 run_envsubst(){
@@ -52,7 +53,7 @@ admin_password(){
 
 # Download, gzip, then b64 encode files from specified URLs
 download_files(){
-    read -ra urls <<< $(yq '.write_files[].url' user-data.yaml |xargs)
+    read -ra urls <<< $(yq '.write_files[].url' "${USER_DATA_PATH}" |xargs)
     export COUNT=0
 
     for url in "${urls[@]}"; do
@@ -64,6 +65,18 @@ download_files(){
             yq -i 'del(.write_files[env(COUNT)].url)' $USER_DATA_PATH
             check_size
             export COUNT=$(($COUNT + 1))
+        fi
+    done
+}
+
+# Add wireguard configs from secrets
+wireguard(){
+    read -ra interfaces <<< $(yq '.wireguard.interfaces[].name' "${USER_DATA_PATH}" |xargs)
+
+    for interface in "${interfaces[@]}"; do
+        if [ "${interface}" != "null" ]; then
+            log "Adding wireguard interface ${interface}\n"
+
         fi
     done
 }
@@ -94,6 +107,7 @@ log "Starting Cloud-Init Optomizer"
 cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
 check_size
 run_envsubst
+wireguard
 admin_password
 download_files
 validate
