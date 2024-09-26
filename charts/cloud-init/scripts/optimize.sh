@@ -1,7 +1,6 @@
 #!/bin/bash
-set -Eeuo pipefail
 
-trap - SIGINT SIGTERM ERR EXIT
+trap - SIGIGNT SIGTERM ERR EXIT
 [[ ! -x "$(command -v date)" ]] && echo "💥 date command not found." && exit 1
 [[ ! -x "$(command -v bc)" ]] && echo "💥 bc command not found." && exit 1
 [[ ! -x "$(command -v mkpasswd)" ]] && echo "💥 gettext-base command not found." && exit 1
@@ -22,7 +21,8 @@ export USER_DATA_PATH="user-data.yaml"
 export SALT="saltsaltlettuce"
 export ENVSUBST=true
 export SECRET_NAME="my-secret"
-export USER_NAME="max"
+export USERNAME="max"
+export WIREGUARD_PATH="wg0.conf"
 
 # Run envsubst against the user-data file
 run_envsubst(){
@@ -46,8 +46,8 @@ admin_password(){
             PASSWORD=$(env |grep "${CAP_USER}_PASSWORD" |cut -d '=' -f2)
             export HASHED_PASSWORD=$(mkpasswd --method=SHA-512 --rounds=4096 "${PASSWORD}" -s "${SALT}")
             yq -i '.users[env(COUNT)].passwd = env(HASHED_PASSWORD)' $USER_DATA_PATH
-            export COUNT=$(($COUNT + 1))
         fi
+        export COUNT=$(($COUNT + 1))
     done
 }
 
@@ -64,20 +64,8 @@ download_files(){
             yq -i '.write_files[env(COUNT)].encoding = "gz+b64"' $USER_DATA_PATH
             yq -i 'del(.write_files[env(COUNT)].url)' $USER_DATA_PATH
             check_size
-            export COUNT=$(($COUNT + 1))
         fi
-    done
-}
-
-# Add wireguard configs from secrets
-wireguard(){
-    read -ra interfaces <<< $(yq '.wireguard.interfaces[].name' "${USER_DATA_PATH}" |xargs)
-
-    for interface in "${interfaces[@]}"; do
-        if [ "${interface}" != "null" ]; then
-            log "Adding wireguard interface ${interface}\n"
-
-        fi
+        export COUNT=$(($COUNT + 1))
     done
 }
 
@@ -103,12 +91,32 @@ create_secret(){
     kubectl create secret generic ${SECRET_NAME} --from-file="${USER_DATA_PATH}"
 }
 
-log "Starting Cloud-Init Optomizer"
-cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
-check_size
-run_envsubst
-wireguard
-admin_password
-download_files
-validate
-create_secret
+# Add wireguard configs from secrets
+wireguard(){
+    read -ra interfaces <<< $(yq '.wireguard.interfaces[].name' "${USER_DATA_PATH}" |xargs)
+    export COUNT=0
+
+    for interface in "${interfaces[@]}"; do
+        if [ "${interface}" != "null" ]; then
+            log "Adding wireguard interface ${interface}\n"
+            IFS= read -rd '' output < <(/bin/cat "${interface}".conf)
+            output=$output yq -i '.wireguard.interfaces[env(COUNT)].content = strenv(output)' $USER_DATA_PATH
+            #yq e '.wireguard.interfaces[env(COUNT)].content |= strenv(output)' $USER_DATA_PATH
+        fi
+        export COUNT=$(($COUNT + 1))
+    done
+}
+
+main(){
+    log "Starting Cloud-Init Optomizer"
+    cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
+    #check_size
+    run_envsubst
+    wireguard
+    #admin_password
+    #download_files
+    #validate
+    #create_secret
+}
+
+main $@

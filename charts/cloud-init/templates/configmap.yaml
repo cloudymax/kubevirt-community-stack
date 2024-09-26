@@ -67,6 +67,5 @@ data:
         {{- range $reg, $props := .Values.wireguard.interfaces }}
         - name: {{ $props.name }}
           config_path: {{ $props.config_path }}
-          content: ""
         {{- end }}
     {{- end }}
