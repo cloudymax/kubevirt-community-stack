@@ -101,7 +101,6 @@ wireguard(){
             log "Adding wireguard interface ${interface}\n"
             IFS= read -rd '' output < <(/bin/cat "${interface}".conf)
             output=$output yq -i '.wireguard.interfaces[env(COUNT)].content = strenv(output)' $USER_DATA_PATH
-            #yq e '.wireguard.interfaces[env(COUNT)].content |= strenv(output)' $USER_DATA_PATH
         fi
         export COUNT=$(($COUNT + 1))
     done
@@ -110,12 +109,12 @@ wireguard(){
 main(){
     log "Starting Cloud-Init Optomizer"
     cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
-    #check_size
+    check_size
     run_envsubst
     wireguard
-    #admin_password
-    #download_files
-    #validate
+    admin_password
+    download_files
+    validate
     #create_secret
 }
 

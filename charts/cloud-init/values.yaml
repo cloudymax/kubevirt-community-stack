@@ -1,12 +1,29 @@
+# Not all cloud-init modules are currently supported
+# https://cloudinit.readthedocs.io/en/latest/reference/modules.html
+
+# -- name of secret in which to save the user-data file
 secret_name: max-scrapmetal-user-data
+
+# -- image version
 image: deserializeme/kv-cloud-init:v0.0.1
+
+# -- virtual-machine hostname
 hostname: scrapmetal
+
+# -- namespace in which to create resources
 namespace: kubevirt
+
+# Disable root login over ssh
 disable_root: false
 
+# -- networking options
 network:
+  # --  disable cloud-init’s network configuration capability and rely on
+  # other methods such as embedded configuration or other customisations.
   config: disabled
 
+# -- add wireguard configuration from existing secret or as plain-text
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard
 wireguard:
   interfaces:
     - name: wg0
@@ -15,30 +32,45 @@ wireguard:
         name: wg0-credentials
         key: wg0.conf
 
+# -- user configuration options
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
 users:
   - name: admin
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     lock_passwd: false
+
+    # -- set user password from existing secret or generate random
     password:
       random: "false"
       existingSecret:
         name: admin-password
         key: password
+
+    # -- import user ssh public keys from github, gitlab, or launchpad
+    # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
     ssh_import_id:
       - gh:cloudymax
+    # -- provider user ssh pub key as plaintext
     ssh_authorized_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUTNigmB9CbSE3WaTeqsEgJzkdftozwcpduuv1EXWFNFcdohARabubYw1Kz14sXg5wSz+MXMgo/XMBu+EtuF8zlEpYp9tuY5M9+X6i/vLilih0eVMFRZAx9Exj3Rwwn1Sjqk4iUxW9VaH1SS7MpWsO+qN4aGeXtkkSvkts2dLAGVIf2Hto/09+f8Pe8dKqnsNYk0rrKjBP2ZPPLcA1tc3bcYzK3/6OwOZaPOgD+bQiFnr2fSj+D8AtEnM2gpetmPhL2I+WNQnm90JH16+S899ZWvSM3cKwN9zkGq4SgFWwLfBP5z6yQRIVcxL9lMF3A0Dqc/qkzP30hUhunXT7oGGzo5U5yqrgjv/0RsAwwpCf7mCWreV/SrFpoPcoiZCiHd2xoiVhb4lArNtxqXlnCFHh+ZvtI0otAkf3hE7OzRxEZw04TXIePdiMi1LOXgU1++r7Qs0kEhP0bVCbnA4Rpev/11uYm9GeNl9WAwAlc9/tKu/6zWTO3/9jBNbADqm6qG8= friend
 
+# -- Add CA certificates
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates
 ca_certs: []
 #  remove_defaults: true
 #  trusted:
 #    - certificate
 
+# -- Run arbitrary commands early in the boot process
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd
 boot_cmd:
   - mkdir -p /home/friend/.config/smol-k8s-lab
 
+# -- Write arbitrary files to disk.
+# Files my be provided as plain-text or downloaded from a url
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
 write_files:
   - path: /etc/ssh/ssh_config
     permissions: "0644"
@@ -63,9 +95,11 @@ write_files:
     content: |-
       foo: bar
 
+# -- Update, upgrade, and install packages
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
+package_reboot_if_required: true
 package_update: true
 package_upgrade: true
-
 packages:
   - wireguard
   - openresolv
@@ -94,6 +128,8 @@ packages:
   - pkg-config
   - libvulkan1
 
+# -- Run arbitrary commands
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
 runcmd:
   - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
   - chmod +x /usr/bin/make
@@ -103,6 +139,8 @@ runcmd:
   - sudo apt-get update
   - sudo apt-get install -y docker-ce
 
+# -- Run envsubst against the cloud-init file at the beginning of templating
+# Not an official part of cloid-init
 envsubst:
   - var: USERNAME
     value: max
