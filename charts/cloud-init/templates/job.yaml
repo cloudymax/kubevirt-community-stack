@@ -16,6 +16,12 @@ spec:
           env:
           - name: SECRET_NAME
             value: {{ .Values.secret_name }}
+          - name: USER_DATA_SECRET_PATH
+            value: /secrets/user-data.yaml
+          - name: USER_DATA_PATH
+            value: /user-data.yaml
+          - name: SALT
+            value: {{ .Values.salt }}
  	  {{- range $reg, $props := .Values.users }}
           {{- if $props.password.existingSecret }}
           - name: {{ upper $props.name }}_PASSWORD
@@ -40,7 +46,11 @@ spec:
             value: {{ $props.value }}
 	  {{- end }}
           {{- end }}
-          command: ["/bin/bash", "sleep 365d"]
+          {{- if .Values.debug }}
+          command: ["/bin/sleep", "365d"]
+          {{- else }}
+          command: ["/bin/bash", "/optimize.sh"]
+          {{- end }}
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: userdata

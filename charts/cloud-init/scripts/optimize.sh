@@ -15,14 +15,13 @@ log() {
     echo >&2 -e "[$(date +"%Y-%m-%d %H:%M:%S")] ${1-}"
 }
 
-export ADMIN_PASSWORD="password"
-export USER_DATA_SECRET_PATH="/home/friend/repos/kubevirt-community-stack/charts/cloud-init/manifests.yaml"
-export USER_DATA_PATH="user-data.yaml"
-export SALT="saltsaltlettuce"
-export ENVSUBST=true
-export SECRET_NAME="my-secret"
-export USERNAME="max"
-export WIREGUARD_PATH="wg0.conf"
+#export USER_DATA_SECRET_PATH="/home/friend/repos/kubevirt-community-stack/charts/cloud-init/manifests.yaml"
+#export USER_DATA_PATH="user-data.yaml"
+#export SALT="saltsaltlettuce"
+#export ENVSUBST=true
+#export SECRET_NAME="my-secret"
+#export USERNAME="max"
+#export WIREGUARD_PATH="wg0.conf"
 
 # Run envsubst against the user-data file
 run_envsubst(){
@@ -115,7 +114,7 @@ main(){
     admin_password
     download_files
     validate
-    #create_secret
+    create_secret
 }
 
 main $@

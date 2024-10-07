@@ -30,8 +30,8 @@ data:
         ssh_import_id:
           - {{ $id }}
         {{- end }}
-        ssh_authorized_keys:
         {{- range $key := $props.ssh_authorized_keys }}
+        ssh_authorized_keys:
           - {{ $key }}
         {{- end }}
       {{- end }}
@@ -39,8 +39,8 @@ data:
     boot_cmd:
       {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- range $reg, $props := .Values.write_files }}
     write_files:
-      {{- range $reg, $props := .Values.write_files }}
       - path: {{ $props.path }}
         permissions: {{ $props.permissions | quote }}
       {{- if $props.url }}
@@ -51,6 +51,7 @@ data:
           {{ $props.content}}
       {{- end }}
       {{- end }}
+    package_reboot_if_required: {{ .Values.package_reboot_if_required }}
     package_update: {{ .Values.package_update }}
     package_upgrade: {{ .Values.package_upgrade }}
     {{- with .Values.packages }}
