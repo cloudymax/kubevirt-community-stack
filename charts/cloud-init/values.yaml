@@ -1,93 +1,105 @@
+# Not all cloud-init modules are currently supported
+# https://cloudinit.readthedocs.io/en/latest/reference/modules.html
+
+# -- name of secret in which to save the user-data file
+secret_name: admin-scrapmetal-user-data
+
+# -- image version
+image: deserializeme/kv-cloud-init:v0.0.1
+
+# -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
+# Not an official part of cloid-init
+envsubst:
+  - var: USERNAME
+    value: admin
+
+# -- virtual-machine hostname
 hostname: scrapmetal
+
+# -- namespace in which to create resources
+namespace: kubevirt
+
+# -- Disable root login over ssh
 disable_root: false
 
+debug: false
+
+# -- salt used for password generation
+salt: "saltsaltlettuce"
+
+# -- networking options
 network:
+  # --  disable cloud-init’s network configuration capability and rely on
+  # other methods such as embedded configuration or other customisations.
   config: disabled
 
+# -- add wireguard configuration from existing secret or as plain-text
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard
 wireguard: []
-  #interfaces:
-  #  - name: wg0
-  #    config_path: /etc/wireguard/wg0.conf
-  #    content: |
-  #      [Interface]
-  #      PrivateKey = <private_key>
-  #      Address = <address>
-  #      [Peer]
-  #      PublicKey = <public_key>
-  #      Endpoint = <endpoint_ip>:<endpoint_ip_port>
-  #      AllowedIPs = <allowedip1>, <allowedip2>, ...
+#  interfaces:
+#    - name: wg0
+#      config_path: /etc/wireguard/wg0.conf
+#      existingSecret:
+#        name: wg0-credentials
+#        key: wg0.conf
 
+# -- user configuration options
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
 users:
   - name: admin
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-  #  lock_passwd: false
-  #  passwd: ${PASSWORD}
-  #  ssh_import_id:
-  #    - gh:cloudymax
+    lock_passwd: false
 
+    # -- set user password from existing secret or generate random
+    password:
+      random: true
+    #  random: false
+    #  existingSecret:
+    #    name: admin-password
+    #    key: password
+
+    # -- import user ssh public keys from github, gitlab, or launchpad
+    # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
+    ssh_import_id: []
+
+    # -- provider user ssh pub key as plaintext
+    ssh_authorized_keys: []
+
+# -- Add CA certificates
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates
 ca_certs: []
 #  remove_defaults: true
 #  trusted:
 #    - certificate
 
+# -- Run arbitrary commands early in the boot process
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd
 boot_cmd: []
-  #- mkdir -p /home/friend/.config/smol-k8s-lab
 
-write_as_b64: false
-write_files:
-  #netplan:
-  #  path: /etc/netplan/99-cloud-init.yaml
-  #  permissions: '0644'
-  #  content: netplan.yaml
-  #smol-k8s-config:
-  #  path: /home/friend/.config/smol-k8s-lab/config.yaml
-  #  permissions: '0644'
-  #  content: config.yaml
-  apt-sources-list:
-    path: /etc/apt/sources.list
-    permissions: '0644'
-    content: apt-sources.list
+# -- Write arbitrary files to disk.
+# Files my be provided as plain-text or downloaded from a url
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
+write_files: {}
+#  - path: /etc/ssh/ssh_config
+#    permissions: "0644"
+#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
+#  - path: /tmp/test.yaml
+#    permissions: '0644'
+#    content: |-
+#      foo: bar
 
+# -- Update, upgrade, and install packages
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
+package_reboot_if_required: true
 package_update: true
 package_upgrade: true
-
 packages: []
-#  - wireguard
-#  - openresolv
-#  - ssh-import-id
-#  - sudo
-#  - curl
-#  - tmux
-#  - netplan.io
-#  - apt-transport-https
-#  - ca-certificates
-#  - software-properties-common
-#  - htop
-#  - iotop
-#  - git-extras
-#  - rsyslog
-#  - fail2ban
-#  - gpg
-#  - open-iscsi
-#  - nfs-common
-#  - ncdu
-#  - nvtop
-#  - linux-headers-generic
-#  - gcc
-#  - kmod
-#  - make
-#  - pkg-config
-#  - libvulkan1
+#  - neovim
 
-runcmd: []
-#  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
-#  - chmod +x /usr/bin/make
-#  - sudo chown -R friend:friend /home/friend
-#  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-#  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-#  - sudo apt-get update 
-#  - sudo apt-get install -y docker-ce
-
-
+# -- Run arbitrary commands
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
+runcmd:
+  - mkdir -p /home/${USERNAME}/shared
+  - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
