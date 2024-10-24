@@ -49,12 +49,11 @@ Kubevirt Community Stack
       --create-namespace
     ```
     
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Generate a standalone cloud-init configuration file for use with other tools.
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Create an optimized cloud-init user-data file as a kubernetes secret. Adds additional functionality for `wireguard`, `write_files`, and `password` modules. 
 
     ```bash
-    git clone https://github.com/cloudymax/kubevirt-community-stack.git
-    cd kubevirt-charts/charts/cloud-init
-    helm template . -f values.yaml > cloud-init.yaml
+    helm repo add cloudinit https://cloudymax.github.io/kubevirt-community-stack
+    helm install <username>-<hostname> cloudinit/cloud-init
     ```
   
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines and vm-pools with Kubevirt via helm
