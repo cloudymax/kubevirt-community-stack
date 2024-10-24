@@ -4,6 +4,12 @@
 
 A Helm chart that generates cloud-init config files
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| cloudymax |  |  |
+
 ## Values
 
 | Key | Type | Default | Description |

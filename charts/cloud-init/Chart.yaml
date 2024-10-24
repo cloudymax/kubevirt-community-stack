@@ -3,3 +3,5 @@ name: cloud-init
 description: A Helm chart that generates cloud-init config files
 type: application
 version: 0.2.0
+maintainers:
+  - name: cloudymax
