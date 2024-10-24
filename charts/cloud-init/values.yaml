@@ -103,5 +103,3 @@ packages: []
 runcmd:
   - mkdir -p /home/${USERNAME}/shared
   - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
-
-
