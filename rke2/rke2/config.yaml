@@ -1,0 +1,29 @@
+---
+write-kubeconfig-mode: "0600"
+node-label: []
+cni:
+  - cilium
+disable:
+  - rke2-canal
+# Disable rke2 bundled nginx
+# fails with: docker invalid tar header: unknown
+  - rke2-ingress-nginx
+
+# Internal Network IP
+node-ip: 192.168.2.66
+
+# VPN IP Address
+node-external-ip: 10.1.0.248
+
+# Required for l2 IP Announcement
+disable-kube-proxy: true
+
+node-label:
+- ingress-ready=true
+
+kubelet-arg:
+- max_pods=150
+- node-ip=192.168.2.66
+- cpuManagerPolicy=static
+- kube-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
+- system-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
