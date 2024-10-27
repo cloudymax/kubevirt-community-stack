@@ -1,12 +1,14 @@
+{{- if eq .Values.serviceAccount.create true}}
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cloud-init
 subjects:
 - kind: ServiceAccount
-  name: cloud-init
+  name: {{ .Values.serviceAccount.name}}
   namespace: {{ .Values.namespace }}
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: secret-admin
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

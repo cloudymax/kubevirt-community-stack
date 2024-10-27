@@ -20,7 +20,7 @@ spec:
       domain:
         features:
           {{- if .Values.virtualMachine.features.kvmEnabled -}}
-          {{ "kvm: {}" | nindent 10 }} 
+          {{ "kvm: {}" | nindent 10 }}
           {{- end }}
           {{- if .Values.virtualMachine.features.acpiEnabled -}}
           {{ "acpi: {}" | nindent 10 }}
@@ -41,7 +41,7 @@ spec:
           {{- "threads: 1" | nindent 10 -}}
           {{- end }}
           dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
-        firmware:  
+        firmware:
         {{- if .Values.virtualMachine.features.efiEnabled }}
           bootloader:
             efi:
@@ -63,7 +63,7 @@ spec:
             name: tablet1
           disks:
             {{- range $reg, $props := .Values.disks }}
-            {{- if ne "hostDisk" $props.type }} 
+            {{- if ne "hostDisk" $props.type }}
           - name: {{ $props.name }}
             {{ $props.type }}:
               bus: {{ $props.bus }}
@@ -115,78 +115,10 @@ spec:
               claimName: {{ $props.pvc }}
         {{- end }}
         {{- end }}
-        {{- if eq .Values.cloudinitEnabled true }}
+        {{- if eq .Values.cloudinit.enabled true }}
         - name: cloudinitvolume
           cloudInitNoCloud:
-        {{- if eq .Values.cloudinitFromSecret true }}
             secretRef:
-              name: {{ .Values.virtualMachine.name }}-cloudinit-secret
-        {{ else }}
-            userData: |
-              {{- if .Values.cloudinitPath }}
-              {{- $.Files.Get .Values.cloudinitPath | trim | nindent 14 }}
-              {{- else }}
-              #cloud-config
-              hostname: {{ .Values.cloudinit.hostname }}
-              disable_root: {{ .Values.cloudinit.disable_root }}
-              {{- with .Values.cloudinit.network }}
-              network:
-                  {{- toYaml . | nindent 16 }}
-              {{- end }}
-              {{- with .Values.cloudinit.groups }}
-              groups:
-                  {{- toYaml . | nindent 16 }}
-              {{- end }}
-              users: 
-                {{- range $reg, $props := .Values.cloudinit.users }}
-                - name: {{ $props.name }}
-                  groups: {{ $props.groups }}
-                  sudo: {{ $props.sudo }}
-                  shell: {{ $props.shell }}
-                  lock_passwd: {{ $props.lock_passwd }}
-                  {{- if $props.passwd }}
-                  passwd: {{ $props.passwd | quote }}
-                  {{- end }}
-                  {{- if $props.ssh_import_id }}
-                  ssh_import_id: 
-                    - {{ $props.ssh_import_id }}
-                  {{- end }}
-                  {{- if $props.ssh_authorized_keys }}
-                  ssh_authorized_keys: 
-                    - {{ $props.ssh_authorized_keys }}
-                  {{- end }}
-                {{- end }}
-              {{- with .Values.cloudinit.boot_cmd }}
-              boot_cmd:
-                  {{- toYaml . | nindent 16 }}
-              {{- end }}
-              write_files:
-                {{- if .Values.cloudinit.write_as_b64 }}
-                {{- range $reg, $props := .Values.cloudinit.write_files }}
-              - path: {{ $props.path }}
-                permissions: {{ $props.permissions | quote }}
-                content: |
-                {{- $.Files.Get $props.content | trim |b64enc | nindent 18 }}
-                {{- end }}
-                {{- else }}
-                {{- range $reg, $props := .Values.cloudinit.write_files }}
-              - path: {{ $props.path }}
-                permissions: {{ $props.permissions | quote }}
-                content: |
-                {{- $.Files.Get $props.content | trim |nindent 18 }}
-                {{- end }}
-              {{- end }}
-              package_update: {{ .Values.cloudinit.package_update }}
-              package_upgrade: {{ .Values.cloudinit.package_upgrade }}
-              {{- with .Values.cloudinit.packages }}
-              packages:
-                  {{- toYaml . | nindent 16 }}
-              {{- end }}
-              {{- with .Values.cloudinit.runcmd }}
-              runcmd:
-                  {{- toYaml . | nindent 16 }}
-              {{- end }}
-              {{- end }}
-              {{- end }}
-              {{- end }}
-{{- end }}
+              name: {{ .Values.cloudinit.secretName }}
+        {{- end }}
+        {{- end }}

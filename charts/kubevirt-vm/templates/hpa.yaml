@@ -6,8 +6,9 @@ metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  maxReplicas: {{ .Values.virtualMachinePool.size }}
-  minReplicas: 1
+  maxReplicas: {{ .Values.virtualMachinePool.maxReplicas }}
+  minReplicas: {{ .Values.virtualMachinePool.minReplicas }}
+
   scaleTargetRef:
     apiVersion: pool.kubevirt.io/v1alpha1
     kind: VirtualMachinePool
