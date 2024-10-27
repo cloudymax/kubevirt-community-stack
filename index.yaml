@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   cloud-init:
   - apiVersion: v2
+    created: "2024-10-27T14:45:52.740793575Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: a368d15bb16d071c782c5ff68e6fd0575377956aa028ba48cf479ff2c0efc375
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.1/cloud-init-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     created: "2024-10-24T17:11:02.394822611Z"
     description: A Helm chart that generates cloud-init config files
     digest: 91121999b3071c8d849640cf20eb1219f5ee4ca91ff063e78e0b3d7b7aff4c84
@@ -473,6 +484,20 @@ entries:
   kubevirt-vm:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-10-27T14:45:52.821938492Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 21ccf0a768d8b949b1829ab809038b27e7d3981d0774047be72c2b45d7462d84
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.0/kubevirt-vm-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2024-04-29T07:00:24.103132819Z"
     description: Configure a virtual machine for use with Kubevirt
     digest: afac2948768122f84e6b2c4227a1e45af92293434e64e8fe980676c0d36c48c6
@@ -696,4 +721,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2024-10-24T17:11:02.394941753Z"
+generated: "2024-10-27T14:45:52.822072193Z"
