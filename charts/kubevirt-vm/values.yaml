@@ -1,15 +1,15 @@
 ##########################
 # Virtual Machine settings
-virtualMachine:  
+virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
-  name: vm0
-  
+  name: scrapmetal
+
   # -- namespace to deploy
   namespace: default
-  
+
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
-  
+
   features:
     # -- Enable KVM acceleration
     kvmEnabled: true
@@ -25,37 +25,37 @@ virtualMachine:
 
     # -- Enable Secure boot (Requires EFI)
     secureBoot: false
-    
+
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
-    
-    # -- Attach a serial console device 
+
+    # -- Attach a serial console device
     autoattachSerialConsole: true
-    
+
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
-  
+
   machine:
     # -- QEMU virtual-machine type
     machineType: "q35"
-    
+
     # -- Pass all CPU features and capabilities to Guest
     cpuPassthrough: true
-    
-    # -- Number of Virtual cores to pass to the Guest 
-    vCores: 2
-    
+
+    # -- Number of Virtual cores to pass to the Guest
+    vCores: 4
+
     # -- Pin QEMU process to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
-    
+
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
-    
+
     # -- Amount of RAM to pass to the Guest
-    memory: 8Gi
-  
-  # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the 
+    memory: 4Gi
+
+  # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
     # kubevirt custom resource.
   gpus: []
   # - name: gpu0
@@ -67,7 +67,8 @@ virtualMachine:
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
   enabled: false
-  size: 3
+  maxReplicas: 5
+  minReplicas: 1
 
 #############################
 # -- controls hypervisor behavior when IO errors occur on disk read or write.
@@ -81,12 +82,12 @@ disks:
 # Cloud-init no-cloud example
 # hold your user-data file
 # Must be the first boot device
-- name: cloudinitvolume
-  type: cdrom
-  bus: sata
-  readonly: true
-  bootorder: 1
-  pv-enable: false
+# - name: cloudinitvolume
+#   type: cdrom
+#   bus: sata
+#   readonly: true
+#   bootorder: 1
+#   pv-enable: false
 
 #################################################
 # DataVolume disk with URL source example
@@ -95,60 +96,60 @@ disks:
 #
 #  # -- Disk type: disk, cdrom, filesystem, or lun
 #  type: disk
-#  
+#
 #  # -- Bus type: sata or virtio
 #  bus: virtio
 #
 #  # -- Sets disk position in boot order, lower numbers are checked earlier
 #  bootorder: 2
-#  
+#
 #  # -- Set disk to be Read-only
 #  readonly: false
-#  
+#
 #  # -- Size of disk in GB
 #  pvsize: 32G
-#  
+#
 #  # -- Storage class to use for the pvc
 #  pvstorageClass: local-path
-#  
+#
 #  # -- Access mode for the PVC
 #  pvaccessMode: ReadWriteOnce
-#   
+#
 #  # -- source type of the disk image. One of `url`, `pvc`
 #  source: url
 #
 #  # -- URL of cloud-image
-#  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2" 
+#  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvc: debian12
-#  ephemeral: true
+  # - name: harddrive
+  #   type: disk
+  #   bus: virtio
+  #   bootorder: 2
+  #   readonly: false
+  #   pvc: debian12
+  #   ephemeral: true
 
 
 ########################################################
 # DataVolume disk with existing PVC source example
 ########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvsize: 32G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
-#  source: pvc
-#  pvcnamespace: default
-#  pvcname: debian12
+- name: harddrive
+  type: disk
+  bus: virtio
+  bootorder: 2
+  readonly: false
+  pvsize: 64G
+  pvstorageClassName: raid
+  nodePlacement: scremlin
+  pvaccessMode: ReadWriteOnce
+  source: pvc
+  pvcnamespace: kubevirt
+  pvcname: debian12
 
 ##########################################################
 # ISO live-image example
@@ -238,59 +239,6 @@ service:
 #      protocol: TCP
 
 # -- enable or disable usage of cloud-init
-cloudinitEnabled: true
-cloudinitFromSecret: true
-# -- Provide a path to an existing cloud-init file
-# will be genrated from values below if no file specified
-cloudinitPath:
-
-# -- Values used to generate a cloud-init user-data file
-# Not all modules yet supported
 cloudinit:
-  # -- Set hostname of VM
-  hostname: scrapmetal
-  disable_root: false
-  network:
-    config: disabled
-  # -- provide a wireguard config
-  wireguard: []
-  # -- Create Groups
-  groups:
-    - docker
-    - kvm
-  # -- Create users
-  users:
-    - name: friend
-      groups: users, admin, sudo
-      sudo: ALL=(ALL) NOPASSWD:ALL
-      shell: /bin/bash
-      lock_passwd: false
-      passwd: "$6$rounds=4096$saltsaltlettuce$Lp/FV.2oOgew7GbM6Nr8KMGMBn7iFM0x9ZwLqtx9Y4QJmKvfcnS.2zx4MKmymCPQGpHS7gqYOiqWjvdCIV2uN."
-      # -- import ssh public-keys from github or lanchpad (doesnt work on Debian12)
-      ssh_import_id: []
-      # -- manually add a ssh public-key
-      ssh_authorized_keys: []
-  ca_certs: []
-  # -- Commands to run early in boot process
-  boot_cmd: []
-  # -- base64 encode content of written files
-  write_as_b64: false
-  # -- list of files to embed in the user-data
-  write_files:
-    - apt-sources-list:
-      # -- Destination to write file on boot
-      path: /etc/apt/sources.list
-      # -- Permissions to assign the file
-      permissions: "0644"
-      # -- path to the source file for helm to read
-      content: apt-sources.list
-  # -- Update apt package cache
-  package_update: true
-  # -- Perform apt package upgrade
-  package_upgrade: false
-  # -- apt packages to install
-  packages: 
-    - ssh-import-id
-  # -- commands to run in final step
-  runcmd:
-    - sudo -u friend -i ssh-import-id-gh cloudymax
+  enabled: true
+  secretName: friend-scrapmetal-user-data

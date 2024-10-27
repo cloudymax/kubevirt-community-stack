@@ -9,7 +9,12 @@ spec:
   template:
     spec:
       restartPolicy: Never
-      serviceAccountName: cloud-init
+      {{- if eq .Values.serviceAccount.create true }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- end }}
+      {{- if eq .Values.serviceAccount.create false }}
+      serviceAccountName: {{ .Values.serviceAccount.existingServiceAccountName }}
+      {{- end }}
       containers:
         - name: cloud-init
           image: {{ .Values.image }}

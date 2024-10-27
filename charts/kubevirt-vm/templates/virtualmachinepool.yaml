@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  replicas: {{ .Values.virtualMachinePool.size }}
+  replicas: {{ .Values.virtualMachinePool.minReplicas }}
   selector:
     matchLabels:
       kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
@@ -114,71 +114,10 @@ spec:
                   claimName: {{ $props.pvc }}
             {{- end }}
             {{- end }}
+            {{- if eq .Values.cloudinit.enabled true }}
             - name: cloudinitvolume
               cloudInitNoCloud:
-                userData: |
-                  {{- if .Values.cloudinitPath }}
-                  {{- $.Files.Get .Values.cloudinitPath | trim | nindent 14 }}
-                  {{- else }}
-                  #cloud-config
-                  hostname: {{ .Values.cloudinit.hostname }}
-                  disable_root: {{ .Values.cloudinit.disable_root }}
-                  {{- with .Values.cloudinit.network }}
-                  network:
-                    {{- toYaml . | nindent 20 }}
-                  {{- end }}
-                  {{- with .Values.cloudinit.groups }}
-                  groups:
-                    {{- toYaml . | nindent 20 }}
-                  {{- end }}
-                  users:
-                    {{- range $reg, $props := .Values.cloudinit.users }}
-                    - name: {{ $props.name }}
-                      groups: {{ $props.groups }}
-                      sudo: {{ $props.sudo }}
-                      shell: {{ $props.shell }}
-                      lock_passwd: {{ $props.lock_passwd }}
-                      {{- if $props.passwd }}
-                      passwd: {{ $props.passwd | quote }}
-                      {{- end }}
-                      {{- if $props.ssh_import_id }}
-                      ssh_import_id:
-                        - {{ $props.ssh_import_id }}
-                      {{- end }}
-                      {{- if $props.ssh_authorized_keys }}
-                      ssh_authorized_keys:
-                        - {{ $props.ssh_authorized_keys }}
-                      {{- end }}
-                    {{- end }}
-                  {{- with .Values.cloudinit.boot_cmd }}
-                  boot_cmd:
-                    {{- toYaml . | nindent 20 }}
-                  {{- end }}
-                  write_files:
-                    {{- if .Values.cloudinit.write_as_b64 }}
-                    {{- range $reg, $props := .Values.cloudinit.write_files }}
-                  - path: {{ $props.path }}
-                    permissions: {{ $props.permissions | quote }}
-                    content: |
-                    {{- $.Files.Get $props.content | trim |b64enc | nindent 22 }}
-                    {{- end }}
-                    {{- else }}
-                    {{- range $reg, $props := .Values.cloudinit.write_files }}
-                  - path: {{ $props.path }}
-                    permissions: {{ $props.permissions | quote }}
-                    content: |
-                    {{- $.Files.Get $props.content | trim |nindent 22 }}
-                    {{- end }}
-                  {{- end }}
-                  package_update: {{ .Values.cloudinit.package_update }}
-                  package_upgrade: {{ .Values.cloudinit.package_upgrade }}
-                  {{- with .Values.cloudinit.packages }}
-                  packages:
-                    {{- toYaml . | nindent 20 }}
-                  {{- end }}
-                  {{- with .Values.cloudinit.runcmd }}
-                  runcmd:
-                  {{- toYaml . | nindent 20 }}
-                  {{- end }}
-                  {{- end }}
+                secretRef:
+                  name: {{ .Values.cloudinit.secretName }}
+            {{- end }}
 {{- end }}

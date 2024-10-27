@@ -86,8 +86,15 @@ validate(){
 }
 
 create_secret(){
+    export SECRET_EXISTS=$(kubectl get secret ${SECRET_NAME} -o yaml |grep -o "${SECRET_NAME}" |wc -l)
+
+    if [ "${SECRET_EXISTS}" -gt 0 ]; then
+        log "Kubernetes secret ${SECRET_NAME} exists and will be replaced"
+        kubectl delete secret ${SECRET_NAME}
+    fi
+
     log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
-    kubectl create secret generic ${SECRET_NAME} --from-file="${USER_DATA_PATH}"
+    kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
 }
 
 # Add wireguard configs from secrets
