@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -16,9 +16,9 @@ A Helm chart that generates cloud-init config files
 |-----|------|---------|-------------|
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `false` |  |
+| debug | bool | `true` |  |
 | disable_root | bool | `false` | Disable root login over ssh |
-| envsubst | list | `[{"value":"admin","var":"USERNAME"}]` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
+| envsubst | list | `[{"value":"friend","var":"USERNAME"},{"value":"cloudymax","var":"GITHUB_USER"}]` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
 | hostname | string | `"scrapmetal"` | virtual-machine hostname |
 | image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
 | namespace | string | `"kubevirt"` | namespace in which to create resources |
@@ -27,11 +27,13 @@ A Helm chart that generates cloud-init config files
 | package_reboot_if_required | bool | `true` | Update, upgrade, and install packages See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
 | package_update | bool | `true` |  |
 | package_upgrade | bool | `true` |  |
-| packages | list | `[]` |  |
-| runcmd | list | `["mkdir -p /home/${USERNAME}/shared","chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared"]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
+| packages[0] | string | `"ssh-import-id"` |  |
+| packages[1] | string | `"neovim"` |  |
+| runcmd | list | `["mkdir -p /home/${USERNAME}/shared","chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared","sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}",["sed","-i","s/PasswordAuthentication no/PasswordAuthentication yes/g","/etc/ssh/sshd_config"],"systemctl restart sshd"]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
-| secret_name | string | `"admin-scrapmetal-user-data"` | name of secret in which to save the user-data file |
-| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"admin","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups |
+| secret_name | string | `"friend-scrapmetal-user-data"` | name of secret in which to save the user-data file |
+| serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
+| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"friend","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
 | users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |
 | users[0].ssh_import_id | list | `[]` | import user ssh public keys from github, gitlab, or launchpad See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh |

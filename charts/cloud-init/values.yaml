@@ -2,16 +2,25 @@
 # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
 # -- name of secret in which to save the user-data file
-secret_name: admin-scrapmetal-user-data
+secret_name: friend-scrapmetal-user-data
 
 # -- image version
 image: deserializeme/kv-cloud-init:v0.0.1
+
+# -- Choose weather to create a service-account or not. Once a SA has been created
+# you should set this to false on subsequent runs.
+serviceAccount:
+  create: true
+  name: cloud-init-sa
+  existingServiceAccountName: "cloud-init-sa"
 
 # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
 # Not an official part of cloid-init
 envsubst:
   - var: USERNAME
-    value: admin
+    value: friend
+  - var: GITHUB_USER
+    value: cloudymax
 
 # -- virtual-machine hostname
 hostname: scrapmetal
@@ -22,7 +31,7 @@ namespace: kubevirt
 # -- Disable root login over ssh
 disable_root: false
 
-debug: false
+debug: true
 
 # -- salt used for password generation
 salt: "saltsaltlettuce"
@@ -45,8 +54,9 @@ wireguard: []
 
 # -- user configuration options
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
+# do NOT use 'admin' as username - it conflicts with multiele cloud-images
 users:
-  - name: admin
+  - name: friend
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
@@ -95,11 +105,15 @@ write_files: {}
 package_reboot_if_required: true
 package_update: true
 package_upgrade: true
-packages: []
-#  - neovim
+packages:
+  - ssh-import-id
+  - neovim
 
 # -- Run arbitrary commands
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
 runcmd:
   - mkdir -p /home/${USERNAME}/shared
   - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
+  - sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}
+  - [ sed , -i , "s/PasswordAuthentication no/PasswordAuthentication yes/g" , /etc/ssh/sshd_config ]
+  - systemctl restart sshd

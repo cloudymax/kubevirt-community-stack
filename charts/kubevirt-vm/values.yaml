@@ -2,10 +2,10 @@
 # Virtual Machine settings
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
-  name: vm0
+  name: scrapmetal
 
   # -- namespace to deploy
-  namespace: kubevirt
+  namespace: default
 
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
@@ -43,7 +43,7 @@ virtualMachine:
     cpuPassthrough: true
 
     # -- Number of Virtual cores to pass to the Guest
-    vCores: 2
+    vCores: 4
 
     # -- Pin QEMU process to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
@@ -53,7 +53,7 @@ virtualMachine:
     hyperThreadingEnabled: false
 
     # -- Amount of RAM to pass to the Guest
-    memory: 2Gi
+    memory: 4Gi
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
     # kubevirt custom resource.
@@ -66,9 +66,9 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
-  enabled: true
-  maxReplicas: 32
-  minReplicas: 20
+  enabled: false
+  maxReplicas: 5
+  minReplicas: 1
 
 #############################
 # -- controls hypervisor behavior when IO errors occur on disk read or write.
@@ -82,12 +82,12 @@ disks:
 # Cloud-init no-cloud example
 # hold your user-data file
 # Must be the first boot device
-- name: cloudinitvolume
-  type: cdrom
-  bus: sata
-  readonly: true
-  bootorder: 1
-  pv-enable: false
+# - name: cloudinitvolume
+#   type: cdrom
+#   bus: sata
+#   readonly: true
+#   bootorder: 1
+#   pv-enable: false
 
 #################################################
 # DataVolume disk with URL source example
@@ -126,30 +126,30 @@ disks:
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
-- name: harddrive
-  type: disk
-  bus: virtio
-  bootorder: 2
-  readonly: false
-  pvc: debian12
-  ephemeral: true
+  # - name: harddrive
+  #   type: disk
+  #   bus: virtio
+  #   bootorder: 2
+  #   readonly: false
+  #   pvc: debian12
+  #   ephemeral: true
 
 
 ########################################################
 # DataVolume disk with existing PVC source example
 ########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvsize: 32G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
-#  source: pvc
-#  pvcnamespace: default
-#  pvcname: debian12
+- name: harddrive
+  type: disk
+  bus: virtio
+  bootorder: 2
+  readonly: false
+  pvsize: 64G
+  pvstorageClassName: raid
+  nodePlacement: scremlin
+  pvaccessMode: ReadWriteOnce
+  source: pvc
+  pvcnamespace: kubevirt
+  pvcname: debian12
 
 ##########################################################
 # ISO live-image example
@@ -210,7 +210,7 @@ service:
 #########################
 # NodePort Example
 - name: service
-  type: LoadBalancer
+  type: NodePort
   externalTrafficPolicy: Cluster
   ports:
     - name: ssh
