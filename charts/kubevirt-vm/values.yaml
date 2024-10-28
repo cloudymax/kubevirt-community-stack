@@ -5,7 +5,7 @@ virtualMachine:
   name: scrapmetal
 
   # -- namespace to deploy
-  namespace: default
+  namespace: kubevirt
 
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
   runStrategy: "RerunOnFailure"
@@ -210,24 +210,17 @@ service:
 #########################
 # NodePort Example
 - name: service
-  type: NodePort
+  type: LoadBalancer
   externalTrafficPolicy: Cluster
   ports:
     - name: ssh
       port: 22
       targetPort: 22
       protocol: TCP
-      nodePort: 30001
-    - name: status
-      port: 1500
-      targetPort: 1500
-      protocol: TCP
-      nodePort: 30001
     - name: vnc
       port: 5900
       targetPort: 5900
       protocol: TCP
-      nodePort: 30005
 #########################
 # LaodBalancer Example
 #- name: vm0-lb
@@ -249,19 +242,19 @@ cloudinit:
   secretName: friend-scrapmetal-user-data
 
 # -- set tieming and port number for liveness probe
-livenessProbe:
-  initialDelaySeconds: 120
-  periodSeconds: 20
-  tcpSocket:
-    port: 1500
-  timeoutSeconds: 10
+#livenessProbe:
+#  initialDelaySeconds: 120
+#  periodSeconds: 20
+#  tcpSocket:
+#    port: 1500
+#  timeoutSeconds: 10
 
 # -- set tieming and port number for readiness probe
-readinessProbe:
-  initialDelaySeconds: 120
-  periodSeconds: 20
-  timeoutSeconds: 10
-  failureThreshold: 3
-  successThreshold: 3
-  httpGet:
-    port: 1500
+#readinessProbe:
+#  initialDelaySeconds: 120
+#  periodSeconds: 20
+#  timeoutSeconds: 10
+#  failureThreshold: 3
+#  successThreshold: 3
+#  httpGet:
+#    port: 1500
