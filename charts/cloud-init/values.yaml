@@ -31,7 +31,8 @@ namespace: kubevirt
 # -- Disable root login over ssh
 disable_root: false
 
-debug: true
+# -- when enabled job sleeps to allow user to exec into the container
+debug: false
 
 # -- salt used for password generation
 salt: "saltsaltlettuce"
