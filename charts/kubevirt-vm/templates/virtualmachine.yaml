@@ -40,7 +40,9 @@ spec:
           {{ else }}
           {{- "threads: 1" | nindent 10 -}}
           {{- end }}
+          {{- if eq .Values.virtualMachine.machine.pinCore true }}
           dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
+          {{- end }}
         firmware:
         {{- if .Values.virtualMachine.features.efiEnabled }}
           bootloader:
@@ -67,7 +69,9 @@ spec:
           - name: {{ $props.name }}
             {{ $props.type }}:
               bus: {{ $props.bus }}
+              {{- if eq $props.readonly true }}
               readonly: {{ $props.readonly }}
+              {{- end }}
             bootOrder: {{ $props.bootorder }}
             errorPolicy: {{ $.Values.diskErrorPolicy }}
             {{- end }}
