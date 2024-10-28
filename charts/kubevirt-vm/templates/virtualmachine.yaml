@@ -83,6 +83,14 @@ spec:
       networks:
       - name: default
         pod: {}
+      {{- with .Values.livenessProbe }}
+      livenessProbe:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.readinessProbe }}
+      readinessProbe:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         {{- range $reg, $props := .Values.disks }}
         {{- if ne "cloudinitvolume" $props.name }}
