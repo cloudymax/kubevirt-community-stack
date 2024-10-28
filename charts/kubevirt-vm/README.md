@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -17,7 +17,9 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit | object | `{"enabled":true,"secretName":"friend-scrapmetal-user-data"}` | enable or disable usage of cloud-init |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when IO errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
 | disks | list | `[{"bootorder":2,"bus":"virtio","name":"harddrive","nodePlacement":"scremlin","pvaccessMode":"ReadWriteOnce","pvcname":"debian12","pvcnamespace":"kubevirt","pvsize":"64G","pvstorageClassName":"raid","readonly":false,"source":"pvc","type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
-| service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","nodePort":30001,"port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","nodePort":30005,"port":5900,"protocol":"TCP","targetPort":5900}],"type":"LoadBalancer"}]` | Service objects are used to expose the VM to the outside world. Just like int he cloud each VM starts off isolated and will need to be exposed via a LoadBalancer, NodePort, or ClusterIp service. |
+| livenessProbe | object | `{"initialDelaySeconds":120,"periodSeconds":20,"tcpSocket":{"port":1500},"timeoutSeconds":10}` | set tieming and port number for liveness probe |
+| readinessProbe | object | `{"failureThreshold":3,"httpGet":{"port":1500},"initialDelaySeconds":120,"periodSeconds":20,"successThreshold":3,"timeoutSeconds":10}` | set tieming and port number for readiness probe |
+| service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","nodePort":30001,"port":22,"protocol":"TCP","targetPort":22},{"name":"status","nodePort":30001,"port":1500,"protocol":"TCP","targetPort":1500},{"name":"vnc","nodePort":30005,"port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service objects are used to expose the VM to the outside world. Just like int he cloud each VM starts off isolated and will need to be exposed via a LoadBalancer, NodePort, or ClusterIp service. |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
