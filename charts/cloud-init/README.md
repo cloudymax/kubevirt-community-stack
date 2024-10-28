@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -16,7 +16,7 @@ A Helm chart that generates cloud-init config files
 |-----|------|---------|-------------|
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `true` |  |
+| debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | envsubst | list | `[{"value":"friend","var":"USERNAME"},{"value":"cloudymax","var":"GITHUB_USER"}]` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
 | hostname | string | `"scrapmetal"` | virtual-machine hostname |
