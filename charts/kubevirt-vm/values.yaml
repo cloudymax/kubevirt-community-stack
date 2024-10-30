@@ -201,10 +201,39 @@ disks:
 #  capacity: 500G
 #  path: /mnt/raid1/hdd2.img
 
+###########################################################
+# ConfigMap example
+# Attach a configmap to VM as an ISO disk or FileSystem
+# Must be mounted via cloud init
+# see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
+# https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
+###########################################################
+#- name: my-configmap
+#  type: configmap
+#  method: disk
+#  bootorder: 3
+#  readonly: true
+#  configMap: my-configmap
+#  serialNumber: CVLY623300HK240D
+
+###########################################################
+# ConfigMap example
+# Attach a configmap to VM as an ISO disk or FileSystem
+# Must be mounted via cloud init
+# see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
+# https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
+###########################################################
+#- name: my-secret
+#  type: secret
+#  method: filesystem
+#  bootorder: 3
+#  readonly: true
+#  configMap: my-configmap
+#  serialNumber: CVLY623300HK240D
 
 # -- Service objects are used to expose the VM to the outside world.
-  # Just like int he cloud each VM starts off isolated and will need
-  # to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
+# Just like int he cloud each VM starts off isolated and will need
+# to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
 
 service:
 #########################
