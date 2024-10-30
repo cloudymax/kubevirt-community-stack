@@ -7,7 +7,8 @@ virtualMachine:
   # -- namespace to deploy
   namespace: kubevirt
 
-  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
+  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
+  # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "RerunOnFailure"
 
   features:
@@ -56,7 +57,7 @@ virtualMachine:
     memory: 4Gi
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
-    # kubevirt custom resource.
+  # kubevirt custom resource.
   gpus: []
   # - name: gpu0
   # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
