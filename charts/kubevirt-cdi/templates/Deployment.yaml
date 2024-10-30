@@ -48,6 +48,8 @@ spec:
               value: quay.io/kubevirt/cdi-importer:{{ .Chart.AppVersion }}
             - name: CLONER_IMAGE
               value: quay.io/kubevirt/cdi-cloner:{{ .Chart.AppVersion }}
+            - name: OVIRT_POPULATOR_IMAGE
+              value: quay.io/kubevirt/cdi-importer:{{ .Chart.AppVersion }}
             - name: APISERVER_IMAGE
               value: quay.io/kubevirt/cdi-apiserver:{{ .Chart.AppVersion }}
             - name: UPLOAD_SERVER_IMAGE
@@ -63,8 +65,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: cdi-operator
           ports:
-            - name: {{ .Values.service.name }}
-              containerPort: {{ .Values.service.port }}
+            - containerPort: {{ .Values.service.port }}
+              name: {{ .Values.service.name }}
               protocol: {{ .Values.service.protocol }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
