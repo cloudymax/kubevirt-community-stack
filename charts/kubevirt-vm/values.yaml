@@ -7,7 +7,8 @@ virtualMachine:
   # -- namespace to deploy
   namespace: kubevirt
 
-  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted`
+  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
+  # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "RerunOnFailure"
 
   features:
@@ -56,7 +57,7 @@ virtualMachine:
     memory: 4Gi
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
-    # kubevirt custom resource.
+  # kubevirt custom resource.
   gpus: []
   # - name: gpu0
   # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
@@ -67,8 +68,10 @@ virtualMachine:
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
   enabled: false
-  maxReplicas: 5
-  minReplicas: 1
+  hpa:
+    enabled: false
+    maxReplicas: 5
+    minReplicas: 1
 
 #############################
 # -- controls hypervisor behavior when IO errors occur on disk read or write.
@@ -201,10 +204,39 @@ disks:
 #  capacity: 500G
 #  path: /mnt/raid1/hdd2.img
 
+###########################################################
+# ConfigMap example
+# Attach a configmap to VM as an ISO disk or FileSystem
+# Must be mounted via cloud init
+# see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
+# https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
+###########################################################
+- name: my-configmap
+  type: configmap
+  method: disk
+  bootorder: 3
+  readonly: true
+  configMap: my-configmap
+  serialNumber: CVLY623300HK240D
+
+###########################################################
+# ConfigMap example
+# Attach a configmap to VM as an ISO disk or FileSystem
+# Must be mounted via cloud init
+# see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
+# https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
+###########################################################
+#- name: my-secret
+#  type: secret
+#  method: filesystem
+#  bootorder: 3
+#  readonly: true
+#  configMap: my-configmap
+#  serialNumber: CVLY623300HK240D
 
 # -- Service objects are used to expose the VM to the outside world.
-  # Just like int he cloud each VM starts off isolated and will need
-  # to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
+# Just like int he cloud each VM starts off isolated and will need
+# to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
 
 service:
 #########################
