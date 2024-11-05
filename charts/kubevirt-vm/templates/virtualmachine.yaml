@@ -75,6 +75,10 @@ spec:
             bootOrder: {{ $props.bootorder }}
             errorPolicy: {{ $.Values.diskErrorPolicy }}
             {{- end }}
+            {{- if $props.configMap }}
+          - name: {{ $props.name }}
+            serial: {{ $props.serialNumber }}
+            {{- end }}
             {{- end }}
           interfaces:
             - bridge: {}
@@ -101,9 +105,11 @@ spec:
         {{- if ne "hostDisk" $props.type }}
         {{- if not $props.ephemeral }}
         {{- if not $props.image }}
+        {{- if not $props.configMap }}
         - name: {{ $props.name }}
           persistentVolumeClaim:
             claimName: {{ $props.name }}
+        {{- end }}
         {{- end }}
         {{- end }}
         {{- end }}
@@ -125,6 +131,11 @@ spec:
           ephemeral:
             persistentVolumeClaim:
               claimName: {{ $props.pvc }}
+        {{- end }}
+        {{- if $props.configMap }}
+        - name: {{ $props.name }}
+          configMap:
+            name: {{ $props.configMap }}
         {{- end }}
         {{- end }}
         {{- if eq .Values.cloudinit.enabled true }}

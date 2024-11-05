@@ -1,4 +1,4 @@
-{{ if .Values.virtualMachinePool.enabled }}
+{{ if .Values.virtualMachinePool.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -6,9 +6,8 @@ metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  maxReplicas: {{ .Values.virtualMachinePool.maxReplicas }}
-  minReplicas: {{ .Values.virtualMachinePool.minReplicas }}
-
+  maxReplicas: {{ .Values.virtualMachinePool.hpa.maxReplicas }}
+  minReplicas: {{ .Values.virtualMachinePool.hpa.minReplicas }}
   scaleTargetRef:
     apiVersion: pool.kubevirt.io/v1alpha1
     kind: VirtualMachinePool

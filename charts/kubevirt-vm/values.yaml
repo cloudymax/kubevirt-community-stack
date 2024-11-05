@@ -68,8 +68,10 @@ virtualMachine:
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
   enabled: false
-  maxReplicas: 5
-  minReplicas: 1
+  hpa:
+    enabled: false
+    maxReplicas: 5
+    minReplicas: 1
 
 #############################
 # -- controls hypervisor behavior when IO errors occur on disk read or write.
@@ -209,13 +211,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-#- name: my-configmap
-#  type: configmap
-#  method: disk
-#  bootorder: 3
-#  readonly: true
-#  configMap: my-configmap
-#  serialNumber: CVLY623300HK240D
+- name: my-configmap
+  type: configmap
+  method: disk
+  bootorder: 3
+  readonly: true
+  configMap: my-configmap
+  serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
