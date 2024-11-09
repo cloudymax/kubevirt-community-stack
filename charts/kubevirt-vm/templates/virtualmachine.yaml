@@ -9,6 +9,11 @@ metadata:
   namespace: {{ .Values.virtualMachine.namespace }}
   name: {{ .Values.virtualMachine.name }}
 spec:
+  {{- if .Values.virtualMachine.machine.instancetype }}
+  instancetype:
+    name: {{ .Values.virtualMachine.machine.instancetype.name }}
+    kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
+  {{- end }}
   runStrategy: {{ .Values.virtualMachine.runStrategy }}
   template:
     metadata:
@@ -33,12 +38,14 @@ spec:
           {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
           {{ "model: host-passthrough" | nindent 10 }}
           {{- end }}
+          {{- if not .Values.virtualMachine.machine.instancetype }}
           sockets: 1
           cores: {{ .Values.virtualMachine.machine.vCores -}}
           {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
           {{- "threads: 2" | nindent 10 -}}
           {{ else }}
           {{- "threads: 1" | nindent 10 -}}
+          {{- end }}
           {{- end }}
           {{- if eq .Values.virtualMachine.machine.pinCore true }}
           dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
@@ -51,11 +58,13 @@ spec:
         {{ else }}
           bootloader: {}
         {{- end }}
+        {{- if not .Values.virtualMachine.machine.instancetype }}
         devices:
           {{- with .Values.virtualMachine.gpus }}
           gpus:
             {{- toYaml . | nindent 10 }}
           {{- end }}
+        {{- end }}
           autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
           autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
           autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
@@ -85,9 +94,11 @@ spec:
               name: default
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
+        {{- if not .Values.virtualMachine.machine.instancetype }}
         resources:
           requests:
             memory: {{ .Values.virtualMachine.machine.memory }}
+        {{- end }}
       networks:
       - name: default
         pod: {}

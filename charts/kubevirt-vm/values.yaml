@@ -29,8 +29,8 @@ virtualMachine:
 
   machine:
     instancetype:
-      name: cmedium
-      kind: virtualMachineInstancetype
+      name: standard-small
+      kind: virtualMachineClusterInstancetype
     # -- QEMU virtual-machine type
     machineType: "q35"
     # -- Pass all CPU features and capabilities to Guest

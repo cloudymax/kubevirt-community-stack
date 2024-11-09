@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  replicas: {{ .Values.virtualMachinePool.minReplicas }}
+  replicas: {{ .Values.virtualMachinePool.replicas }}
   selector:
     matchLabels:
       kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
@@ -19,6 +19,11 @@ spec:
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
         kubevirt-service: {{ .Values.virtualMachine.name }}
     spec:
+      {{- if .Values.virtualMachine.machine.instancetype }}
+      instancetype:
+        name: {{ .Values.virtualMachine.machine.instancetype.name }}
+        kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
+      {{- end }}
       running: true
       template:
         metadata:
@@ -28,11 +33,6 @@ spec:
             kubevirt.io/domain: {{ .Values.virtualMachine.name }}
             kubevirt-service: {{ .Values.virtualMachine.name }}
         spec:
-          {{- if .Values.virtualMachine.machine.instancetype }}
-          instancetype:
-            name: {{ .Values.virtualMachine.machine.instancetype.name }}
-            kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
-          {{- end }}
           domain:
             features:
               {{- if .Values.virtualMachine.features.kvmEnabled -}}
@@ -49,14 +49,14 @@ spec:
               {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
               {{ "model: host-passthrough" | nindent 14 }}
               {{- end }}
-              sockets: 1
               {{- if not .Values.virtualMachine.machine.instancetype }}
+              sockets: 1
               cores: {{ .Values.virtualMachine.machine.vCores -}}
-              {{- end }}
               {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
               {{- "threads: 2" | nindent 14 -}}
               {{ else }}
               {{- "threads: 1" | nindent 14 -}}
+              {{- end }}
               {{- end }}
             firmware:
             {{- if .Values.virtualMachine.features.efiEnabled }}
