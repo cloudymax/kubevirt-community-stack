@@ -28,6 +28,11 @@ spec:
             kubevirt.io/domain: {{ .Values.virtualMachine.name }}
             kubevirt-service: {{ .Values.virtualMachine.name }}
         spec:
+          {{- if .Values.virtualMachine.machine.instancetype }}
+          instancetype:
+            name: {{ .Values.virtualMachine.machine.instancetype.name }}
+            kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
+          {{- end }}
           domain:
             features:
               {{- if .Values.virtualMachine.features.kvmEnabled -}}
@@ -45,21 +50,28 @@ spec:
               {{ "model: host-passthrough" | nindent 14 }}
               {{- end }}
               sockets: 1
+              {{- if not .Values.virtualMachine.machine.instancetype }}
               cores: {{ .Values.virtualMachine.machine.vCores -}}
+              {{- end }}
               {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
               {{- "threads: 2" | nindent 14 -}}
               {{ else }}
               {{- "threads: 1" | nindent 14 -}}
               {{- end }}
-            {{- if .Values.virtualMachine.features.efiEnabled -}}
-            {{- "firmware:" | nindent 12 -}}
-            {{- "bootloader:" |nindent 14 -}}
-            {{- "efi: {}" | nindent 16 -}}
+            firmware:
+            {{- if .Values.virtualMachine.features.efiEnabled }}
+              bootloader:
+                efi:
+                  secureBoot: {{ .Values.virtualMachine.features.secureBoot }}
+            {{ else }}
+              bootloader: {}
             {{- end }}
             devices:
+              {{- if not .Values.virtualMachine.machine.instancetype }}
               {{- with .Values.virtualMachine.gpus }}
               gpus:
               {{- toYaml . | nindent 14 }}
+              {{- end }}
               {{- end }}
               autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
               autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
@@ -78,9 +90,11 @@ spec:
                 bootOrder: {{ $props.bootorder }}
                 {{- end }}
                 {{- end }}
+            {{- if not .Values.virtualMachine.machine.instancetype }}
             resources:
               limits:
                 memory: {{ .Values.virtualMachine.machine.memory }}
+            {{- end }}
           terminationGracePeriodSeconds: 0
           volumes:
             {{- range $reg, $props := .Values.disks }}

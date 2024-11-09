@@ -3,10 +3,8 @@
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
   name: scrapmetal
-
   # -- namespace to deploy
   namespace: kubevirt
-
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
   # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "RerunOnFailure"
@@ -14,50 +12,42 @@ virtualMachine:
   features:
     # -- Enable KVM acceleration
     kvmEnabled: true
-
     # Enable ACPI platform event device
     acpiEnabled: true
-
     # Enable System Management Mode (required for secureboot)
     smmEnabled: true
-
     # -- Enable EFI bios
     efiEnabled: true
-
     # -- Enable Secure boot (Requires EFI)
     secureBoot: false
-
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
-
     # -- Attach a serial console device
     autoattachSerialConsole: true
-
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
 
   machine:
+    instancetype:
+      name: cmedium
+      kind: virtualMachineInstancetype
     # -- QEMU virtual-machine type
     machineType: "q35"
-
     # -- Pass all CPU features and capabilities to Guest
     cpuPassthrough: true
-
     # -- Number of Virtual cores to pass to the Guest
+    # ignored when instancetype is defined
     vCores: 4
-
     # -- Pin QEMU process to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
-
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
-
-    # -- Amount of RAM to pass to the Guest
+    # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
     memory: 4Gi
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
-  # kubevirt custom resource.
+  # kubevirt custom resource. ignored when instancetype is defined
   gpus: []
   # - name: gpu0
   # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
@@ -67,7 +57,9 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
-  enabled: false
+  enabled: true
+  # -- number of replicas to create. Ignored when hpa is set to 'true'
+  replicas: 1
   hpa:
     enabled: false
     maxReplicas: 5
@@ -129,30 +121,30 @@ disks:
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
-  # - name: harddrive
-  #   type: disk
-  #   bus: virtio
-  #   bootorder: 2
-  #   readonly: false
-  #   pvc: debian12
-  #   ephemeral: true
+ - name: harddrive
+   type: disk
+   bus: virtio
+   bootorder: 2
+   readonly: false
+   pvc: debian12
+   ephemeral: true
 
 
 ########################################################
 # DataVolume disk with existing PVC source example
 ########################################################
-- name: harddrive
-  type: disk
-  bus: virtio
-  bootorder: 2
-  readonly: false
-  pvsize: 64G
-  pvstorageClassName: raid
-  nodePlacement: scremlin
-  pvaccessMode: ReadWriteOnce
-  source: pvc
-  pvcnamespace: kubevirt
-  pvcname: debian12
+#- name: harddrive
+#  type: disk
+#  bus: virtio
+#  bootorder: 2
+#  readonly: false
+#  pvsize: 64G
+#  pvstorageClassName: local-path
+#  nodePlacement: bradley
+#  pvaccessMode: ReadWriteOnce
+#  source: pvc
+#  pvcnamespace: kubevirt
+#  pvcname: debian12
 
 ##########################################################
 # ISO live-image example
@@ -211,13 +203,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-- name: my-configmap
-  type: configmap
-  method: disk
-  bootorder: 3
-  readonly: true
-  configMap: my-configmap
-  serialNumber: CVLY623300HK240D
+#- name: my-configmap
+#  type: configmap
+#  method: disk
+#  bootorder: 3
+#  readonly: true
+#  configMap: my-configmap
+#  serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
