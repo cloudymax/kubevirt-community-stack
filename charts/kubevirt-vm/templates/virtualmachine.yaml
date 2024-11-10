@@ -21,6 +21,7 @@ spec:
       labels:
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
         kubevirt-service: {{ .Values.virtualMachine.name }}
+        kubevirt-manager.io/managed: "true"
     spec:
       domain:
         features:
