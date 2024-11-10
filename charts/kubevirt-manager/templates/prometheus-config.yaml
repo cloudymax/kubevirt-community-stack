@@ -17,8 +17,8 @@ data:
         proxy_set_header Authorization "";
         proxy_pass_request_body on;
         proxy_pass_request_headers on;
-       	client_max_body_size 5g;
-       	proxy_set_header Upgrade $http_upgrade;
+        client_max_body_size 5g;
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
         proxy_pass http://{{ .Values.prometheus.serviceName }}.{{ .Values.prometheus.serviceNamesapce }}.svc:9090;
     }

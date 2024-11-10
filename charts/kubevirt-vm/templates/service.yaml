@@ -5,6 +5,9 @@ kind: Service
 metadata:
   name: {{ $.Values.virtualMachine.name }}-{{ $props.name }}
   namespace: {{ $.Values.virtualMachine.namespace }}
+  labels:
+    kubevirt.io/domain: {{ $.Values.virtualMachine.name }}
+    kubevirt-manager.io/managed: "true"
 spec:
   externalTrafficPolicy: {{ $props.externalTrafficPolicy }}
   type: {{ $props.type }}

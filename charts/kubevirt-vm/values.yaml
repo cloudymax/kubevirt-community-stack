@@ -3,10 +3,8 @@
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
   name: scrapmetal
-
   # -- namespace to deploy
   namespace: kubevirt
-
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
   # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "RerunOnFailure"
@@ -14,53 +12,64 @@ virtualMachine:
   features:
     # -- Enable KVM acceleration
     kvmEnabled: true
-
     # Enable ACPI platform event device
     acpiEnabled: true
-
     # Enable System Management Mode (required for secureboot)
     smmEnabled: true
-
     # -- Enable EFI bios
     efiEnabled: true
-
     # -- Enable Secure boot (Requires EFI)
     secureBoot: false
-
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
-
     # -- Attach a serial console device
     autoattachSerialConsole: true
-
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
+    # -- Enhances network performance by allowing multiple TX and RX queues.
+    networkInterfaceMultiqueue: true
 
   machine:
+    # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
+    priorityClassName: vm-standard
+    # -- Define CPU, RAM, GPU, HostDevice settings for VMs. cannot be overridden.
+    instancetype:
+      name: standard-small
+      kind: virtualMachineClusterInstancetype
     # -- QEMU virtual-machine type
     machineType: "q35"
-
     # -- Pass all CPU features and capabilities to Guest
     cpuPassthrough: true
-
     # -- Number of Virtual cores to pass to the Guest
+    # ignored when instancetype is defined
     vCores: 4
-
     # -- Pin QEMU process to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
-
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
-
-    # -- Amount of RAM to pass to the Guest
+    # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
     memory: 4Gi
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
-  # kubevirt custom resource.
+  # kubevirt custom resource. ignored when instancetype is defined
   gpus: []
   # - name: gpu0
   # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
+
+  # -- virtual network interface config options.
+  # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
+  interfaces:
+  # -- bridge mode, vms are connected to the network via a linux "bridge".
+  # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
+    - bridge: {}
+      name: default
+
+  networks:
+  # Use the default pod network
+  - name: default
+    pod: {}
+
 
 #########################
 # Create a Virtual Machine Pool
@@ -68,6 +77,8 @@ virtualMachine:
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
   enabled: false
+  # -- number of replicas to create. Ignored when hpa is set to 'true'
+  replicas: 1
   hpa:
     enabled: false
     maxReplicas: 5
@@ -81,6 +92,7 @@ diskErrorPolicy: "report"
 #############################
 # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
 disks:
+
 #############################
 # Cloud-init no-cloud example
 # hold your user-data file
@@ -95,101 +107,100 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
-#- name: harddrive
+# - name: harddrive
 #
-#  # -- Disk type: disk, cdrom, filesystem, or lun
-#  type: disk
+#   # -- Disk type: disk, cdrom, filesystem, or lun
+#   type: disk
 #
-#  # -- Bus type: sata or virtio
-#  bus: virtio
+#   # -- Bus type: sata or virtio
+#   bus: virtio
 #
-#  # -- Sets disk position in boot order, lower numbers are checked earlier
-#  bootorder: 2
+#   # -- Sets disk position in boot order, lower numbers are checked earlier
+#   bootorder: 2
 #
-#  # -- Set disk to be Read-only
-#  readonly: false
+#   # -- Set disk to be Read-only
+#   readonly: false
 #
-#  # -- Size of disk in GB
-#  pvsize: 32G
+#   # -- Size of disk in GB
+#   pvsize: 32G
 #
-#  # -- Storage class to use for the pvc
-#  pvstorageClass: local-path
+#   # -- Storage class to use for the pvc
+#   pvstorageClass: local-path
 #
-#  # -- Access mode for the PVC
-#  pvaccessMode: ReadWriteOnce
+#   # -- Access mode for the PVC
+#   pvaccessMode: ReadWriteOnce
 #
-#  # -- source type of the disk image. One of `url`, `pvc`
-#  source: url
+#   # -- source type of the disk image. One of `url`, `pvc`
+#   source: url
 #
-#  # -- URL of cloud-image
-#  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+#   # -- URL of cloud-image
+#   url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
-  # - name: harddrive
-  #   type: disk
-  #   bus: virtio
-  #   bootorder: 2
-  #   readonly: false
-  #   pvc: debian12
-  #   ephemeral: true
-
+  - name: harddrive
+    type: disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvc: debian12
+    ephemeral: true
 
 ########################################################
 # DataVolume disk with existing PVC source example
 ########################################################
-- name: harddrive
-  type: disk
-  bus: virtio
-  bootorder: 2
-  readonly: false
-  pvsize: 64G
-  pvstorageClassName: raid
-  nodePlacement: scremlin
-  pvaccessMode: ReadWriteOnce
-  source: pvc
-  pvcnamespace: kubevirt
-  pvcname: debian12
+# - name: harddrive
+#   type: disk
+#   bus: virtio
+#   bootorder: 2
+#   readonly: false
+#   pvsize: 64G
+#   pvstorageClassName: local-path
+#   nodePlacement: bradley
+#   pvaccessMode: ReadWriteOnce
+#   source: pvc
+#   pvcnamespace: kubevirt
+#   pvcname: debian12
 
 ##########################################################
 # ISO live-image example
 ##########################################################
-#- name: iso
-#  type: cdrom
-#  bus: sata
-#  bootorder: 1
-#  readonly: true
-#  pvsize: 8G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
-#  source: "https://www.itechtics.com/?dl_id=173"
+# - name: iso
+#   type: cdrom
+#   bus: sata
+#   bootorder: 1
+#   readonly: true
+#   pvsize: 8G
+#   pvstorageClassName: local-path
+#   nodePlacement: node0
+#   pvaccessMode: ReadWriteOnce
+#   source: "https://www.itechtics.com/?dl_id=173"
 
 ##########################################################
 # Empty PVC as disk example
 ##########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvsize: 32G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
+# - name: harddrive
+#   type: disk
+#   bus: virtio
+#   bootorder: 2
+#   readonly: false
+#   pvsize: 32G
+#   pvstorageClassName: local-path
+#   nodePlacement: node0
+#   pvaccessMode: ReadWriteOnce
 
 ##########################################################
 # Container Disk Example
 ##########################################################
-#- name: virtio-drivers
-#  type: cdrom
-#  bus: sata
-#  bootorder: 3
-#  readonly: true
-#  image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
+# - name: virtio-drivers
+#   type: cdrom
+#   bus: sata
+#   bootorder: 3
+#   readonly: true
+#   image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
 
 ###########################################################
 # Local Disk example
@@ -197,12 +208,12 @@ disks:
 # disks need to be owned by 107:messagebus
 # disks cannot be mounted, file systems unidentifiable
 ###########################################################
-#- name: localfile
-#  type: hostDisk
-#  # -- Enter a capacity amount to create a new disk
-#  # otherwise expects an existing disk
-#  capacity: 500G
-#  path: /mnt/raid1/hdd2.img
+# - name: localfile
+#   type: hostDisk
+#   # -- Enter a capacity amount to create a new disk
+#   # otherwise expects an existing disk
+#   capacity: 500G
+#   path: /mnt/raid1/hdd2.img
 
 ###########################################################
 # ConfigMap example
@@ -211,13 +222,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-- name: my-configmap
-  type: configmap
-  method: disk
-  bootorder: 3
-  readonly: true
-  configMap: my-configmap
-  serialNumber: CVLY623300HK240D
+# - name: my-configmap
+#   type: configmap
+#   method: disk
+#   bootorder: 3
+#   readonly: true
+#   configMap: my-configmap
+#   serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
@@ -226,13 +237,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-#- name: my-secret
-#  type: secret
-#  method: filesystem
-#  bootorder: 3
-#  readonly: true
-#  configMap: my-configmap
-#  serialNumber: CVLY623300HK240D
+# - name: my-secret
+#   type: secret
+#   method: filesystem
+#   bootorder: 3
+#   readonly: true
+#   configMap: my-configmap
+#   serialNumber: CVLY623300HK240D
 
 # -- Service objects are used to expose the VM to the outside world.
 # Just like int he cloud each VM starts off isolated and will need
@@ -255,18 +266,18 @@ service:
       protocol: TCP
 #########################
 # LaodBalancer Example
-#- name: vm0-lb
-#  type: LoadBalancer
-#  externalTrafficPolicy: Cluster
-#  ports:
-#    - name: ssh
-#      port: 22
-#      targetPort: 22
-#      protocol: TCP
-#    - name: vnc
-#      port: 5900
-#      targetPort: 5900
-#      protocol: TCP
+# - name: vm0-lb
+#   type: LoadBalancer
+#   externalTrafficPolicy: Cluster
+#   ports:
+#     - name: ssh
+#       port: 22
+#       targetPort: 22
+#       protocol: TCP
+#     - name: vnc
+#       port: 5900
+#       targetPort: 5900
+#       protocol: TCP
 
 # -- enable or disable usage of cloud-init
 cloudinit:
@@ -274,19 +285,19 @@ cloudinit:
   secretName: friend-scrapmetal-user-data
 
 # -- set tieming and port number for liveness probe
-#livenessProbe:
-#  initialDelaySeconds: 120
-#  periodSeconds: 20
-#  tcpSocket:
-#    port: 1500
-#  timeoutSeconds: 10
+# livenessProbe:
+#   initialDelaySeconds: 120
+#   periodSeconds: 20
+#   tcpSocket:
+#     port: 1500
+#   timeoutSeconds: 10
 
 # -- set tieming and port number for readiness probe
-#readinessProbe:
-#  initialDelaySeconds: 120
-#  periodSeconds: 20
-#  timeoutSeconds: 10
-#  failureThreshold: 3
-#  successThreshold: 3
-#  httpGet:
-#    port: 1500
+# readinessProbe:
+#   initialDelaySeconds: 120
+#   periodSeconds: 20
+#   timeoutSeconds: 10
+#   failureThreshold: 3
+#   successThreshold: 3
+#   httpGet:
+#     port: 1500
