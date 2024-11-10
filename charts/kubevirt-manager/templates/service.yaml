@@ -14,4 +14,4 @@ spec:
     - name: {{ .Values.service.name }}
       protocol: {{ .Values.service.protocol }}
       port: {{ .Values.service.port }}
-      targetPort: 8001
+      targetPort: 8080
