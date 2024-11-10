@@ -95,6 +95,7 @@ spec:
                 {{- range $reg, $props := .Values.disks }}
                 {{- if ne "hostDisk" $props.type }}
                 {{- if ne "configmap" $props.type }}
+                {{- if ne "secret" $props.type }}
               - name: {{ $props.name }}
                 {{ $props.type }}:
                   bus: {{ $props.bus }}
@@ -105,7 +106,12 @@ spec:
                 errorPolicy: {{ $.Values.diskErrorPolicy }}
                 {{- end }}
                 {{- end }}
+                {{- end }}
                 {{- if $props.configMap }}
+              - name: {{ $props.name }}
+                serial: {{ $props.serialNumber }}
+                {{- end }}
+                {{- if eq $props.type "secret" }}
               - name: {{ $props.name }}
                 serial: {{ $props.serialNumber }}
                 {{- end }}
@@ -126,6 +132,7 @@ spec:
             {{- if ne "cloudinitvolume" $props.name }}
             {{- if ne "hostDisk" $props.type }}
             {{- if ne "configmap" $props.type }}
+            {{- if ne "secret" $props.type }}
             {{- if not $props.ephemeral }}
             {{- if not $props.image }}
             - name: {{ $props.name }}
@@ -136,10 +143,16 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- end }}
             {{- if eq "configmap" $props.type }}
             - name: {{ $props.name }}
               configMap:
                 name: {{ $props.configMap }}
+            {{- end }}
+            {{- if eq "secret" $props.type }}
+            - name: {{ $props.name }}
+              secret:
+                secretName: {{ $props.secretName }}
             {{- end }}
             {{- if eq "hostDisk" $props.type }}
             - hostDisk:

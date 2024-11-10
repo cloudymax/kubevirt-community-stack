@@ -222,13 +222,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-  - name: my-configmap
-    type: configmap
-    method: disk
-    bootorder: 3
-    readonly: true
-    configMap: my-configmap
-    serialNumber: CVLY623300HK240D
+#  - name: my-configmap
+#     type: configmap
+#     method: disk
+#     bootorder: 3
+#     readonly: true
+#     configMap: my-configmap
+#     serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
@@ -237,13 +237,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-# - name: my-secret
-#   type: secret
-#   method: filesystem
-#   bootorder: 3
-#   readonly: true
-#   configMap: my-configmap
-#   serialNumber: CVLY623300HK240D
+  - name: my-secret
+    type: secret
+    method: disk
+    bootorder: 3
+    readonly: true
+    secretName: test
+    serialNumber: CVLY623300HK240D
 
 # -- Service objects are used to expose the VM to the outside world.
 # Just like int he cloud each VM starts off isolated and will need
