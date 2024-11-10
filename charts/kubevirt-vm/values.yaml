@@ -106,34 +106,34 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
-#- name: harddrive
+# - name: harddrive
 #
-#  # -- Disk type: disk, cdrom, filesystem, or lun
-#  type: disk
+#   # -- Disk type: disk, cdrom, filesystem, or lun
+#   type: disk
 #
-#  # -- Bus type: sata or virtio
-#  bus: virtio
+#   # -- Bus type: sata or virtio
+#   bus: virtio
 #
-#  # -- Sets disk position in boot order, lower numbers are checked earlier
-#  bootorder: 2
+#   # -- Sets disk position in boot order, lower numbers are checked earlier
+#   bootorder: 2
 #
-#  # -- Set disk to be Read-only
-#  readonly: false
+#   # -- Set disk to be Read-only
+#   readonly: false
 #
-#  # -- Size of disk in GB
-#  pvsize: 32G
+#   # -- Size of disk in GB
+#   pvsize: 32G
 #
-#  # -- Storage class to use for the pvc
-#  pvstorageClass: local-path
+#   # -- Storage class to use for the pvc
+#   pvstorageClass: local-path
 #
-#  # -- Access mode for the PVC
-#  pvaccessMode: ReadWriteOnce
+#   # -- Access mode for the PVC
+#   pvaccessMode: ReadWriteOnce
 #
-#  # -- source type of the disk image. One of `url`, `pvc`
-#  source: url
+#   # -- source type of the disk image. One of `url`, `pvc`
+#   source: url
 #
-#  # -- URL of cloud-image
-#  url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
+#   # -- URL of cloud-image
+#   url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
@@ -152,55 +152,55 @@ disks:
 ########################################################
 # DataVolume disk with existing PVC source example
 ########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvsize: 64G
-#  pvstorageClassName: local-path
-#  nodePlacement: bradley
-#  pvaccessMode: ReadWriteOnce
-#  source: pvc
-#  pvcnamespace: kubevirt
-#  pvcname: debian12
+# - name: harddrive
+#   type: disk
+#   bus: virtio
+#   bootorder: 2
+#   readonly: false
+#   pvsize: 64G
+#   pvstorageClassName: local-path
+#   nodePlacement: bradley
+#   pvaccessMode: ReadWriteOnce
+#   source: pvc
+#   pvcnamespace: kubevirt
+#   pvcname: debian12
 
 ##########################################################
 # ISO live-image example
 ##########################################################
-#- name: iso
-#  type: cdrom
-#  bus: sata
-#  bootorder: 1
-#  readonly: true
-#  pvsize: 8G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
-#  source: "https://www.itechtics.com/?dl_id=173"
+# - name: iso
+#   type: cdrom
+#   bus: sata
+#   bootorder: 1
+#   readonly: true
+#   pvsize: 8G
+#   pvstorageClassName: local-path
+#   nodePlacement: node0
+#   pvaccessMode: ReadWriteOnce
+#   source: "https://www.itechtics.com/?dl_id=173"
 
 ##########################################################
 # Empty PVC as disk example
 ##########################################################
-#- name: harddrive
-#  type: disk
-#  bus: virtio
-#  bootorder: 2
-#  readonly: false
-#  pvsize: 32G
-#  pvstorageClassName: local-path
-#  nodePlacement: node0
-#  pvaccessMode: ReadWriteOnce
+# - name: harddrive
+#   type: disk
+#   bus: virtio
+#   bootorder: 2
+#   readonly: false
+#   pvsize: 32G
+#   pvstorageClassName: local-path
+#   nodePlacement: node0
+#   pvaccessMode: ReadWriteOnce
 
 ##########################################################
 # Container Disk Example
 ##########################################################
-#- name: virtio-drivers
-#  type: cdrom
-#  bus: sata
-#  bootorder: 3
-#  readonly: true
-#  image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
+# - name: virtio-drivers
+#   type: cdrom
+#   bus: sata
+#   bootorder: 3
+#   readonly: true
+#   image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
 
 ###########################################################
 # Local Disk example
@@ -208,12 +208,12 @@ disks:
 # disks need to be owned by 107:messagebus
 # disks cannot be mounted, file systems unidentifiable
 ###########################################################
-#- name: localfile
-#  type: hostDisk
-#  # -- Enter a capacity amount to create a new disk
-#  # otherwise expects an existing disk
-#  capacity: 500G
-#  path: /mnt/raid1/hdd2.img
+# - name: localfile
+#   type: hostDisk
+#   # -- Enter a capacity amount to create a new disk
+#   # otherwise expects an existing disk
+#   capacity: 500G
+#   path: /mnt/raid1/hdd2.img
 
 ###########################################################
 # ConfigMap example
@@ -222,13 +222,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-#- name: my-configmap
-#  type: configmap
-#  method: disk
-#  bootorder: 3
-#  readonly: true
-#  configMap: my-configmap
-#  serialNumber: CVLY623300HK240D
+# - name: my-configmap
+#   type: configmap
+#   method: disk
+#   bootorder: 3
+#   readonly: true
+#   configMap: my-configmap
+#   serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
@@ -237,13 +237,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-#- name: my-secret
-#  type: secret
-#  method: filesystem
-#  bootorder: 3
-#  readonly: true
-#  configMap: my-configmap
-#  serialNumber: CVLY623300HK240D
+# - name: my-secret
+#   type: secret
+#   method: filesystem
+#   bootorder: 3
+#   readonly: true
+#   configMap: my-configmap
+#   serialNumber: CVLY623300HK240D
 
 # -- Service objects are used to expose the VM to the outside world.
 # Just like int he cloud each VM starts off isolated and will need
@@ -266,18 +266,18 @@ service:
       protocol: TCP
 #########################
 # LaodBalancer Example
-#- name: vm0-lb
-#  type: LoadBalancer
-#  externalTrafficPolicy: Cluster
-#  ports:
-#    - name: ssh
-#      port: 22
-#      targetPort: 22
-#      protocol: TCP
-#    - name: vnc
-#      port: 5900
-#      targetPort: 5900
-#      protocol: TCP
+# - name: vm0-lb
+#   type: LoadBalancer
+#   externalTrafficPolicy: Cluster
+#   ports:
+#     - name: ssh
+#       port: 22
+#       targetPort: 22
+#       protocol: TCP
+#     - name: vnc
+#       port: 5900
+#       targetPort: 5900
+#       protocol: TCP
 
 # -- enable or disable usage of cloud-init
 cloudinit:
@@ -285,19 +285,19 @@ cloudinit:
   secretName: friend-scrapmetal-user-data
 
 # -- set tieming and port number for liveness probe
-#livenessProbe:
-#  initialDelaySeconds: 120
-#  periodSeconds: 20
-#  tcpSocket:
-#    port: 1500
-#  timeoutSeconds: 10
+# livenessProbe:
+#   initialDelaySeconds: 120
+#   periodSeconds: 20
+#   tcpSocket:
+#     port: 1500
+#   timeoutSeconds: 10
 
 # -- set tieming and port number for readiness probe
-#readinessProbe:
-#  initialDelaySeconds: 120
-#  periodSeconds: 20
-#  timeoutSeconds: 10
-#  failureThreshold: 3
-#  successThreshold: 3
-#  httpGet:
-#    port: 1500
+# readinessProbe:
+#   initialDelaySeconds: 120
+#   periodSeconds: 20
+#   timeoutSeconds: 10
+#   failureThreshold: 3
+#   successThreshold: 3
+#   httpGet:
+#     port: 1500
