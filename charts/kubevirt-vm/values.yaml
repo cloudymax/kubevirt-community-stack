@@ -92,6 +92,7 @@ diskErrorPolicy: "report"
 #############################
 # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
 disks:
+
 #############################
 # Cloud-init no-cloud example
 # hold your user-data file
@@ -140,14 +141,13 @@ disks:
 # no persistance, these are deleted after the VM exists
 # requires an existing PVC as a backing file
 #########################################################
- - name: harddrive
-   type: disk
-   bus: virtio
-   bootorder: 2
-   readonly: false
-   pvc: debian12
-   ephemeral: true
-
+  - name: harddrive
+    type: disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvc: debian12
+    ephemeral: true
 
 ########################################################
 # DataVolume disk with existing PVC source example
