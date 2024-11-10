@@ -76,7 +76,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
-  enabled: false
+  enabled: true
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 1
   hpa:
@@ -222,13 +222,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-# - name: my-configmap
-#   type: configmap
-#   method: disk
-#   bootorder: 3
-#   readonly: true
-#   configMap: my-configmap
-#   serialNumber: CVLY623300HK240D
+  - name: my-configmap
+    type: configmap
+    method: disk
+    bootorder: 3
+    readonly: true
+    configMap: my-configmap
+    serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
