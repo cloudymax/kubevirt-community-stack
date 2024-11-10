@@ -111,6 +111,7 @@ spec:
           {{- toYaml . | nindent 10 }}
           {{- end }}
           terminationGracePeriodSeconds: 0
+          priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}
           volumes:
             {{- range $reg, $props := .Values.disks }}
             {{- if ne "cloudinitvolume" $props.name }}

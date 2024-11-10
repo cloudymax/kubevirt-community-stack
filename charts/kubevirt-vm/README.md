@@ -24,21 +24,26 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.autoattachSerialConsole | bool | `true` | Attach a serial console device |
 | virtualMachine.features.efiEnabled | bool | `true` | Enable EFI bios |
 | virtualMachine.features.kvmEnabled | bool | `true` | Enable KVM acceleration |
+| virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
 | virtualMachine.features.secureBoot | bool | `false` | Enable Secure boot (Requires EFI) |
 | virtualMachine.features.smmEnabled | bool | `true` |  |
 | virtualMachine.gpus | list | `[]` | GPUs to pass to guest, requires that the GPUs are pre-configured in the kubevirt custom resource. ignored when instancetype is defined |
+| virtualMachine.interfaces | list | `[{"bridge":{},"name":"default"}]` | virtual network interface config options. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces |
+| virtualMachine.interfaces[0] | object | `{"bridge":{},"name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
 | virtualMachine.machine.cpuPassthrough | bool | `true` | Pass all CPU features and capabilities to Guest |
 | virtualMachine.machine.hyperThreadingEnabled | bool | `false` | Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs. |
-| virtualMachine.machine.instancetype.kind | string | `"virtualMachineInstancetype"` |  |
-| virtualMachine.machine.instancetype.name | string | `"cmedium"` |  |
+| virtualMachine.machine.instancetype | object | `{"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. cannot be overridden. |
 | virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
 | virtualMachine.machine.memory | string | `"4Gi"` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
 | virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
+| virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.vCores | int | `4` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
 | virtualMachine.name | string | `"scrapmetal"` | name of the virtualMachine or virtualMachinePool object |
 | virtualMachine.namespace | string | `"kubevirt"` | namespace to deploy |
+| virtualMachine.networks[0].name | string | `"default"` |  |
+| virtualMachine.networks[0].pod | object | `{}` |  |
 | virtualMachine.runStrategy | string | `"RerunOnFailure"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once` See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy |
-| virtualMachinePool.enabled | bool | `true` |  |
+| virtualMachinePool.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.maxReplicas | int | `5` |  |
 | virtualMachinePool.hpa.minReplicas | int | `1` |  |

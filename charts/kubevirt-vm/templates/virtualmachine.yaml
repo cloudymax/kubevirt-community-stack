@@ -25,30 +25,27 @@ spec:
       domain:
         features:
           {{- if .Values.virtualMachine.features.kvmEnabled -}}
-          {{ "kvm: {}" | nindent 10 }}
+          {{ "kvm: {}" | nindent 14 }}
           {{- end }}
           {{- if .Values.virtualMachine.features.acpiEnabled -}}
-          {{ "acpi: {}" | nindent 10 }}
+          {{ "acpi: {}" | nindent 14 }}
           {{- end }}
           {{- if .Values.virtualMachine.features.smmEnabled -}}
-          {{ "smm:"  | nindent 10 -}}
-          {{ "enabled: true"  | nindent 12 }}
+          {{ "smm:"  | nindent 14 -}}
+          {{ "enabled: true"  | nindent 16 }}
           {{- end }}
         cpu:
           {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
-          {{ "model: host-passthrough" | nindent 10 }}
+          {{ "model: host-passthrough" | nindent 14 }}
           {{- end }}
           {{- if not .Values.virtualMachine.machine.instancetype }}
           sockets: 1
           cores: {{ .Values.virtualMachine.machine.vCores -}}
           {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
-          {{- "threads: 2" | nindent 10 -}}
+          {{- "threads: 2" | nindent 14 -}}
           {{ else }}
-          {{- "threads: 1" | nindent 10 -}}
+          {{- "threads: 1" | nindent 14 -}}
           {{- end }}
-          {{- end }}
-          {{- if eq .Values.virtualMachine.machine.pinCore true }}
-          dedicatedCpuPlacement: {{ .Values.virtualMachine.machine.pinCores }}
           {{- end }}
         firmware:
         {{- if .Values.virtualMachine.features.efiEnabled }}
@@ -58,16 +55,21 @@ spec:
         {{ else }}
           bootloader: {}
         {{- end }}
-        {{- if not .Values.virtualMachine.machine.instancetype }}
         devices:
+          {{- with .Values.virtualMachine.interfaces }}
+          interfaces:
+          {{- toYaml . | nindent 14 }}
+          {{- end }}
+          {{- if not .Values.virtualMachine.machine.instancetype }}
           {{- with .Values.virtualMachine.gpus }}
           gpus:
-            {{- toYaml . | nindent 10 }}
+          {{- toYaml . | nindent 14 }}
           {{- end }}
-        {{- end }}
+          {{- end }}
           autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
           autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
           autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
+          networkInterfaceMultiqueue: {{ .Values.virtualMachine.features.networkInterfaceMultiqueue }}
           inputs:
           - type: tablet
             bus: virtio
@@ -78,49 +80,30 @@ spec:
           - name: {{ $props.name }}
             {{ $props.type }}:
               bus: {{ $props.bus }}
-              {{- if eq $props.readonly true }}
               readonly: {{ $props.readonly }}
-              {{- end }}
             bootOrder: {{ $props.bootorder }}
-            errorPolicy: {{ $.Values.diskErrorPolicy }}
-            {{- end }}
-            {{- if $props.configMap }}
-          - name: {{ $props.name }}
-            serial: {{ $props.serialNumber }}
             {{- end }}
             {{- end }}
-          interfaces:
-            - bridge: {}
-              name: default
-        machine:
-          type: {{ .Values.virtualMachine.machine.machineType }}
         {{- if not .Values.virtualMachine.machine.instancetype }}
         resources:
-          requests:
+          limits:
             memory: {{ .Values.virtualMachine.machine.memory }}
         {{- end }}
+      {{- with .Values.virtualMachine.networks }}
       networks:
-      - name: default
-        pod: {}
-      {{- with .Values.livenessProbe }}
-      livenessProbe:
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 10 }}
       {{- end }}
-      {{- with .Values.readinessProbe }}
-      readinessProbe:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      terminationGracePeriodSeconds: 0
+      priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}
       volumes:
         {{- range $reg, $props := .Values.disks }}
         {{- if ne "cloudinitvolume" $props.name }}
         {{- if ne "hostDisk" $props.type }}
         {{- if not $props.ephemeral }}
         {{- if not $props.image }}
-        {{- if not $props.configMap }}
         - name: {{ $props.name }}
           persistentVolumeClaim:
             claimName: {{ $props.name }}
-        {{- end }}
         {{- end }}
         {{- end }}
         {{- end }}
@@ -143,11 +126,6 @@ spec:
             persistentVolumeClaim:
               claimName: {{ $props.pvc }}
         {{- end }}
-        {{- if $props.configMap }}
-        - name: {{ $props.name }}
-          configMap:
-            name: {{ $props.configMap }}
-        {{- end }}
         {{- end }}
         {{- if eq .Values.cloudinit.enabled true }}
         - name: cloudinitvolume
@@ -155,4 +133,4 @@ spec:
             secretRef:
               name: {{ .Values.cloudinit.secretName }}
         {{- end }}
-        {{- end }}
+{{- end }}
