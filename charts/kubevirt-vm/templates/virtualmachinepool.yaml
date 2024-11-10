@@ -4,6 +4,9 @@ kind: VirtualMachinePool
 metadata:
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
+  labels:
+    kubevirt-manager.io/managed: "true"
+    kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
 spec:
   replicas: {{ .Values.virtualMachinePool.replicas }}
   selector:
@@ -11,6 +14,7 @@ spec:
       kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
       kubevirt.io/domain: {{ .Values.virtualMachine.name }}
       kubevirt-service: {{ .Values.virtualMachine.name }}
+      kubevirt-manager.io/managed: "true"
   virtualMachineTemplate:
     metadata:
       creationTimestamp: null
@@ -18,6 +22,7 @@ spec:
         kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
         kubevirt.io/domain: {{ .Values.virtualMachine.name }}
         kubevirt-service: {{ .Values.virtualMachine.name }}
+        kubevirt-manager.io/managed: "true"
     spec:
       {{- if .Values.virtualMachine.machine.instancetype }}
       instancetype:
@@ -32,6 +37,7 @@ spec:
             kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
             kubevirt.io/domain: {{ .Values.virtualMachine.name }}
             kubevirt-service: {{ .Values.virtualMachine.name }}
+            kubevirt-manager.io/managed: "true"
         spec:
           domain:
             features:
@@ -67,6 +73,10 @@ spec:
               bootloader: {}
             {{- end }}
             devices:
+              {{- with .Values.virtualMachine.interfaces }}
+              interfaces:
+              {{- toYaml . | nindent 14 }}
+              {{- end }}
               {{- if not .Values.virtualMachine.machine.instancetype }}
               {{- with .Values.virtualMachine.gpus }}
               gpus:
@@ -76,6 +86,7 @@ spec:
               autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
               autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
               autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
+              networkInterfaceMultiqueue: {{ .Values.virtualMachine.features.networkInterfaceMultiqueue }}
               inputs:
               - type: tablet
                 bus: virtio
@@ -95,6 +106,10 @@ spec:
               limits:
                 memory: {{ .Values.virtualMachine.machine.memory }}
             {{- end }}
+          {{- with .Values.virtualMachine.networks }}
+          networks:
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
           terminationGracePeriodSeconds: 0
           volumes:
             {{- range $reg, $props := .Values.disks }}

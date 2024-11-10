@@ -26,6 +26,8 @@ virtualMachine:
     autoattachSerialConsole: true
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
+    # -- Enhances network performance by allowing multiple TX and RX queues.
+    networkInterfaceMultiqueue: true
 
   machine:
     instancetype:
@@ -51,6 +53,20 @@ virtualMachine:
   gpus: []
   # - name: gpu0
   # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
+
+  # -- virtual network interface config options.
+  # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
+  interfaces:
+  # -- bridge mode, vms are connected to the network via a linux "bridge".
+  # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
+    - bridge: {}
+      name: default
+
+  networks:
+  # Use the default pod network
+  - name: default
+    pod: {}
+
 
 #########################
 # Create a Virtual Machine Pool
