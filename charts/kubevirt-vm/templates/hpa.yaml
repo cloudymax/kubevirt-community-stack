@@ -5,6 +5,8 @@ metadata:
   creationTimestamp: null
   name: {{ .Values.virtualMachine.name }}
   namespace: {{ .Values.virtualMachine.namespace }}
+  labels:
+    kubevirt-manager.io/managed: "true"
 spec:
   maxReplicas: {{ .Values.virtualMachinePool.hpa.maxReplicas }}
   minReplicas: {{ .Values.virtualMachinePool.hpa.minReplicas }}
