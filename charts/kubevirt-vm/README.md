@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.3.6](https://img.shields.io/badge/Version-0.3.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.3.7](https://img.shields.io/badge/Version-0.3.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -16,8 +16,8 @@ Configure a virtual machine for use with Kubevirt
 |-----|------|---------|-------------|
 | cloudinit | object | `{"enabled":true,"secretName":"friend-scrapmetal-user-data"}` | enable or disable usage of cloud-init |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when IO errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
-| disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
-| service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"LoadBalancer"}]` | Service objects are used to expose the VM to the outside world. Just like int he cloud each VM starts off isolated and will need to be exposed via a LoadBalancer, NodePort, or ClusterIp service. |
+| disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"},{"bootorder":3,"method":"disk","name":"my-secret","readonly":true,"secretName":"test","serialNumber":"CVLY623300HK240D","type":"secret"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
+| service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
@@ -32,7 +32,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.interfaces[0] | object | `{"bridge":{},"name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
 | virtualMachine.machine.cpuPassthrough | bool | `true` | Pass all CPU features and capabilities to Guest |
 | virtualMachine.machine.hyperThreadingEnabled | bool | `false` | Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs. |
-| virtualMachine.machine.instancetype | object | `{"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. cannot be overridden. |
+| virtualMachine.machine.instancetype | object | `{"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Uncomment to enable. Overrides: vCores, memory, gpus |
 | virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
 | virtualMachine.machine.memory | string | `"4Gi"` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
 | virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |

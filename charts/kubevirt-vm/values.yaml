@@ -32,7 +32,8 @@ virtualMachine:
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
     priorityClassName: vm-standard
-    # -- Define CPU, RAM, GPU, HostDevice settings for VMs. cannot be overridden.
+    # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
+    # Uncomment to enable. Overrides: vCores, memory, gpus
     instancetype:
       name: standard-small
       kind: virtualMachineClusterInstancetype
@@ -222,13 +223,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-# - name: my-configmap
-#   type: configmap
-#   method: disk
-#   bootorder: 3
-#   readonly: true
-#   configMap: my-configmap
-#   serialNumber: CVLY623300HK240D
+#  - name: my-configmap
+#     type: configmap
+#     method: disk
+#     bootorder: 3
+#     readonly: true
+#     configMap: my-configmap
+#     serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
@@ -237,23 +238,19 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-# - name: my-secret
-#   type: secret
-#   method: filesystem
-#   bootorder: 3
-#   readonly: true
-#   configMap: my-configmap
-#   serialNumber: CVLY623300HK240D
+  - name: my-secret
+    type: secret
+    method: disk
+    bootorder: 3
+    readonly: true
+    secretName: test
+    serialNumber: CVLY623300HK240D
 
-# -- Service objects are used to expose the VM to the outside world.
-# Just like int he cloud each VM starts off isolated and will need
-# to be exposed via a LoadBalancer, NodePort, or ClusterIp service.
-
+# -- Service cinfiguration. Used to expose VM to the outside world.
+# Accepts a list of ports to open.
 service:
-#########################
-# NodePort Example
 - name: service
-  type: LoadBalancer
+  type: NodePort
   externalTrafficPolicy: Cluster
   ports:
     - name: ssh
@@ -264,20 +261,6 @@ service:
       port: 5900
       targetPort: 5900
       protocol: TCP
-#########################
-# LaodBalancer Example
-# - name: vm0-lb
-#   type: LoadBalancer
-#   externalTrafficPolicy: Cluster
-#   ports:
-#     - name: ssh
-#       port: 22
-#       targetPort: 22
-#       protocol: TCP
-#     - name: vnc
-#       port: 5900
-#       targetPort: 5900
-#       protocol: TCP
 
 # -- enable or disable usage of cloud-init
 cloudinit:
