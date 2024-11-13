@@ -1,6 +1,6 @@
 # kubevirt-manager
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Install the Kubevirt Manager UI
 
@@ -21,9 +21,9 @@ Install the Kubevirt Manager UI
 | ingress.hostname | string | `"kubevirt.example.com"` |  |
 | ingress.tls.enabled | bool | `false` |  |
 | ingress.tls.secretName | string | `"tls-kubevirt-manager"` |  |
-| prometheus.enabled | bool | `false` |  |
-| prometheus.serviceName | string | `"prometheus-prometheus"` |  |
-| prometheus.serviceNamesapce | string | `"prometheus"` |  |
+| prometheus.enabled | bool | `true` |  |
+| prometheus.serviceName | string | `"thanos-app-query-frontend"` |  |
+| prometheus.serviceNamesapce | string | `"default"` |  |
 | replicaCount | int | `1` |  |
 | service.name | string | `"http"` |  |
 | service.port | int | `8080` |  |

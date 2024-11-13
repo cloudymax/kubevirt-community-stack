@@ -7,9 +7,9 @@ service:
   name: http
 
 prometheus:
-  enabled: false
-  serviceName: "prometheus-prometheus"
-  serviceNamesapce: "prometheus"
+  enabled: true
+  serviceName: "thanos-app-query-frontend"
+  serviceNamesapce: "default"
 
 ingress:
   enabled: false
