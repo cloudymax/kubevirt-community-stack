@@ -9,7 +9,7 @@ metadata:
   namespace: {{ .Values.virtualMachine.namespace }}
   name: {{ .Values.virtualMachine.name }}
 spec:
-  {{- if .Values.virtualMachine.machine.instancetype }}
+  {{- if eq .Values.virtualMachine.machine.instancetype.enabled true }}
   instancetype:
     name: {{ .Values.virtualMachine.machine.instancetype.name }}
     kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
@@ -26,26 +26,26 @@ spec:
       domain:
         features:
           {{- if .Values.virtualMachine.features.kvmEnabled -}}
-          {{ "kvm: {}" | nindent 14 }}
+          {{ "kvm: {}" | nindent 10 }}
           {{- end }}
           {{- if .Values.virtualMachine.features.acpiEnabled -}}
-          {{ "acpi: {}" | nindent 14 }}
+          {{ "acpi: {}" | nindent 10 }}
           {{- end }}
           {{- if .Values.virtualMachine.features.smmEnabled -}}
-          {{ "smm:"  | nindent 14 -}}
-          {{ "enabled: true"  | nindent 16 }}
+          {{ "smm:"  | nindent 10 -}}
+          {{ "enabled: true"  | nindent 12 }}
           {{- end }}
         cpu:
           {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
-          {{ "model: host-passthrough" | nindent 14 }}
+          {{ "model: host-passthrough" | nindent 10 }}
           {{- end }}
-          {{- if not .Values.virtualMachine.machine.instancetype }}
+          {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
           sockets: 1
           cores: {{ .Values.virtualMachine.machine.vCores -}}
           {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
-          {{- "threads: 2" | nindent 14 -}}
+          {{- "threads: 2" | nindent 10 -}}
           {{ else }}
-          {{- "threads: 1" | nindent 14 -}}
+          {{- "threads: 1" | nindent 10 -}}
           {{- end }}
           {{- end }}
         firmware:
@@ -59,18 +59,19 @@ spec:
         devices:
           {{- with .Values.virtualMachine.interfaces }}
           interfaces:
-          {{- toYaml . | nindent 14 }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- if not .Values.virtualMachine.machine.instancetype }}
+          {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
           {{- with .Values.virtualMachine.gpus }}
           gpus:
-          {{- toYaml . | nindent 14 }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- end }}
           autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
           autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
           autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
           networkInterfaceMultiqueue: {{ .Values.virtualMachine.features.networkInterfaceMultiqueue }}
+          rng: {}
           inputs:
           - type: tablet
             bus: virtio
@@ -94,20 +95,22 @@ spec:
             {{- if eq $props.type "configmap" }}
           - name: {{ $props.name }}
             serial: {{ $props.serialNumber }}
+            cdrom:
+              bus: sata
             {{- end }}
             {{- if eq $props.type "secret" }}
           - name: {{ $props.name }}
             serial: {{ $props.serialNumber }}
             {{- end }}
             {{- end }}
-        {{- if not .Values.virtualMachine.machine.instancetype }}
+        {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
         resources:
           limits:
             memory: {{ .Values.virtualMachine.machine.memory }}
         {{- end }}
       {{- with .Values.virtualMachine.networks }}
       networks:
-      {{- toYaml . | nindent 10 }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       terminationGracePeriodSeconds: 0
       priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}
