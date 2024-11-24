@@ -44,7 +44,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
 | virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.vCores | int | `4` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
-| virtualMachine.name | string | `"scrapmetal"` | name of the virtualMachine or virtualMachinePool object |
+| virtualMachine.name | string | `"scrapmetal2"` | name of the virtualMachine or virtualMachinePool object |
 | virtualMachine.namespace | string | `"kubevirt"` | namespace to deploy |
 | virtualMachine.networks[0].name | string | `"default"` |  |
 | virtualMachine.networks[0].pod | object | `{}` |  |

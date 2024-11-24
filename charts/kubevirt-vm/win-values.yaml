@@ -14,13 +14,27 @@ virtualMachine:
     autoattachPodInterface: true
     autoattachSerialConsole: true
     autoattachGraphicsDevice: true
+    hyperv: true
+    clock:
+      enabled: true
+      hpet:
+        enabled: true
+        present: false
+      pit:
+        enabled: true
+        tickPolicy: delay
+      rtc:
+        enabled: true
+        tickPolicy: catchup
+      kvm: false
+      hyperv: true
 
   machine:
     instancetype:
       enabled: false
     priorityClassName: vm-standard
     machineType: "q35"
-    cpuPassthrough: true
+    cpuModel: host-passthrough
     vCores: 4
     pinCores: false
     hyperThreadingEnabled: true
@@ -31,7 +45,7 @@ virtualMachine:
   interfaces:
     - name: default
       bridge: {}
-      model: e1000e
+      model: e1000
 
   networks:
   - name: default

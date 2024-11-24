@@ -31,15 +31,15 @@ spec:
         clock:
           utc: {}
           timer:
-            {{ if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
+            {{- if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
             hpet:
               present: {{ .Values.virtualMachine.features.clock.hpet.present }}
             {{- end }}
-            {{ if eq .Values.virtualMachine.features.clock.pit.enabled true }}
+            {{- if eq .Values.virtualMachine.features.clock.pit.enabled true }}
             pit:
               tickPolicy: {{ .Values.virtualMachine.features.clock.pit.tickPolicy }}
             {{- end }}
-            {{ if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
+            {{- if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
             rtc:
               tickPolicy: {{ .Values.virtualMachine.features.clock.rtc.tickPolicy }}
             {{- end }}

@@ -2,7 +2,7 @@
 # Virtual Machine settings
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
-  name: scrapmetal
+  name: scrapmetal2
   # -- namespace to deploy
   namespace: kubevirt
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
