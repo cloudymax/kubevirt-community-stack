@@ -28,6 +28,25 @@ virtualMachine:
     autoattachGraphicsDevice: true
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
+    # -- Set default hyperv settings for windows guests
+    hyperv: false
+    # -- Options for machine clock
+    clock:
+      enabled: true
+      # -- High Precision Event Timer
+      hpet:
+        enabled: true
+        present: false
+      # -- Programmable interval timer
+      pit:
+        enabled: true
+        tickPolicy: delay
+      # -- Real-Time Clock
+      rtc:
+        enabled: true
+        tickPolicy: catchup
+      kvm: true
+      hyperv: false
 
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
@@ -35,12 +54,16 @@ virtualMachine:
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
     # Uncomment to enable. Overrides: vCores, memory, gpus
     instancetype:
+      enabled: true
       name: standard-small
       kind: virtualMachineClusterInstancetype
+    # -- Arch
+    architecture: amd64
     # -- QEMU virtual-machine type
-    machineType: "q35"
-    # -- Pass all CPU features and capabilities to Guest
-    cpuPassthrough: true
+    machineType: q35
+    # -- Specify hots-passthrough or a named cpu model
+    # https://www.qemu.org/docs/master/system/qemu-cpu-models.html
+    cpuModel: host-passthrough
     # -- Number of Virtual cores to pass to the Guest
     # ignored when instancetype is defined
     vCores: 4
@@ -238,13 +261,13 @@ disks:
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
 ###########################################################
-  - name: my-secret
-    type: secret
-    method: disk
-    bootorder: 3
-    readonly: true
-    secretName: test
-    serialNumber: CVLY623300HK240D
+#  - name: my-secret
+#    type: secret
+#    method: disk
+#    bootorder: 3
+#    readonly: true
+#    secretName: test
+#    serialNumber: CVLY623300HK240D
 
 # -- Service cinfiguration. Used to expose VM to the outside world.
 # Accepts a list of ports to open.
