@@ -43,14 +43,13 @@ spec:
                 key: password
 	  {{- end }}
 	  {{- end }}
-          {{- if .Values.envsubst }}
+          {{- with .Values.extraEnvVars }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- if eq .Values.envsubst true }}
           - name: ENVSUBST
             value: "true"
- 	  {{- range $reg, $props := .Values.envsubst }}
-          - name: {{ $props.var }}
-            value: {{ $props.value }}
 	  {{- end }}
-          {{- end }}
           {{- if .Values.debug }}
           command: ["/bin/sleep", "365d"]
           {{- else }}
