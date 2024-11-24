@@ -9,7 +9,7 @@ metadata:
   namespace: {{ .Values.virtualMachine.namespace }}
   name: {{ .Values.virtualMachine.name }}
 spec:
-  {{- if .Values.virtualMachine.machine.instancetype }}
+  {{- if eq .Values.virtualMachine.machine.instancetype.enabled true }}
   instancetype:
     name: {{ .Values.virtualMachine.machine.instancetype.name }}
     kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
@@ -23,29 +23,73 @@ spec:
         kubevirt-service: {{ .Values.virtualMachine.name }}
         kubevirt-manager.io/managed: "true"
     spec:
+      architecture: {{ .Values.virtualMachine.machine.architecture }}
       domain:
+        machine:
+          type: {{ .Values.virtualMachine.machine.machineType }}
+        {{- if eq .Values.virtualMachine.features.clock.enabled true }}
+        clock:
+          utc: {}
+          timer:
+            {{- if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
+            hpet:
+              present: {{ .Values.virtualMachine.features.clock.hpet.present }}
+            {{- end }}
+            {{- if eq .Values.virtualMachine.features.clock.pit.enabled true }}
+            pit:
+              tickPolicy: {{ .Values.virtualMachine.features.clock.pit.tickPolicy }}
+            {{- end }}
+            {{- if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
+            rtc:
+              tickPolicy: {{ .Values.virtualMachine.features.clock.rtc.tickPolicy }}
+            {{- end }}
+            {{- if eq .Values.virtualMachine.features.clock.hyperv true }}
+            hyperv: {}
+            {{- end }}
+            {{- if eq .Values.virtualMachine.features.clock.kvm true }}
+            kvm: {}
+            {{- end }}
+        {{- end }}
         features:
-          {{- if .Values.virtualMachine.features.kvmEnabled -}}
-          {{ "kvm: {}" | nindent 14 }}
+          {{- if eq .Values.virtualMachine.features.kvmEnabled true -}}
+          {{ "kvm: {}" | nindent 10 }}
           {{- end }}
-          {{- if .Values.virtualMachine.features.acpiEnabled -}}
-          {{ "acpi: {}" | nindent 14 }}
+          {{- if eq .Values.virtualMachine.features.acpiEnabled true -}}
+          {{ "acpi: {}" | nindent 10 }}
           {{- end }}
-          {{- if .Values.virtualMachine.features.smmEnabled -}}
-          {{ "smm:"  | nindent 14 -}}
-          {{ "enabled: true"  | nindent 16 }}
+          {{- if eq .Values.virtualMachine.features.smmEnabled true -}}
+          {{ "smm:"  | nindent 10 -}}
+          {{ "enabled: true"  | nindent 12 }}
+          {{- end }}
+          {{- if eq .Values.virtualMachine.features.hyperv true }}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            vpindex: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer:
+              direct: {}
+            tlbflush: {}
+            frequencies: {}
+            reenlightenment: {}
+            ipi: {}
+            runtime: {}
+            reset: {}
           {{- end }}
         cpu:
-          {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
-          {{ "model: host-passthrough" | nindent 14 }}
+          {{- if eq .Values.virtualMachine.machine.pinCores true }}
+          dedicatedCpuPlacement: true
           {{- end }}
-          {{- if not .Values.virtualMachine.machine.instancetype }}
+          model: {{ .Values.virtualMachine.machine.cpuModel }}
+          {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
           sockets: 1
           cores: {{ .Values.virtualMachine.machine.vCores -}}
           {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
-          {{- "threads: 2" | nindent 14 -}}
+          {{- "threads: 2" | nindent 10 -}}
           {{ else }}
-          {{- "threads: 1" | nindent 14 -}}
+          {{- "threads: 1" | nindent 10 -}}
           {{- end }}
           {{- end }}
         firmware:
@@ -53,24 +97,25 @@ spec:
           bootloader:
             efi:
               secureBoot: {{ .Values.virtualMachine.features.secureBoot }}
-        {{ else }}
+        {{- else }}
           bootloader: {}
         {{- end }}
         devices:
           {{- with .Values.virtualMachine.interfaces }}
           interfaces:
-          {{- toYaml . | nindent 14 }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- if not .Values.virtualMachine.machine.instancetype }}
+          {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
           {{- with .Values.virtualMachine.gpus }}
           gpus:
-          {{- toYaml . | nindent 14 }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- end }}
           autoattachPodInterface: {{ .Values.virtualMachine.features.autoattachPodInterface }}
           autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
           autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
           networkInterfaceMultiqueue: {{ .Values.virtualMachine.features.networkInterfaceMultiqueue }}
+          rng: {}
           inputs:
           - type: tablet
             bus: virtio
@@ -94,20 +139,22 @@ spec:
             {{- if eq $props.type "configmap" }}
           - name: {{ $props.name }}
             serial: {{ $props.serialNumber }}
+            cdrom:
+              bus: sata
             {{- end }}
             {{- if eq $props.type "secret" }}
           - name: {{ $props.name }}
             serial: {{ $props.serialNumber }}
             {{- end }}
             {{- end }}
-        {{- if not .Values.virtualMachine.machine.instancetype }}
+        {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
         resources:
           limits:
             memory: {{ .Values.virtualMachine.machine.memory }}
         {{- end }}
       {{- with .Values.virtualMachine.networks }}
       networks:
-      {{- toYaml . | nindent 10 }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       terminationGracePeriodSeconds: 0
       priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}

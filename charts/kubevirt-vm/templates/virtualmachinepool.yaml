@@ -24,38 +24,81 @@ spec:
         kubevirt-service: {{ .Values.virtualMachine.name }}
         kubevirt-manager.io/managed: "true"
     spec:
-      {{- if .Values.virtualMachine.machine.instancetype }}
+      {{- if eq .Values.virtualMachine.machine.instancetype.enabled true }}
       instancetype:
         name: {{ .Values.virtualMachine.machine.instancetype.name }}
         kind: {{ .Values.virtualMachine.machine.instancetype.kind }}
       {{- end }}
-      running: true
+      runStrategy: {{ .Values.virtualMachine.runStrategy }}
       template:
         metadata:
           creationTimestamp: null
           labels:
-            kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
             kubevirt.io/domain: {{ .Values.virtualMachine.name }}
             kubevirt-service: {{ .Values.virtualMachine.name }}
             kubevirt-manager.io/managed: "true"
         spec:
+          architecture: {{ .Values.virtualMachine.machine.architecture }}
           domain:
+            machine:
+              type: {{ .Values.virtualMachine.machine.machineType }}
+            {{- if eq .Values.virtualMachine.features.clock.enabled true }}
+            clock:
+              utc: {}
+              timer:
+                {{- if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
+                hpet:
+                  present: {{ .Values.virtualMachine.features.clock.hpet.present }}
+                {{- end }}
+                {{- if eq .Values.virtualMachine.features.clock.pit.enabled true }}
+                pit:
+                  tickPolicy: {{ .Values.virtualMachine.features.clock.pit.tickPolicy }}
+                {{- end }}
+                {{- if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
+                rtc:
+                  tickPolicy: {{ .Values.virtualMachine.features.clock.rtc.tickPolicy }}
+                {{- end }}
+                {{- if eq .Values.virtualMachine.features.clock.hyperv true }}
+                hyperv: {}
+                {{- end }}
+                {{- if eq .Values.virtualMachine.features.clock.kvm true }}
+                kvm: {}
+                {{- end }}
+            {{- end }}
             features:
-              {{- if .Values.virtualMachine.features.kvmEnabled -}}
+              {{- if eq .Values.virtualMachine.features.kvmEnabled true -}}
               {{ "kvm: {}" | nindent 14 }}
               {{- end }}
-              {{- if .Values.virtualMachine.features.acpiEnabled -}}
+              {{- if eq .Values.virtualMachine.features.acpiEnabled true -}}
               {{ "acpi: {}" | nindent 14 }}
               {{- end }}
-              {{- if .Values.virtualMachine.features.smmEnabled -}}
+              {{- if eq .Values.virtualMachine.features.smmEnabled true -}}
               {{ "smm:"  | nindent 14 -}}
               {{ "enabled: true"  | nindent 16 }}
               {{- end }}
-            cpu:
-              {{- if .Values.virtualMachine.machine.cpuPassthrough -}}
-              {{ "model: host-passthrough" | nindent 14 }}
+              {{- if eq .Values.virtualMachine.features.hyperv true }}
+              hyperv:
+                relaxed: {}
+                vapic: {}
+                vpindex: {}
+                spinlocks:
+                  spinlocks: 8191
+                synic: {}
+                synictimer:
+                  direct: {}
+                tlbflush: {}
+                frequencies: {}
+                reenlightenment: {}
+                ipi: {}
+                runtime: {}
+                reset: {}
               {{- end }}
-              {{- if not .Values.virtualMachine.machine.instancetype }}
+            cpu:
+              {{- if eq .Values.virtualMachine.machine.pinCores true }}
+              dedicatedCpuPlacement: true
+              {{- end }}
+              model: {{ .Values.virtualMachine.machine.cpuModel }}
+              {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
               sockets: 1
               cores: {{ .Values.virtualMachine.machine.vCores -}}
               {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
@@ -69,7 +112,7 @@ spec:
               bootloader:
                 efi:
                   secureBoot: {{ .Values.virtualMachine.features.secureBoot }}
-            {{ else }}
+            {{- else }}
               bootloader: {}
             {{- end }}
             devices:
@@ -77,7 +120,7 @@ spec:
               interfaces:
               {{- toYaml . | nindent 14 }}
               {{- end }}
-              {{- if not .Values.virtualMachine.machine.instancetype }}
+              {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
               {{- with .Values.virtualMachine.gpus }}
               gpus:
               {{- toYaml . | nindent 14 }}
@@ -87,6 +130,7 @@ spec:
               autoattachSerialConsole: {{ .Values.virtualMachine.features.autoattachSerialConsole }}
               autoattachGraphicsDevice: {{ .Values.virtualMachine.features.autoattachGraphicsDevice }}
               networkInterfaceMultiqueue: {{ .Values.virtualMachine.features.networkInterfaceMultiqueue }}
+              rng: {}
               inputs:
               - type: tablet
                 bus: virtio
@@ -107,23 +151,25 @@ spec:
                 {{- end }}
                 {{- end }}
                 {{- end }}
-                {{- if $props.configMap }}
+                {{- if eq $props.type "configmap" }}
               - name: {{ $props.name }}
                 serial: {{ $props.serialNumber }}
+                cdrom:
+                  bus: sata
                 {{- end }}
                 {{- if eq $props.type "secret" }}
               - name: {{ $props.name }}
                 serial: {{ $props.serialNumber }}
                 {{- end }}
                 {{- end }}
-            {{- if not .Values.virtualMachine.machine.instancetype }}
+            {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
             resources:
               limits:
                 memory: {{ .Values.virtualMachine.machine.memory }}
             {{- end }}
           {{- with .Values.virtualMachine.networks }}
           networks:
-          {{- toYaml . | nindent 10 }}
+          {{- toYaml . | nindent 12 }}
           {{- end }}
           terminationGracePeriodSeconds: 0
           priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}
