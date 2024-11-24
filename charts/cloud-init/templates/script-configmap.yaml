@@ -1,3 +1,4 @@
+{{ if eq .Values.existingConfigMap false }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,3 +7,4 @@ metadata:
 data:
   optimize.sh: |
     {{ .Files.Get "scripts/optimize.sh" | nindent 4}}
+{{- end }}

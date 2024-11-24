@@ -2,7 +2,7 @@
 # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
 # -- name of secret in which to save the user-data file
-secret_name: friend-scrapmetal-user-data
+secret_name: max-scrapmetal-user-data
 
 # -- image version
 image: deserializeme/kv-cloud-init:v0.0.1
@@ -10,20 +10,36 @@ image: deserializeme/kv-cloud-init:v0.0.1
 # -- Choose weather to create a service-account or not. Once a SA has been created
 # you should set this to false on subsequent runs.
 serviceAccount:
-  create: true
+  create: false
   name: cloud-init-sa
   existingServiceAccountName: "cloud-init-sa"
 
+# -- Dont recreate script configmap. Set to true when keeping multiple
+# cloud-init secrets in the same namespace
+existingConfigMap: true
+
 # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
 # Not an official part of cloid-init
-envsubst:
-  - var: USERNAME
-    value: friend
-  - var: GITHUB_USER
+envsubst: true
+
+extraEnvVars:
+  - name: USERNAME
+    value: max
+  - name: GITHUB_USER
     value: cloudymax
+  - name: REPO_OWNER
+    value: buildstar-online
+  - name: REPO_NAME
+    value: nvidia-desktops
+  - name: ACCESS_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: test
+        key: "test.yaml"
+
 
 # -- virtual-machine hostname
-hostname: scrapmetal
+hostname: random
 
 # -- namespace in which to create resources
 namespace: kubevirt
@@ -57,7 +73,7 @@ wireguard: []
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
 # do NOT use 'admin' as username - it conflicts with multiele cloud-images
 users:
-  - name: friend
+  - name: pool
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
@@ -92,23 +108,46 @@ boot_cmd: []
 # -- Write arbitrary files to disk.
 # Files my be provided as plain-text or downloaded from a url
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
-write_files: {}
-#  - path: /etc/ssh/ssh_config
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
-#  - path: /tmp/test.yaml
-#    permissions: '0644'
-#    content: |-
-#      foo: bar
+write_files:
+  - path: /home/${USERNAME}/runner.sh
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
+  - path: /etc/apt-sources.list
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-apt-sources.list"
+  - path: /etc/default/laocalw
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-locale"
+  - path: /etc/default/keyboard
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-keyboard"
+  - path: /etc/ssh/sshd_config
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
 
 # -- Update, upgrade, and install packages
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
-package_reboot_if_required: true
+package_reboot_if_required: false
 package_update: true
-package_upgrade: true
+package_upgrade: false
 packages:
   - ssh-import-id
-  - neovim
+  - curl
+  - tmux
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - git-extras
+  - rsyslog
+  - vim
+  - gpg
+  - open-iscsi
+  - nfs-common
+  - bc
+  - zip
+  - pkg-config
+  - pipx
+  - jq
 
 # -- Run arbitrary commands
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
@@ -116,5 +155,18 @@ runcmd:
   - mkdir -p /home/${USERNAME}/shared
   - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
   - sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}
-  - [ sed , -i , "s/PasswordAuthentication no/PasswordAuthentication yes/g" , /etc/ssh/sshd_config ]
-  - systemctl restart sshd
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install -y docker-ce
+  - wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+  - chmod +x /install.sh
+  - chmod 777 /install.sh
+  - sudo -u ${USERNAME} NONINTERACTIVE=1 /bin/bash /install.sh
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew shellenv >> /home/${USERNAME}/.profile
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/opt/python@3.11/libexec/bin >> /home/${USERNAME}/.profile
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew install python@3.11
+  - sudo chown -R ${USERNAME}:${USERNAME} /home/linuxbrew
+  - sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+  - chmod +x /usr/bin/yq

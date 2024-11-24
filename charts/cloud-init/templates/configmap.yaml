@@ -39,8 +39,8 @@ data:
     boot_cmd:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- range $reg, $props := .Values.write_files }}
     write_files:
+    {{- range $reg, $props := .Values.write_files }}
       - path: {{ $props.path }}
         permissions: {{ $props.permissions | quote }}
       {{- if $props.url }}
