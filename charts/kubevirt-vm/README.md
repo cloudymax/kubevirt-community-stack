@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.3.8](https://img.shields.io/badge/Version-0.3.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -10,13 +10,19 @@ Configure a virtual machine for use with Kubevirt
 | ---- | ------ | --- |
 | cloudymax | <emax@cloudydev.net> | <https://github.com/cloudymax/> |
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.3 |
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | cloudinit | object | `{"enabled":true,"secretName":"friend-scrapmetal-user-data"}` | enable or disable usage of cloud-init |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when IO errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
-| disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
+| disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"},{"bootorder":3,"configMap":"my-configmap","method":"disk","name":"my-configmap","readonly":true,"serialNumber":"CVLY623300HK240D","type":"configmap","volumeLabel":"cfgdata"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
 | service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
