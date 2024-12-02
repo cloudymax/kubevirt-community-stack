@@ -39,7 +39,7 @@ Kubevirt Community Stack
       --set infrastructure=kubevirt:v0.1.8 \
       --wait --timeout 90s
     ```
-    
+
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
     ```bash
@@ -48,15 +48,15 @@ Kubevirt Community Stack
       --namespace cdi \
       --create-namespace
     ```
-    
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Create an optimized cloud-init user-data file as a kubernetes secret. Adds additional functionality for `wireguard`, `write_files`, and `password` modules. 
+
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Create an optimized cloud-init user-data file as a kubernetes secret. Adds additional functionality for `wireguard`, `write_files`, and `password` modules.
 
     ```bash
     helm repo add cloudinit https://cloudymax.github.io/kubevirt-community-stack
     helm install <username>-<hostname> cloudinit/cloud-init
     ```
-  
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines and vm-pools with Kubevirt via helm
+
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines and vm-pools with Kubevirt via helm. Optionally define cloud-init data.
 
     ```bash
     # Customize your own values.yaml before deploying
@@ -67,7 +67,7 @@ Kubevirt Community Stack
     ```
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
-    
+
     ```bash
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
@@ -110,7 +110,7 @@ Kubevirt is made up of several pieces:
    export CAPK_GUEST_K8S_VERSION="v1.23.10"
    export CRI_PATH="/var/run/containerd/containerd.sock"
    export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
-   
+
    clusterctl generate cluster capi-quickstart \
    --infrastructure="kubevirt:v0.1.8" \
    --flavor lb \
@@ -165,7 +165,7 @@ Kubevirt is made up of several pieces:
 3. clusterctl
 
     The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
-   
+
     ```bash
     curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
     sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
