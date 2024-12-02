@@ -245,14 +245,18 @@ disks:
 # Must be mounted via cloud init
 # see https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-disk and
 # https://kubevirt.io/user-guide/storage/disks_and_volumes/#as-a-filesystem
+#
+# Configmaps may also specify the volumeLable field which informs the guest OS
+# of the disk name. Useful for windows vms.
 ###########################################################
-#  - name: my-configmap
-#     type: configmap
-#     method: disk
-#     bootorder: 3
-#     readonly: true
-#     configMap: my-configmap
-#     serialNumber: CVLY623300HK240D
+  - name: my-configmap
+    type: configmap
+    volumeLabel: cfgdata
+    method: disk
+    bootorder: 3
+    readonly: true
+    configMap: my-configmap
+    serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example

@@ -178,6 +178,7 @@ spec:
         {{- if eq "configmap" $props.type }}
         - name: {{ $props.name }}
           configMap:
+            volumeLable: {{ $props.volumeLabel }}
             name: {{ $props.configMap }}
         {{- end }}
         {{- if eq "secret" $props.type }}
