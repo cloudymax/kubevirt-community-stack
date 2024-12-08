@@ -2,7 +2,7 @@
 # Virtual Machine settings
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
-  name: scrapmetal2
+  name: test
   # -- namespace to deploy to
   namespace: kubevirt
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
@@ -238,14 +238,14 @@ disks:
 # Configmaps may also specify the volumeLable field which informs the guest OS
 # of the disk name. Useful for windows vms.
 ###########################################################
-  - name: my-configmap
-    type: configmap
-    volumeLabel: cfgdata
-    method: disk
-    bootorder: 3
-    readonly: true
-    configMap: my-configmap
-    serialNumber: CVLY623300HK240D
+#  - name: my-configmap
+#    type: configmap
+#    volumeLabel: cfgdata
+#    method: disk
+#    bootorder: 3
+#    readonly: true
+#    configMap: my-configmap
+#    serialNumber: CVLY623300HK240D
 
 ###########################################################
 # ConfigMap example
@@ -298,12 +298,120 @@ service:
 #     port: 1500
 
 # -- Use an existing cloud-init userdata secret
+# ignored if cloudinit subchart is enabled.
 userDataSecret:
-  enabled: true
+  enabled: false
   name: friend-scrapmetal-user-data
 
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
   enabled: true
 
+  # Not all cloud-init modules are currently supported
+  # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
+  # -- name of secret in which to save the user-data file
+  secret_name: test-scrapmetal-user-data
+
+  # -- image version
+  image: deserializeme/kv-cloud-init:v0.0.1
+
+  # -- Choose weather to create a service-account or not. Once a SA has been created
+  # you should set this to false on subsequent runs.
+  serviceAccount:
+    create: false
+    name: cloud-init-sa
+    existingServiceAccountName: "cloud-init-sa"
+
+  # -- Dont recreate script configmap. Set to true when keeping multiple
+  # cloud-init secrets in the same namespace
+  existingConfigMap: true
+
+  # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
+  # Not an official part of cloid-init
+  envsubst: false
+
+  extraEnvVars: []
+
+  # -- virtual-machine hostname
+  hostname: test
+
+  # -- namespace in which to create resources
+  namespace: kubevirt
+
+  # -- Disable root login over ssh
+  disable_root: false
+
+  # -- when enabled job sleeps to allow user to exec into the container
+  debug: false
+
+  # -- salt used for password generation
+  salt: "saltsaltlettuce"
+
+  # -- networking options
+  network:
+    # --  disable cloud-init’s network configuration capability and rely on
+    # other methods such as embedded configuration or other customisations.
+    config: disabled
+
+  # -- add wireguard configuration from existing secret or as plain-text
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard
+  wireguard: []
+  #  interfaces:
+  #    - name: wg0
+  #      config_path: /etc/wireguard/wg0.conf
+  #      existingSecret:
+  #        name: wg0-credentials
+  #        key: wg0.conf
+
+  # -- user configuration options
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
+  # do NOT use 'admin' as username - it conflicts with multiele cloud-images
+  users:
+    - name: test
+      groups: users, admin, docker, sudo, kvm
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      shell: /bin/bash
+      lock_passwd: false
+
+      # -- set user password from existing secret or generate random
+      password:
+        random: true
+      #  random: false
+      #  existingSecret:
+      #    name: admin-password
+      #    key: password
+
+      # -- import user ssh public keys from github, gitlab, or launchpad
+      # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
+      ssh_import_id: []
+
+      # -- provider user ssh pub key as plaintext
+      ssh_authorized_keys: []
+
+  # -- Add CA certificates
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates
+  ca_certs: []
+  #  remove_defaults: true
+  #  trusted:
+  #    - certificate
+
+  # -- Run arbitrary commands early in the boot process
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd
+  boot_cmd: []
+
+  # -- Write arbitrary files to disk.
+  # Files my be provided as plain-text or downloaded from a url
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
+  write_files: []
+
+  # -- Update, upgrade, and install packages
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
+  package_reboot_if_required: false
+  package_update: false
+  package_upgrade: false
+  packages: []
+
+  # -- Run arbitrary commands
+  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
+  runcmd: []

@@ -121,7 +121,7 @@ spec:
             bus: virtio
             name: tablet1
           disks:
-          {{- if eq .Values.userDataSecret.enabled true }}
+          {{- if or (eq .Values.userDataSecret.enabled true) (eq .Values.cloudinit.enabled true) }}
           - name: cloudinitvolume
             cdrom:
               bus: sata
@@ -213,10 +213,17 @@ spec:
               claimName: {{ $props.pvc }}
         {{- end }}
         {{- end }}
-        {{- if eq .Values.userDataSecret.enabled true }}
+        {{- if or (eq .Values.userDataSecret.enabled true) (eq .Values.cloudinit.enabled true) }}
         - name: cloudinitvolume
           cloudInitNoCloud:
             secretRef:
+              {{- if eq .Values.userDataSecret.enabled true }}
+              {{- if eq .Values.cloudinit.enabled false }}
               name: {{ .Values.userDataSecret.name }}
+              {{- end }}
+              {{- end }}
+              {{- if eq .Values.cloudinit.enabled true }}
+              name: {{ .Values.cloudinit.secret_name }}
+              {{- end }}
         {{- end }}
 {{- end }}
