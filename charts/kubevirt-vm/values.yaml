@@ -3,7 +3,7 @@
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
   name: scrapmetal2
-  # -- namespace to deploy
+  # -- namespace to deploy to
   namespace: kubevirt
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
   # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
@@ -52,7 +52,7 @@ virtualMachine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
     priorityClassName: vm-standard
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
-    # Uncomment to enable. Overrides: vCores, memory, gpus
+    # Overrides: vCores, memory, gpus
     instancetype:
       enabled: true
       name: standard-small
@@ -116,17 +116,6 @@ diskErrorPolicy: "report"
 #############################
 # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
 disks:
-
-#############################
-# Cloud-init no-cloud example
-# hold your user-data file
-# Must be the first boot device
-# - name: cloudinitvolume
-#   type: cdrom
-#   bus: sata
-#   readonly: true
-#   bootorder: 1
-#   pv-enable: false
 
 #################################################
 # DataVolume disk with URL source example
@@ -289,10 +278,6 @@ service:
       targetPort: 5900
       protocol: TCP
 
-# -- enable or disable usage of cloud-init
-cloudinit:
-  enabled: true
-  secretName: friend-scrapmetal-user-data
 
 # -- set tieming and port number for liveness probe
 # livenessProbe:
@@ -311,3 +296,14 @@ cloudinit:
 #   successThreshold: 3
 #   httpGet:
 #     port: 1500
+
+# -- Use an existing cloud-init userdata secret
+userDataSecret:
+  enabled: true
+  name: friend-scrapmetal-user-data
+
+# -- Enable or disable usage of cloud-init sub-chart
+cloudinit:
+  enabled: true
+
+
