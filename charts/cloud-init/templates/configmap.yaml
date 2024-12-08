@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.hostname}}-userdata
   namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-1"
 data:
   user-data.yaml: |-
     #cloud-config
