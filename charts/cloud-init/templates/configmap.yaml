@@ -42,6 +42,7 @@ data:
     boot_cmd:
       {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- if gt (len .Values.write_files) 0 }}
     write_files:
     {{- range $reg, $props := .Values.write_files }}
       - path: {{ $props.path }}
@@ -54,6 +55,7 @@ data:
           {{ $props.content}}
       {{- end }}
       {{- end }}
+    {{- end }}
     package_reboot_if_required: {{ .Values.package_reboot_if_required }}
     package_update: {{ .Values.package_update }}
     package_upgrade: {{ .Values.package_upgrade }}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 trap - SIGIGNT SIGTERM ERR EXIT
 [[ ! -x "$(command -v date)" ]] && echo "💥 date command not found." && exit 1
 [[ ! -x "$(command -v bc)" ]] && echo "💥 bc command not found." && exit 1
