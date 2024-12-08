@@ -12,6 +12,8 @@ virtualMachine:
   features:
     # -- Enable KVM acceleration
     kvmEnabled: true
+    # -- obscure virtualization details from the guest OS
+    kvmHidden: false
     # Enable ACPI platform event device
     acpiEnabled: true
     # Enable System Management Mode (required for secureboot)
@@ -100,7 +102,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC
 virtualMachinePool:
-  enabled: false
+  enabled: true
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 1
   hpa:
@@ -301,7 +303,7 @@ service:
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
   enabled: false
-  name: friend-scrapmetal-user-data
+  name: ""
 
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:

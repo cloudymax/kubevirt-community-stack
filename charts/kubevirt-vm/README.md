@@ -14,7 +14,7 @@ Configure a virtual machine for use with Kubevirt
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.3 |
+| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.6 |
 
 ## Values
 
@@ -46,7 +46,7 @@ Configure a virtual machine for use with Kubevirt
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when IO errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
 | disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
 | service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
-| userDataSecret | object | `{"enabled":false,"name":"friend-scrapmetal-user-data"}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
+| userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
@@ -58,6 +58,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.efiEnabled | bool | `true` | Enable EFI bios |
 | virtualMachine.features.hyperv | bool | `false` | Set default hyperv settings for windows guests |
 | virtualMachine.features.kvmEnabled | bool | `true` | Enable KVM acceleration |
+| virtualMachine.features.kvmHidden | bool | `false` | obscure virtualization details from the guest OS |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
 | virtualMachine.features.secureBoot | bool | `false` | Enable Secure boot (Requires EFI) |
 | virtualMachine.features.smmEnabled | bool | `true` |  |
@@ -78,7 +79,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.networks[0].name | string | `"default"` |  |
 | virtualMachine.networks[0].pod | object | `{}` |  |
 | virtualMachine.runStrategy | string | `"RerunOnFailure"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once` See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy |
-| virtualMachinePool.enabled | bool | `false` |  |
+| virtualMachinePool.enabled | bool | `true` |  |
 | virtualMachinePool.hpa.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.maxReplicas | int | `5` |  |
 | virtualMachinePool.hpa.minReplicas | int | `1` |  |
