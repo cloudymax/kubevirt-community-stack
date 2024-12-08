@@ -121,6 +121,14 @@ spec:
             bus: virtio
             name: tablet1
           disks:
+          {{- if or (eq .Values.userDataSecret.enabled true) (eq .Values.cloudinit.enabled true) }}
+          - name: cloudinitvolume
+            cdrom:
+              bus: sata
+              readonly: true
+            bootOrder: 1
+            errorPolicy: report
+          {{- end }}
             {{- range $reg, $props := .Values.disks }}
             {{- if ne "hostDisk" $props.type }}
             {{- if ne "configmap" $props.type }}
@@ -178,6 +186,7 @@ spec:
         {{- if eq "configmap" $props.type }}
         - name: {{ $props.name }}
           configMap:
+            volumeLable: {{ $props.volumeLabel }}
             name: {{ $props.configMap }}
         {{- end }}
         {{- if eq "secret" $props.type }}
@@ -204,10 +213,17 @@ spec:
               claimName: {{ $props.pvc }}
         {{- end }}
         {{- end }}
-        {{- if eq .Values.cloudinit.enabled true }}
+        {{- if or (eq .Values.userDataSecret.enabled true) (eq .Values.cloudinit.enabled true) }}
         - name: cloudinitvolume
           cloudInitNoCloud:
             secretRef:
-              name: {{ .Values.cloudinit.secretName }}
+              {{- if eq .Values.userDataSecret.enabled true }}
+              {{- if eq .Values.cloudinit.enabled false }}
+              name: {{ .Values.userDataSecret.name }}
+              {{- end }}
+              {{- end }}
+              {{- if eq .Values.cloudinit.enabled true }}
+              name: {{ .Values.cloudinit.secret_name }}
+              {{- end }}
         {{- end }}
 {{- end }}
