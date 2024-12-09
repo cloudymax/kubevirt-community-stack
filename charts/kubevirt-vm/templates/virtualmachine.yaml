@@ -51,15 +51,16 @@ spec:
             {{- end }}
         {{- end }}
         features:
-          {{- if eq .Values.virtualMachine.features.kvmEnabled true -}}
-          {{ "kvm: {}" | nindent 10 }}
+          {{- if eq .Values.virtualMachine.features.kvmEnabled true }}
+          kvm:
+            hidden: {{ .Values.virtualMachine.features.kvmHidden }}
           {{- end }}
-          {{- if eq .Values.virtualMachine.features.acpiEnabled true -}}
-          {{ "acpi: {}" | nindent 10 }}
+          {{- if eq .Values.virtualMachine.features.acpiEnabled true }}
+          acpi: {}
           {{- end }}
-          {{- if eq .Values.virtualMachine.features.smmEnabled true -}}
-          {{ "smm:"  | nindent 10 -}}
-          {{ "enabled: true"  | nindent 12 }}
+          {{- if eq .Values.virtualMachine.features.smmEnabled true }}
+          smm:
+            enabled: true
           {{- end }}
           {{- if eq .Values.virtualMachine.features.hyperv true }}
           hyperv:

@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -14,7 +14,7 @@ Configure a virtual machine for use with Kubevirt
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.3 |
+| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.6 |
 
 ## Values
 
@@ -43,10 +43,10 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.users[0].ssh_import_id | list | `[]` | import user ssh public keys from github, gitlab, or launchpad See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh |
 | cloudinit.wireguard | list | `[]` | add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard |
 | cloudinit.write_files | list | `[]` | Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files |
-| diskErrorPolicy | string | `"report"` | controls hypervisor behavior when IO errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
+| diskErrorPolicy | string | `"report"` | controls hypervisor behavior when I/O errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
 | disks | list | `[{"bootorder":2,"bus":"virtio","ephemeral":true,"name":"harddrive","pvc":"debian12","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
 | service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
-| userDataSecret | object | `{"enabled":false,"name":"friend-scrapmetal-user-data"}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
+| userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
@@ -58,6 +58,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.efiEnabled | bool | `true` | Enable EFI bios |
 | virtualMachine.features.hyperv | bool | `false` | Set default hyperv settings for windows guests |
 | virtualMachine.features.kvmEnabled | bool | `true` | Enable KVM acceleration |
+| virtualMachine.features.kvmHidden | bool | `true` | obscure virtualization details from the guest OS |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
 | virtualMachine.features.secureBoot | bool | `false` | Enable Secure boot (Requires EFI) |
 | virtualMachine.features.smmEnabled | bool | `true` |  |
@@ -70,7 +71,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.machine.instancetype | object | `{"enabled":true,"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus |
 | virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
 | virtualMachine.machine.memory | string | `"4Gi"` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
-| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
+| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical core Requires `--cpu-manager-policy` enabled in kubelet |
 | virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.vCores | int | `4` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
 | virtualMachine.name | string | `"test"` | name of the virtualMachine or virtualMachinePool object |

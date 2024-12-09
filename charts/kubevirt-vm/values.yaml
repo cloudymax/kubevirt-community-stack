@@ -12,6 +12,8 @@ virtualMachine:
   features:
     # -- Enable KVM acceleration
     kvmEnabled: true
+    # -- obscure virtualization details from the guest OS
+    kvmHidden: true
     # Enable ACPI platform event device
     acpiEnabled: true
     # Enable System Management Mode (required for secureboot)
@@ -67,7 +69,7 @@ virtualMachine:
     # -- Number of Virtual cores to pass to the Guest
     # ignored when instancetype is defined
     vCores: 4
-    # -- Pin QEMU process to specific physical cores
+    # -- Pin QEMU process to specific physical core
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
@@ -98,7 +100,7 @@ virtualMachine:
 #########################
 # Create a Virtual Machine Pool
 # Vm pools should be used with ephemeral disks or containerdisks
-# otherwise they would all fight over the same PVC
+# otherwise they would all fight over the same PVC.
 virtualMachinePool:
   enabled: false
   # -- number of replicas to create. Ignored when hpa is set to 'true'
@@ -109,7 +111,7 @@ virtualMachinePool:
     minReplicas: 1
 
 #############################
-# -- controls hypervisor behavior when IO errors occur on disk read or write.
+# -- controls hypervisor behavior when I/O errors occur on disk read or write.
 # Possible values are: 'report', 'ignore', 'enospace'
 diskErrorPolicy: "report"
 
@@ -151,8 +153,9 @@ disks:
 
 #########################################################
 # Ephemeral disk example
-# no persistance, these are deleted after the VM exists
-# requires an existing PVC as a backing file
+# no persistance, these are deleted after the VM exits
+# requires an existing PVC as a backing file.
+# Performance degrades at liarge sizes (100G+)
 #########################################################
   - name: harddrive
     type: disk
@@ -301,7 +304,7 @@ service:
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
   enabled: false
-  name: friend-scrapmetal-user-data
+  name: ""
 
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
