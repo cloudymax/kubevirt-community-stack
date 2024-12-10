@@ -438,6 +438,20 @@ entries:
     version: 0.1.0
   kubevirt-manager:
   - apiVersion: v2
+    appVersion: 1.5.0-rc
+    created: "2024-12-10T20:56:15.046845278Z"
+    description: Install the Kubevirt Manager UI
+    digest: 7bca256f2a3735e6787348b9b3fcdcf6afcb3fcd70312cd4cd27f11bf822abba
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.2.2/kubevirt-manager-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
     appVersion: 1.4.1
     created: "2024-11-13T18:36:00.697092233Z"
     description: Install the Kubevirt Manager UI
@@ -969,4 +983,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2024-12-10T11:22:03.732110355Z"
+generated: "2024-12-10T20:56:15.046956376Z"
