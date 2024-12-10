@@ -3,7 +3,7 @@ name: kubevirt
 description: Deploy Kebivirt on Kubernetes
 
 type: application
-version: 0.2.7
+version: 0.2.8
 appVersion: "v1.2.0"
 
 maintainers:
