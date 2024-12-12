@@ -66,9 +66,9 @@ spec:
                 {{- end }}
             {{- end }}
             features:
-              {{- if eq .Values.virtualMachine.features.kvmEnabled true }}
+              {{- if eq .Values.virtualMachine.features.kvm.enabled true }}
               kvm:
-                hidden: {{ .Values.virtualMachine.features.kvmHidden }}
+                hidden: {{ .Values.virtualMachine.features.kvm.hidden }}
               {{- end }}
               {{- if eq .Values.virtualMachine.features.acpiEnabled true }}
               acpi: {}
@@ -109,10 +109,13 @@ spec:
               {{- end }}
               {{- end }}
             firmware:
-            {{- if .Values.virtualMachine.features.efiEnabled }}
+            {{- if .Values.virtualMachine.firmware.efi.enabled }}
+              {{- if .Values.virtualMachine.firmware.uuid }}
+              uuid: {{ .Values.virtualMachine.firmware.uuid }}
+              {{- end }}
               bootloader:
                 efi:
-                  secureBoot: {{ .Values.virtualMachine.features.secureBoot }}
+                  secureBoot: {{ .Values.virtualMachine.firmware.efi.secureBoot }}
             {{- else }}
               bootloader: {}
             {{- end }}

@@ -22,5 +22,5 @@ spec:
       {{- end }}
     {{- end }}
   selector:
-    kubevirt-service: {{ $.Values.virtualMachine.name }}
+    kubevirt.io/domain: {{ $.Values.virtualMachine.name }}
 {{- end }}
