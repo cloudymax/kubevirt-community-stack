@@ -83,14 +83,15 @@ virtualMachine:
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
   # kubevirt custom resource. ignored when instancetype is defined
-  gpus:
-  - name: gpu0
-    deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
-    virtualGPUOptions:
-      display:
-        enabled: true
-      ramFB:
-        enabled: true
+  gpus: []
+  # - name: gpu0
+  #   deviceName: nvidia.com/GRID_RTX6000-4Q
+  #   virtualGPUOptions:
+  #     display:
+  #       enabled: true
+  #       ramFB:
+  #         enabled: true
+
   # -- virtual network interface config options.
   # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
   interfaces:
