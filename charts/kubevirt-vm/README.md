@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -55,23 +55,22 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.clock.hpet | object | `{"enabled":true,"present":false}` | High Precision Event Timer |
 | virtualMachine.features.clock.pit | object | `{"enabled":true,"tickPolicy":"delay"}` | Programmable interval timer |
 | virtualMachine.features.clock.rtc | object | `{"enabled":true,"tickPolicy":"catchup"}` | Real-Time Clock |
-| virtualMachine.features.efiEnabled | bool | `true` | Enable EFI bios |
 | virtualMachine.features.hyperv | bool | `false` | Set default hyperv settings for windows guests |
-| virtualMachine.features.kvmEnabled | bool | `true` | Enable KVM acceleration |
-| virtualMachine.features.kvmHidden | bool | `true` | obscure virtualization details from the guest OS |
+| virtualMachine.features.kvm | object | `{"enabled":true,"hidden":true}` | Enable KVM acceleration |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
-| virtualMachine.features.secureBoot | bool | `false` | Enable Secure boot (Requires EFI) |
-| virtualMachine.features.smmEnabled | bool | `true` |  |
-| virtualMachine.gpus | list | `[]` | GPUs to pass to guest, requires that the GPUs are pre-configured in the kubevirt custom resource. ignored when instancetype is defined |
-| virtualMachine.interfaces | list | `[{"bridge":{},"name":"default"}]` | virtual network interface config options. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces |
-| virtualMachine.interfaces[0] | object | `{"bridge":{},"name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
+| virtualMachine.firmware.efi | object | `{"enabled":true,"secureBoot":false}` | Enable EFI bios and secureboot |
+| virtualMachine.firmware.smmEnabled | bool | `false` |  |
+| virtualMachine.firmware.uuid | string | `"5d307ca9-b3ef-428c-8861-06e72d69f223"` |  |
+| virtualMachine.gpus | list | `[{"deviceName":"nvidia.com/AD104_GeForce_RTX4070Ti","name":"gpu0","virtualGPUOptions":{"display":{"enabled":true},"ramFB":{"enabled":true}}}]` | GPUs to pass to guest, requires that the GPUs are pre-configured in the kubevirt custom resource. ignored when instancetype is defined |
+| virtualMachine.interfaces | list | `[{"masquerade":{},"model":"virtio","name":"default"}]` | virtual network interface config options. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces |
+| virtualMachine.interfaces[0] | object | `{"masquerade":{},"model":"virtio","name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
 | virtualMachine.machine.architecture | string | `"amd64"` | Arch |
 | virtualMachine.machine.cpuModel | string | `"host-passthrough"` | Specify hots-passthrough or a named cpu model https://www.qemu.org/docs/master/system/qemu-cpu-models.html |
 | virtualMachine.machine.hyperThreadingEnabled | bool | `false` | Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs. |
-| virtualMachine.machine.instancetype | object | `{"enabled":true,"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus |
+| virtualMachine.machine.instancetype | object | `{"enabled":false,"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus |
 | virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
 | virtualMachine.machine.memory | string | `"4Gi"` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
-| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical core Requires `--cpu-manager-policy` enabled in kubelet |
+| virtualMachine.machine.pinCores | bool | `true` | Pin QEMU process to specific physical core Requires `--cpu-manager-policy` enabled in kubelet |
 | virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.vCores | int | `4` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
 | virtualMachine.name | string | `"test"` | name of the virtualMachine or virtualMachinePool object |
@@ -79,7 +78,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.networks[0].name | string | `"default"` |  |
 | virtualMachine.networks[0].pod | object | `{}` |  |
 | virtualMachine.runStrategy | string | `"RerunOnFailure"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once` See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy |
-| virtualMachinePool.enabled | bool | `false` |  |
+| virtualMachinePool.enabled | bool | `true` |  |
 | virtualMachinePool.hpa.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.maxReplicas | int | `5` |  |
 | virtualMachinePool.hpa.minReplicas | int | `1` |  |

@@ -11,17 +11,13 @@ virtualMachine:
 
   features:
     # -- Enable KVM acceleration
-    kvmEnabled: true
-    # -- obscure virtualization details from the guest OS
-    kvmHidden: true
+    kvm:
+      enabled: true
+      hidden: true
+    # -- Set default hyperv settings for windows guests
+    hyperv: false
     # Enable ACPI platform event device
     acpiEnabled: true
-    # Enable System Management Mode (required for secureboot)
-    smmEnabled: true
-    # -- Enable EFI bios
-    efiEnabled: true
-    # -- Enable Secure boot (Requires EFI)
-    secureBoot: false
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
     # -- Attach a serial console device
@@ -30,8 +26,6 @@ virtualMachine:
     autoattachGraphicsDevice: true
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
-    # -- Set default hyperv settings for windows guests
-    hyperv: false
     # -- Options for machine clock
     clock:
       enabled: true
@@ -50,13 +44,23 @@ virtualMachine:
       kvm: true
       hyperv: false
 
+  firmware:
+    # Enable System Management Mode (required for secureboot)
+    smmEnabled: false
+    # -- Enable EFI bios and secureboot
+    efi:
+      enabled: true
+      secureBoot: false
+    uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+
+
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
     priorityClassName: vm-standard
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
     # Overrides: vCores, memory, gpus
     instancetype:
-      enabled: true
+      enabled: false
       name: standard-small
       kind: virtualMachineClusterInstancetype
     # -- Arch
@@ -71,7 +75,7 @@ virtualMachine:
     vCores: 4
     # -- Pin QEMU process to specific physical core
     # Requires `--cpu-manager-policy` enabled in kubelet
-    pinCores: false
+    pinCores: true
     # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
     hyperThreadingEnabled: false
     # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
@@ -79,17 +83,22 @@ virtualMachine:
 
   # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
   # kubevirt custom resource. ignored when instancetype is defined
-  gpus: []
-  # - name: gpu0
-  # deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
-
+  gpus:
+  - name: gpu0
+    deviceName: nvidia.com/AD104_GeForce_RTX4070Ti
+    virtualGPUOptions:
+      display:
+        enabled: true
+      ramFB:
+        enabled: true
   # -- virtual network interface config options.
   # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
   interfaces:
   # -- bridge mode, vms are connected to the network via a linux "bridge".
   # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-    - bridge: {}
+    - masquerade: {}
       name: default
+      model: virtio
 
   networks:
   # Use the default pod network
@@ -102,7 +111,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: false
+  enabled: true
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 1
   hpa:
