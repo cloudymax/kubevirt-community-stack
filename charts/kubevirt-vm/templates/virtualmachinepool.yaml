@@ -73,7 +73,7 @@ spec:
               {{- if eq .Values.virtualMachine.features.acpiEnabled true }}
               acpi: {}
               {{- end }}
-              {{- if eq .Values.virtualMachine.features.smmEnabled true }}
+              {{- if eq .Values.virtualMachine.firmware.smmEnabled true }}
               smm:
                 enabled: true
               {{- end }}
@@ -108,6 +108,14 @@ spec:
               {{- "threads: 1" | nindent 14 -}}
               {{- end }}
               {{- end }}
+            {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
+            memory:
+              {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled false }}
+              guest: {{ .Values.virtualMachine.machine.memory.base }}
+              {{ else }}
+              guest: {{ .Values.virtualMachine.machine.memory.overcommit.limit }}
+              {{- end }}
+            {{- end }}
             firmware:
             {{- if .Values.virtualMachine.firmware.efi.enabled }}
               {{- if .Values.virtualMachine.firmware.uuid }}
@@ -176,8 +184,19 @@ spec:
                 {{- end }}
             {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
             resources:
+              {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled true }}
+              overcommitGuestOverhead: {{ .Values.virtualMachine.machine.memory.overcommit.overhead }}
+              {{- end }}
+              requests:
+                memory: {{ .Values.virtualMachine.machine.memory.base }}
+                cpu: {{ .Values.virtualMachine.machine.vCores }}
               limits:
-                memory: {{ .Values.virtualMachine.machine.memory }}
+                {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled true }}
+                memory: {{ .Values.virtualMachine.machine.memory.overcommit.limit }}
+                {{ else }}
+                memory: {{ .Values.virtualMachine.machine.memory.base }}
+                {{- end }}
+                cpu: {{ .Values.virtualMachine.machine.vCores }}
             {{- end }}
           {{- with .Values.virtualMachine.networks }}
           networks:
@@ -205,7 +224,7 @@ spec:
             {{- if eq "configmap" $props.type }}
             - name: {{ $props.name }}
               configMap:
-                volumeLabel: {{ $props.volumeLabel }}
+                volumeLable: {{ $props.volumeLabel }}
                 name: {{ $props.configMap }}
             {{- end }}
             {{- if eq "secret" $props.type }}
