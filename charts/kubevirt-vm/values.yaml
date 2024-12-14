@@ -15,7 +15,7 @@ virtualMachine:
     # -- Enable KVM acceleration
     kvm:
       enabled: true
-      hidden: true
+      hidden: false
 
       # -- Set default hyperv settings for windows guests
     hyperv: false
@@ -86,10 +86,10 @@ virtualMachine:
       name: standard-small
       kind: virtualMachineClusterInstancetype
 
-    # -- Arch
+    # -- System Arch. Supported options are amd64 and arm64
     architecture: amd64
 
-    # -- QEMU virtual-machine type
+    # -- QEMU virtual-machine type. Options are q35 and i440fx
     machineType: q35
 
     # -- Specify hots-passthrough or a named cpu model
@@ -100,12 +100,17 @@ virtualMachine:
     # ignored when instancetype is defined
     vCores: 4
 
-    # -- Pin QEMU process to specific physical core
+    # -- Number of simulated CPU sockets.
+    # ignored if pinCores set to "true"
+    sockets: 1
+
+    # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+    # ignored if pinCores set to "true"
+    hyperThreadingEnabled: false
+
+    # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
-
-    # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
-    hyperThreadingEnabled: true
 
     # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
     memory:
@@ -332,7 +337,6 @@ service:
       port: 5900
       targetPort: 5900
       protocol: TCP
-
 
 # -- set tieming and port number for liveness probe
 # livenessProbe:

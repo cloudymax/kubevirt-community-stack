@@ -88,12 +88,14 @@ spec:
           {{- end }}
           model: {{ .Values.virtualMachine.machine.cpuModel }}
           {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
-          sockets: 1
-          cores: {{ .Values.virtualMachine.machine.vCores -}}
-          {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
+          {{- if eq .Values.virtualMachine.machine.pinCores false }}
+          sockets: {{ .Values.virtualMachine.machine.sockets }}
+          cores: {{ .Values.virtualMachine.machine.vCores }}
+          {{- if .Values.virtualMachine.machine.hyperThreadingEnabled }}
           {{- "threads: 2" | nindent 10 -}}
           {{ else }}
           {{- "threads: 1" | nindent 10 -}}
+          {{- end }}
           {{- end }}
           {{- end }}
         {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
