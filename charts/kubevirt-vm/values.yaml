@@ -15,7 +15,7 @@ virtualMachine:
     # -- Enable KVM acceleration
     kvm:
       enabled: true
-      hidden: true
+      hidden: false
 
       # -- Set default hyperv settings for windows guests
     hyperv: false
@@ -35,26 +35,34 @@ virtualMachine:
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
 
-    # -- Options for machine clock
-    clock:
+  # -- Options for machine clock
+  clock:
+    enabled: true
+
+    # -- Set clock timezone eg: "Europe/Amsterdam" or "utc"
+    timezone: utc
+
+    # -- High Precision Event Timer
+    hpet:
       enabled: true
+      present: false
 
-      # -- High Precision Event Timer
-      hpet:
-        enabled: true
-        present: false
+    # -- Programmable interval timer
+    pit:
+      enabled: true
+      tickPolicy: delay
 
-        # -- Programmable interval timer
-      pit:
-        enabled: true
-        tickPolicy: delay
+    # -- Real-Time Clock
+    rtc:
+      enabled: true
+      tickPolicy: catchup
 
-        # -- Real-Time Clock
-      rtc:
-        enabled: true
-        tickPolicy: catchup
-      kvm: true
-      hyperv: false
+    # -- Paravirtualized clock that provides better accuracy and performance.
+    # Recommended clock source for KVM guest virtual machines.
+    kvm: true
+
+    # -- Hyper-V's reference time counter for use with Windows guests.
+    hyperv: false
 
   firmware:
     # Enable System Management Mode (required for secureboot)
@@ -78,10 +86,10 @@ virtualMachine:
       name: standard-small
       kind: virtualMachineClusterInstancetype
 
-    # -- Arch
+    # -- System Arch. Supported options are amd64 and arm64
     architecture: amd64
 
-    # -- QEMU virtual-machine type
+    # -- QEMU virtual-machine type. Options are q35 and i440fx
     machineType: q35
 
     # -- Specify hots-passthrough or a named cpu model
@@ -92,12 +100,17 @@ virtualMachine:
     # ignored when instancetype is defined
     vCores: 4
 
-    # -- Pin QEMU process to specific physical core
+    # -- Number of simulated CPU sockets.
+    # ignored if pinCores set to "true"
+    sockets: 1
+
+    # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+    # ignored if pinCores set to "true"
+    hyperThreadingEnabled: false
+
+    # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     pinCores: false
-
-    # -- Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs.
-    hyperThreadingEnabled: true
 
     # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
     memory:
@@ -145,7 +158,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: false
+  enabled: true
 
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 1
@@ -324,7 +337,6 @@ service:
       port: 5900
       targetPort: 5900
       protocol: TCP
-
 
 # -- set tieming and port number for liveness probe
 # livenessProbe:

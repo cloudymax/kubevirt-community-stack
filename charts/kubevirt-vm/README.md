@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -56,14 +56,19 @@ Configure a virtual machine for use with Kubevirt
 | disks[0].url | string | `"https://buildstars.online/debian-12-generic-amd64-daily.qcow2"` | URL of cloud-image |
 | service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
+| virtualMachine.clock | object | `{"enabled":true,"hpet":{"enabled":true,"present":false},"hyperv":false,"kvm":true,"pit":{"enabled":true,"tickPolicy":"delay"},"rtc":{"enabled":true,"tickPolicy":"catchup"},"timezone":"utc"}` | Options for machine clock |
+| virtualMachine.clock.hpet | object | `{"enabled":true,"present":false}` | High Precision Event Timer |
+| virtualMachine.clock.hyperv | bool | `false` | Hyper-V's reference time counter for use with Windows guests. |
+| virtualMachine.clock.kvm | bool | `true` | Paravirtualized clock that provides better accuracy and performance. Recommended clock source for KVM guest virtual machines. |
+| virtualMachine.clock.pit | object | `{"enabled":true,"tickPolicy":"delay"}` | Programmable interval timer |
+| virtualMachine.clock.rtc | object | `{"enabled":true,"tickPolicy":"catchup"}` | Real-Time Clock |
+| virtualMachine.clock.timezone | string | `"utc"` | Set clock timezone eg: "Europe/Amsterdam" or "utc" |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
 | virtualMachine.features.autoattachSerialConsole | bool | `true` | Attach a serial console device |
-| virtualMachine.features.clock | object | `{"enabled":true,"hpet":{"enabled":true,"present":false},"hyperv":false,"kvm":true,"pit":{"enabled":true,"tickPolicy":"delay"},"rtc":{"enabled":true,"tickPolicy":"catchup"}}` | Options for machine clock |
-| virtualMachine.features.clock.hpet | object | `{"enabled":true,"present":false}` | High Precision Event Timer |
 | virtualMachine.features.hyperv | bool | `false` |  |
-| virtualMachine.features.kvm | object | `{"enabled":true,"hidden":true}` | Enable KVM acceleration |
+| virtualMachine.features.kvm | object | `{"enabled":true,"hidden":false}` | Enable KVM acceleration |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
 | virtualMachine.firmware.efi | object | `{"enabled":true,"secureBoot":false}` | Enable EFI bios and secureboot |
 | virtualMachine.firmware.smmEnabled | bool | `false` |  |
@@ -71,16 +76,17 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.gpus | list | `[]` | GPUs to pass to guest, requires that the GPUs are pre-configured in the kubevirt custom resource. ignored when instancetype is defined. ramFB & display may only be enabled on 1 vGPU |
 | virtualMachine.interfaces | list | `[{"masquerade":{},"model":"virtio","name":"default"}]` | virtual network interface config options. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces |
 | virtualMachine.interfaces[0] | object | `{"masquerade":{},"model":"virtio","name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
-| virtualMachine.machine.architecture | string | `"amd64"` | Arch |
+| virtualMachine.machine.architecture | string | `"amd64"` | System Arch. Supported options are amd64 and arm64 |
 | virtualMachine.machine.cpuModel | string | `"host-passthrough"` | Specify hots-passthrough or a named cpu model https://www.qemu.org/docs/master/system/qemu-cpu-models.html |
-| virtualMachine.machine.hyperThreadingEnabled | bool | `true` | Enable the use of Hyperthreading on Intel CPUs. Disable on AMD CPUs. |
+| virtualMachine.machine.hyperThreadingEnabled | bool | `false` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. ignored if pinCores set to "true" |
 | virtualMachine.machine.instancetype | object | `{"enabled":false,"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus |
-| virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type |
+| virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type. Options are q35 and i440fx |
 | virtualMachine.machine.memory | object | `{"base":"4Gi","overcommit":{"enabled":false,"limit":"8Gi","overhead":false}}` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
 | virtualMachine.machine.memory.overcommit.enabled | bool | `false` | Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled. |
 | virtualMachine.machine.memory.overcommit.overhead | bool | `false` | Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory. |
-| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process to specific physical core Requires `--cpu-manager-policy` enabled in kubelet |
+| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
 | virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
+| virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. ignored if pinCores set to "true" |
 | virtualMachine.machine.vCores | int | `4` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
 | virtualMachine.name | string | `"test"` | name of the virtualMachine or virtualMachinePool object |
 | virtualMachine.namespace | string | `"kubevirt"` | namespace to deploy to |

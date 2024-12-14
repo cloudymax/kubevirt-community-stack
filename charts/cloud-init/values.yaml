@@ -37,7 +37,6 @@ extraEnvVars: []
 #        name: test
 #        key: "test.yaml"
 
-
 # -- virtual-machine hostname
 hostname: random
 
