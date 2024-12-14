@@ -39,21 +39,29 @@ virtualMachine:
   clock:
     enabled: true
 
+    # -- Set clock timezone eg: "Europe/Amsterdam" or "utc"
+    timezone: utc
+
     # -- High Precision Event Timer
     hpet:
       enabled: true
       present: false
 
-      # -- Programmable interval timer
+    # -- Programmable interval timer
     pit:
       enabled: true
       tickPolicy: delay
 
-      # -- Real-Time Clock
+    # -- Real-Time Clock
     rtc:
       enabled: true
       tickPolicy: catchup
+
+    # -- Paravirtualized clock that provides better accuracy and performance.
+    # Recommended clock source for KVM guest virtual machines.
     kvm: true
+
+    # -- Hyper-V's reference time counter for use with Windows guests.
     hyperv: false
 
   firmware:
