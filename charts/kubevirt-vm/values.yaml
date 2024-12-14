@@ -158,7 +158,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: false
+  enabled: true
 
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 1

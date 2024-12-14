@@ -42,26 +42,30 @@ spec:
           domain:
             machine:
               type: {{ .Values.virtualMachine.machine.machineType }}
-            {{- if eq .Values.virtualMachine.features.clock.enabled true }}
+            {{- if eq .Values.virtualMachine.clock.enabled true }}
             clock:
+              {{- if eq .Values.virtualMachine.clock.timezone "utc" }}
               utc: {}
+              {{ else }}
+              timezone: {{ .Values.virtualMachine.clock.timezone }}
+              {{- end }}
               timer:
-                {{- if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
+                {{- if eq .Values.virtualMachine.clock.hpet.enabled true }}
                 hpet:
-                  present: {{ .Values.virtualMachine.features.clock.hpet.present }}
+                  present: {{ .Values.virtualMachine.clock.hpet.present }}
                 {{- end }}
-                {{- if eq .Values.virtualMachine.features.clock.pit.enabled true }}
+                {{- if eq .Values.virtualMachine.clock.pit.enabled true }}
                 pit:
-                  tickPolicy: {{ .Values.virtualMachine.features.clock.pit.tickPolicy }}
+                  tickPolicy: {{ .Values.virtualMachine.clock.pit.tickPolicy }}
                 {{- end }}
-                {{- if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
+                {{- if eq .Values.virtualMachine.clock.rtc.enabled true }}
                 rtc:
-                  tickPolicy: {{ .Values.virtualMachine.features.clock.rtc.tickPolicy }}
+                  tickPolicy: {{ .Values.virtualMachine.clock.rtc.tickPolicy }}
                 {{- end }}
-                {{- if eq .Values.virtualMachine.features.clock.hyperv true }}
+                {{- if eq .Values.virtualMachine.clock.hyperv true }}
                 hyperv: {}
                 {{- end }}
-                {{- if eq .Values.virtualMachine.features.clock.kvm true }}
+                {{- if eq .Values.virtualMachine.clock.kvm true }}
                 kvm: {}
                 {{- end }}
             {{- end }}
@@ -100,12 +104,14 @@ spec:
               {{- end }}
               model: {{ .Values.virtualMachine.machine.cpuModel }}
               {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
-              sockets: 1
-              cores: {{ .Values.virtualMachine.machine.vCores -}}
-              {{- if .Values.virtualMachine.machine.hyperThreadingEnabled -}}
+              {{- if eq .Values.virtualMachine.machine.pinCores false }}
+              sockets: {{ .Values.virtualMachine.machine.sockets }}
+              cores: {{ .Values.virtualMachine.machine.vCores }}
+              {{- if .Values.virtualMachine.machine.hyperThreadingEnabled }}
               {{- "threads: 2" | nindent 14 -}}
               {{ else }}
               {{- "threads: 1" | nindent 14 -}}
+              {{- end }}
               {{- end }}
               {{- end }}
             {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
@@ -188,15 +194,15 @@ spec:
               overcommitGuestOverhead: {{ .Values.virtualMachine.machine.memory.overcommit.overhead }}
               {{- end }}
               requests:
-                memory: {{ .Values.virtualMachine.machine.memory.base }}
-                cpu: {{ .Values.virtualMachine.machine.vCores }}
+                memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
+                cpu: {{ .Values.virtualMachine.machine.vCores | quote }}
               limits:
                 {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled true }}
-                memory: {{ .Values.virtualMachine.machine.memory.overcommit.limit }}
+                memory: {{ .Values.virtualMachine.machine.memory.overcommit.limit | quote }}
                 {{ else }}
-                memory: {{ .Values.virtualMachine.machine.memory.base }}
+                memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
                 {{- end }}
-                cpu: {{ .Values.virtualMachine.machine.vCores }}
+                cpu: {{ .Values.virtualMachine.machine.vCores | quote }}
             {{- end }}
           {{- with .Values.virtualMachine.networks }}
           networks:
