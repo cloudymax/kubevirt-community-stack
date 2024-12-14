@@ -26,26 +26,26 @@ spec:
       domain:
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
-        {{- if eq .Values.virtualMachine.features.clock.enabled true }}
+        {{- if eq .Values.virtualMachine.clock.enabled true }}
         clock:
           utc: {}
           timer:
-            {{- if eq .Values.virtualMachine.features.clock.hpet.enabled true }}
+            {{- if eq .Values.virtualMachine.clock.hpet.enabled true }}
             hpet:
-              present: {{ .Values.virtualMachine.features.clock.hpet.present }}
+              present: {{ .Values.virtualMachine.clock.hpet.present }}
             {{- end }}
-            {{- if eq .Values.virtualMachine.features.clock.pit.enabled true }}
+            {{- if eq .Values.virtualMachine.clock.pit.enabled true }}
             pit:
-              tickPolicy: {{ .Values.virtualMachine.features.clock.pit.tickPolicy }}
+              tickPolicy: {{ .Values.virtualMachine.clock.pit.tickPolicy }}
             {{- end }}
-            {{- if eq .Values.virtualMachine.features.clock.rtc.enabled true }}
+            {{- if eq .Values.virtualMachine.clock.rtc.enabled true }}
             rtc:
-              tickPolicy: {{ .Values.virtualMachine.features.clock.rtc.tickPolicy }}
+              tickPolicy: {{ .Values.virtualMachine.clock.rtc.tickPolicy }}
             {{- end }}
-            {{- if eq .Values.virtualMachine.features.clock.hyperv true }}
+            {{- if eq .Values.virtualMachine.clock.hyperv true }}
             hyperv: {}
             {{- end }}
-            {{- if eq .Values.virtualMachine.features.clock.kvm true }}
+            {{- if eq .Values.virtualMachine.clock.kvm true }}
             kvm: {}
             {{- end }}
         {{- end }}
@@ -180,6 +180,7 @@ spec:
             {{ else }}
             memory: {{ .Values.virtualMachine.machine.memory.base }}
             {{- end }}
+            {{- if }}
             cpu: {{ .Values.virtualMachine.machine.vCores }}
         {{- end }}
       {{- with .Values.virtualMachine.networks }}

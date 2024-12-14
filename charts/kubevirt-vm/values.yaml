@@ -35,26 +35,26 @@ virtualMachine:
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
 
-    # -- Options for machine clock
-    clock:
+  # -- Options for machine clock
+  clock:
+    enabled: true
+
+    # -- High Precision Event Timer
+    hpet:
       enabled: true
+      present: false
 
-      # -- High Precision Event Timer
-      hpet:
-        enabled: true
-        present: false
+      # -- Programmable interval timer
+    pit:
+      enabled: true
+      tickPolicy: delay
 
-        # -- Programmable interval timer
-      pit:
-        enabled: true
-        tickPolicy: delay
-
-        # -- Real-Time Clock
-      rtc:
-        enabled: true
-        tickPolicy: catchup
-      kvm: true
-      hyperv: false
+      # -- Real-Time Clock
+    rtc:
+      enabled: true
+      tickPolicy: catchup
+    kvm: true
+    hyperv: false
 
   firmware:
     # Enable System Management Mode (required for secureboot)
