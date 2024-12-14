@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -56,12 +56,12 @@ Configure a virtual machine for use with Kubevirt
 | disks[0].url | string | `"https://buildstars.online/debian-12-generic-amd64-daily.qcow2"` | URL of cloud-image |
 | service | list | `[{"externalTrafficPolicy":"Cluster","name":"service","ports":[{"name":"ssh","port":22,"protocol":"TCP","targetPort":22},{"name":"vnc","port":5900,"protocol":"TCP","targetPort":5900}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
+| virtualMachine.clock | object | `{"enabled":true,"hpet":{"enabled":true,"present":false},"hyperv":false,"kvm":true,"pit":{"enabled":true,"tickPolicy":"delay"},"rtc":{"enabled":true,"tickPolicy":"catchup"}}` | Options for machine clock |
+| virtualMachine.clock.hpet | object | `{"enabled":true,"present":false}` | High Precision Event Timer |
 | virtualMachine.features.acpiEnabled | bool | `true` |  |
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
 | virtualMachine.features.autoattachSerialConsole | bool | `true` | Attach a serial console device |
-| virtualMachine.features.clock | object | `{"enabled":true,"hpet":{"enabled":true,"present":false},"hyperv":false,"kvm":true,"pit":{"enabled":true,"tickPolicy":"delay"},"rtc":{"enabled":true,"tickPolicy":"catchup"}}` | Options for machine clock |
-| virtualMachine.features.clock.hpet | object | `{"enabled":true,"present":false}` | High Precision Event Timer |
 | virtualMachine.features.hyperv | bool | `false` |  |
 | virtualMachine.features.kvm | object | `{"enabled":true,"hidden":true}` | Enable KVM acceleration |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
