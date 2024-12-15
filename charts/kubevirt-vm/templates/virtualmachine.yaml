@@ -85,18 +85,13 @@ spec:
         cpu:
           {{- if eq .Values.virtualMachine.machine.pinCores true }}
           dedicatedCpuPlacement: true
+          isolateEmulatorThread: {{ .Values.virtualMachine.machine.emulatorThread }}
           {{- end }}
           model: {{ .Values.virtualMachine.machine.cpuModel }}
           {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
-          {{- if eq .Values.virtualMachine.machine.pinCores false }}
           sockets: {{ .Values.virtualMachine.machine.sockets }}
           cores: {{ .Values.virtualMachine.machine.vCores }}
-          {{- if .Values.virtualMachine.machine.hyperThreadingEnabled }}
-          {{- "threads: 2" | nindent 10 -}}
-          {{ else }}
-          {{- "threads: 1" | nindent 10 -}}
-          {{- end }}
-          {{- end }}
+          threads: {{ .Values.virtualMachine.machine.threads }}
           {{- end }}
         {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
         memory:
@@ -179,15 +174,21 @@ spec:
           {{- end }}
           requests:
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
-            cpu: {{ .Values.virtualMachine.machine.vCores | quote }}
           limits:
             {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled true }}
             memory: {{ .Values.virtualMachine.machine.memory.overcommit.limit | quote }}
             {{ else }}
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
             {{- end }}
-            cpu: {{ .Values.virtualMachine.machine.vCores | quote }}
         {{- end }}
+      {{- with .Values.livenessProbe }}
+      livenessProbe:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.readinessProbe }}
+      readinessProbe:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.virtualMachine.networks }}
       networks:
       {{- toYaml . | nindent 8 }}

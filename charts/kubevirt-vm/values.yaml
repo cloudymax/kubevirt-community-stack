@@ -1,5 +1,9 @@
-##########################
-# Virtual Machine settings
+################################################################################
+# \ \   / (_)_ __| |_ _   _  __ _| | |  \/  | __ _  ___| |__ (_)_ __   ___
+#  \ \ / /| | '__| __| | | |/ _` | | | |\/| |/ _` |/ __| '_ \| | '_ \ / _ \
+#   \ V / | | |  | |_| |_| | (_| | | | |  | | (_| | (__| | | | | | | |  __/
+#    \_/  |_|_|   \__|\__,_|\__,_|_| |_|  |_|\__,_|\___|_| |_|_|_| |_|\___|
+###############################################################################
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
   name: test
@@ -12,7 +16,9 @@ virtualMachine:
   runStrategy: "Always"
 
   features:
-    # -- Enable KVM acceleration
+    # -- Enable KVM acceleration.
+    # Setting the 'hidden' flag to `true` will obscure kvm from the host.
+    # Set `hidden` to `false` when using vGPU in Windows Guests.
     kvm:
       enabled: true
       hidden: false
@@ -96,31 +102,37 @@ virtualMachine:
     # https://www.qemu.org/docs/master/system/qemu-cpu-models.html
     cpuModel: host-passthrough
 
+    # -- Number of simulated CPU sockets.
+    # Note: Multiple cpu-bound microbenchmarks show a significant
+    # performance advantage when using sockets instead of cores
+    sockets: 2
+
     # -- Number of Virtual cores to pass to the Guest
     # ignored when instancetype is defined
-    vCores: 4
-
-    # -- Number of simulated CPU sockets.
-    # ignored if pinCores set to "true"
-    sockets: 1
+    vCores: 1
 
     # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
-    # ignored if pinCores set to "true"
-    hyperThreadingEnabled: false
+    threads: 1
 
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
-    pinCores: false
+    pinCores: true
+
+    # -- In order to enhance the real-time support in KubeVirt and provide
+    # improved latency, KubeVirt will allocate an additional dedicated CPU,
+    # exclusively for the emulator thread, to which it will be pinned.
+    # Requires `dedicatedCpuPlacement` set to `true`
+    emulatorThread: false
 
     # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
     memory:
-      base: 4Gi
+      base: 2Gi
       overcommit:
         # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
         # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
         # GPU passthrough and vGPU will not function with overcommit enabled.
         enabled: false
-        limit: 8Gi
+        limit: 4Gi
 
         # -- Do not allocate hypervisor overhead memory to VM. Will work for as
         # long as most of the VirtualMachineInstances do not request the full memory.
@@ -158,55 +170,59 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: true
+  enabled: false
 
   # -- number of replicas to create. Ignored when hpa is set to 'true'
-  replicas: 1
+  replicas: 2
   hpa:
     enabled: true
     maxReplicas: 5
     minReplicas: 1
 
-#############################
+###############################################################################
+#  ____  _     _
+# |  _ \(_)___| | _____
+# | | | | / __| |/ / __|
+# | |_| | \__ \   <\__ \
+# |____/|_|___/_|\_\___/
+###############################################################################
 # -- controls hypervisor behavior when I/O errors occur on disk read or write.
 # Possible values are: 'report', 'ignore', 'enospace'
 diskErrorPolicy: "report"
 
-#############################
 # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
 disks:
-
 #################################################
 # DataVolume disk with URL source example
 #################################################
- - name: harddrive
-
-   # -- Disk type: disk, cdrom, filesystem, or lun
-   type: disk
-
-   # -- Bus type: sata or virtio
-   bus: virtio
-
-   # -- Sets disk position in boot order, lower numbers are checked earlier
-   bootorder: 2
-
-   # -- Set disk to be Read-only
-   readonly: false
-
-   # -- Size of disk in GB
-   pvsize: 16Gi
-
-   # -- Storage class to use for the pvc
-   pvstorageClass: fast-raid
-
-   # -- Access mode for the PVC
-   pvaccessMode: ReadWriteOnce
-
-   # -- source type of the disk image. One of `url`, `pvc`
-   source: url
-
-   # -- URL of cloud-image
-   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+# - name: harddrive
+#
+#   # -- Disk type: disk, cdrom, filesystem, or lun
+#   type: disk
+#
+#   # -- Bus type: sata or virtio
+#   bus: virtio
+#
+#   # -- Sets disk position in boot order, lower numbers are checked earlier
+#   bootorder: 2
+#
+#   # -- Set disk to be Read-only
+#   readonly: false
+#
+#   # -- Size of disk in GB
+#   pvsize: 16Gi
+#
+#   # -- Storage class to use for the pvc
+#   pvstorageClass: fast-raid
+#
+#   # -- Access mode for the PVC
+#   pvaccessMode: ReadWriteOnce
+#
+#   # -- source type of the disk image. One of `url`, `pvc`
+#   source: url
+#
+#   # -- URL of cloud-image
+#   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
@@ -214,13 +230,13 @@ disks:
 # requires an existing PVC as a backing file.
 # Performance degrades at liarge sizes (100G+)
 #########################################################
-  #  - name: harddrive
-  #    type: disk
-  #    bus: virtio
-  #    bootorder: 2
-  #    readonly: false
-  #    pvc: debian12
-  #    ephemeral: true
+  - name: harddrive
+    type: disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvc: debian12
+    ephemeral: true
 
 ########################################################
 # DataVolume disk with existing PVC source example
@@ -322,46 +338,19 @@ disks:
 #    secretName: test
 #    serialNumber: CVLY623300HK240D
 
-# -- Service cinfiguration. Used to expose VM to the outside world.
-# Accepts a list of ports to open.
-service:
-- name: service
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  ports:
-    - name: ssh
-      port: 22
-      targetPort: 22
-      protocol: TCP
-    - name: vnc
-      port: 5900
-      targetPort: 5900
-      protocol: TCP
-
-# -- set tieming and port number for liveness probe
-# livenessProbe:
-#   initialDelaySeconds: 120
-#   periodSeconds: 20
-#   tcpSocket:
-#     port: 1500
-#   timeoutSeconds: 10
-
-# -- set tieming and port number for readiness probe
-# readinessProbe:
-#   initialDelaySeconds: 120
-#   periodSeconds: 20
-#   timeoutSeconds: 10
-#   failureThreshold: 3
-#   successThreshold: 3
-#   httpGet:
-#     port: 1500
-
 # -- Use an existing cloud-init userdata secret
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
   enabled: false
   name: ""
 
+################################################################################
+#   ____ _                 _ ___       _ _
+#  / ___| | ___  _   _  __| |_ _|_ __ (_) |_
+# | |   | |/ _ \| | | |/ _` || || '_ \| | __|
+# | |___| | (_) | |_| | (_| || || | | | | |_
+#  \____|_|\___/ \__,_|\__,_|___|_| |_|_|\__|
+################################################################################
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
   enabled: true
@@ -388,9 +377,14 @@ cloudinit:
 
   # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
   # Not an official part of cloid-init
-  envsubst: false
+  envsubst: true
 
-  extraEnvVars: []
+  extraEnvVars:
+    - name: VNC_PASS
+      valueFrom:
+        secretKeyRef:
+          name: test-password
+          key: "password"
 
   # -- virtual-machine hostname
   hostname: test
@@ -467,10 +461,123 @@ cloudinit:
   # -- Update, upgrade, and install packages
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
   package_reboot_if_required: false
-  package_update: false
+  package_update: true
   package_upgrade: false
-  packages: []
+  packages:
+    - docker.io
 
   # -- Run arbitrary commands
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
-  runcmd: []
+  runcmd:
+    - docker run -d --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD="$VNC_PASS" deserializeme/ubuntu-xfce
+
+################################################################################
+# ____                  _             ___     ___
+#/ ___|  ___ _ ____   _(_) ___ ___   ( _ )   |_ _|_ __   __ _ _ __ ___  ___ ___
+#\___ \ / _ \ '__\ \ / / |/ __/ _ \  / _ \/\  | || '_ \ / _` | '__/ _ \/ __/ __|
+# ___) |  __/ |   \ V /| | (_|  __/ | (_>  <  | || | | | (_| | | |  __/\__ \__ \
+#|____/ \___|_|    \_/ |_|\___\___|  \___/\/ |___|_| |_|\__, |_|  \___||___/___/
+#                                                       |___/
+################################################################################
+# -- Service cinfiguration. Used to expose VM to the outside world.
+# Accepts a list of ports to open.
+service:
+- name: test-service
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+      protocol: TCP
+    - name: novnc
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+
+# -- Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  hostname: "novnc.buildstar.online"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    enabled: true
+    secretName: "tls-kubevirt-manager"
+  paths:
+  - path: /
+    pathType: Prefix
+    backend:
+      service:
+        name: test-service
+        port:
+          number: 8080
+
+################################################################################
+#  _   _      _                      _      ____       _ _      _
+# | \ | | ___| |___      _____  _ __| | __ |  _ \ ___ | (_) ___(_) ___  ___
+# |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ / | |_) / _ \| | |/ __| |/ _ \/ __|
+# | |\  |  __/ |_ \ V  V / (_) | |  |   <  |  __/ (_) | | | (__| |  __/\__ \
+# |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\ |_|   \___/|_|_|\___|_|\___||___/
+################################################################################
+networkPolicy:
+  # -- Enable the creation of network policies
+  enabled: true
+  egress:
+    # Allow communication to Kubernetes DNS service
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+      - podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - protocol: UDP
+        port: 53
+
+    # Allow internet access
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          # Exclude traffic to Kubernetes service IPs and pods
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+
+  ingress:
+    # Allow internet access from the ingress controller
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: "ingress-nginx"
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: "ingress-nginx"
+
+################################################################################
+#  ____            _
+# |  _ \ _ __ ___ | |__   ___  ___
+# | |_) | '__/ _ \| '_ \ / _ \/ __|
+# |  __/| | | (_) | |_) |  __/\__ \
+# |_|   |_|  \___/|_.__/ \___||___/
+################################################################################
+# -- set tieming and port number for liveness probe
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  tcpSocket:
+    port: 8080
+  timeoutSeconds: 10
+
+# -- set tieming and port number for readiness probe
+readinessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 10
+  failureThreshold: 6
+  successThreshold: 1
+  httpGet:
+    port: 8080
