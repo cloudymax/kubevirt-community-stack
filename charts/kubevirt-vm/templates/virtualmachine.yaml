@@ -55,8 +55,13 @@ spec:
         {{- end }}
         features:
           {{- if eq .Values.virtualMachine.features.kvm.enabled true }}
+          {{- if eq .Values.virtualMachine.features.kvm.hidden false }}
+          kvm: {}
+          {{- end }}
+          {{- if eq .Values.virtualMachine.features.kvm.hidden true }}
           kvm:
-            hidden: {{ .Values.virtualMachine.features.kvm.hidden }}
+            hidden: {{ .Values.virtualMachine.features.hidden }}
+          {{- end }}
           {{- end }}
           {{- if eq .Values.virtualMachine.features.acpiEnabled true }}
           acpi: {}
