@@ -183,7 +183,7 @@ spec:
         {{- end }}
       {{- with .Values.livenessProbe }}
       livenessProbe:
-      {{- toYaml . | nindent 8}}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.readinessProbe }}
       readinessProbe:
