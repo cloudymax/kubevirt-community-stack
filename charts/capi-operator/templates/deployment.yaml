@@ -59,16 +59,16 @@ spec:
       {{- end }}
       containers:
       - args:
-        {{- if .Values.logLevel }}
+        {{- if ne .Values.logLevel null }}
         - --v={{ .Values.logLevel }}
         {{- end }}
-        {{- if .Values.healthAddr }}
+        {{- if ne .Values.healthAddr null }}
         - --health-addr={{ .Values.healthAddr }}
         {{- end }}
-        {{- if .Values.diagnosticsAddress }}
+        {{- if ne .Values.diagnosticsAddress null }}
         - --diagnostics-address={{ .Values.diagnosticsAddress }}
         {{- end }}
-        {{- if .Values.insecureDiagnostics }}
+        {{- if eq .Values.insecureDiagnostics true }}
         - --insecure-diagnostics={{ .Values.insecureDiagnostics }}
         {{- end }}
         {{- if .Values.watchConfigSecret }}
