@@ -28,9 +28,10 @@ watchConfigSecret: false
 imagePullSecrets: {}
 
 featureGates:
-  machinePool: "false"
-  kubeadmBootstrapFormatIgnition: "true"
-  bootstrapTokenTtl: "15m"
+  enabled: false
+  MachinePool: "false"
+  KubeadmBootstrapFormatIgnition: "true"
+  BootstrapTokenTtl: "15m"
 
 resources:
   manager:
