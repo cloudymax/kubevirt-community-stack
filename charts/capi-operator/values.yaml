@@ -1,8 +1,10 @@
-core: ""
-bootstrap: ""
-controlPlane: ""
-infrastructure: ""
+---
+core: "cluster-api:v1.7.2"
+bootstrap: "kubeadm:v1.7.2"
+controlPlane: "kubeadm:v1.7.2"
+infrastructure: "kubevirt:v0.1.8"
 addon: ""
+
 manager.featureGates:
   MachinePool: true
   KubeadmBootstrapFormatIgnition: true

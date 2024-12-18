@@ -60,7 +60,7 @@ spec:
       containers:
       {{- with .Values.args }}
       - args:
-      {{- toYaml . | nindent 10 }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
         command:
         - /manager
