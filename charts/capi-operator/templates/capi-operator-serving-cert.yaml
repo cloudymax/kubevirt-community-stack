@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    clusterctl.cluster.x-k8s.io/core: capi-operator
+  name: capi-operator-serving-cert
+  namespace: capi
+spec:
+  dnsNames:
+    - capi-operator-webhook-service.capi-operator-system.svc
+    - capi-operator-webhook-service.capi-operator-system.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: capi-operator-selfsigned-issuer
+  secretName: capi-operator-webhook-service-cert
