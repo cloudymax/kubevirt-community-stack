@@ -5,30 +5,36 @@ controlPlane: "kubeadm:v1.7.2"
 infrastructure: "kubevirt:v0.1.8"
 addon: ""
 
-manager.featureGates:
-  MachinePool: true
-  KubeadmBootstrapFormatIgnition: true
+manager:
+  featureGates:
+    kubeadm:
+      MachinePool: true
+      KubeadmBootstrapFormatIgnition: true
+    core:
+      MachinePool: true
+      KubeadmBootstrapFormatIgnition: true
+    kubevirt:
+      MachinePool: true
+      KubeadmBootstrapFormatIgnition: true
+    bootstrap:
+      MachinePool: true
+      KubeadmBootstrapFormatIgnition: true
+
 
 configSecret: {}
 
 replicaCount: 1
-leaderElection:
-  enabled: true
+
 image:
   manager:
     repository: registry.k8s.io/capi-operator/cluster-api-operator
     tag: v0.15.0
     pullPolicy: IfNotPresent
+
 env:
   manager: []
 
 imagePullSecrets: {}
-
-featureGates:
-  enabled: false
-  MachinePool: "false"
-  KubeadmBootstrapFormatIgnition: "true"
-  BootstrapTokenTtl: "15m"
 
 args:
   - --v=2
@@ -46,6 +52,7 @@ resources:
     requests:
       cpu: 100m
       memory: 100Mi
+
 containerSecurityContext: {}
 
 affinity:
