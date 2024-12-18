@@ -85,6 +85,11 @@ spec:
         {{- if .retryPeriod }}
         - --leader-elect-retry-period={{ .retryPeriod }}
         {{- end }}
+        - --feature-gates=MachinePool={{- default false .Values.featureGates.MachinePool
+          }},KubeadmBootstrapFormatIgnition={{- default false .Values.featureGates.KubeadmBootstrapFormatIgnition
+          }}
+        - --bootstrap-token-ttl={{- default "15m" .Values.featureGates.BootstrapTokenTtl
+          }}
         {{- end }}
         command:
         - /manager
