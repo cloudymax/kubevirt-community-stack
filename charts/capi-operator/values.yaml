@@ -32,7 +32,7 @@ featureGates:
 
 args:
   - --v=2
-  - --health-addr="0.0.0.0:8081"
+  - --health-addr="0.0.0.0:8080"
   - --diagnostics-address="0.0.0.0:8443"
   - --insecure-diagnostics=true
   - --watch-configsecret
