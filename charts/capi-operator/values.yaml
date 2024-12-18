@@ -5,8 +5,8 @@ controlPlane: "kubeadm:v1.7.2"
 infrastructure: "kubevirt:v0.1.8"
 addon: ""
 
-manager:
-  featureGates: {}
+manager: {}
+#  featureGates:
 #    kubeadm:
 #      MachinePool: true
 #      KubeadmBootstrapFormatIgnition: true
