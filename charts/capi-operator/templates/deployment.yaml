@@ -65,9 +65,6 @@ spec:
         {{- if .Values.healthAddr }}
         - --health-addr={{ .Values.healthAddr }}
         {{- end }}
-        {{- if .Values.metricsBindAddr }}
-        - --metrics-bind-addr={{ .Values.metricsBindAddr }}
-        {{- end }}
         {{- if .Values.diagnosticsAddress }}
         - --diagnostics-address={{ .Values.diagnosticsAddress }}
         {{- end }}
