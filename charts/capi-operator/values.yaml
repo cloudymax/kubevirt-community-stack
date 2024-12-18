@@ -3,28 +3,23 @@ bootstrap: ""
 controlPlane: ""
 infrastructure: ""
 addon: ""
-manager.featureGates: {}
+manager.featureGates:
+  MachinePool: true
+  KubeadmBootstrapFormatIgnition: true
 
 configSecret: {}
 
-logLevel: 2
 replicaCount: 1
 leaderElection:
   enabled: true
 image:
   manager:
-    repository: gcr.io/k8s-staging-capi-operator/cluster-api-operator
-    tag: dev
+    repository: registry.k8s.io/capi-operator/cluster-api-operator
+    tag: v0.15.0
     pullPolicy: IfNotPresent
 env:
   manager: []
 
-healthAddr: "0.0.0.0:8081"
-metricsBindAddr: "0.0.0.0:8080"
-diagnosticsAddress: "0.0.0.0:8443"
-
-insecureDiagnostics: false
-watchConfigSecret: false
 imagePullSecrets: {}
 
 featureGates:
@@ -32,6 +27,16 @@ featureGates:
   MachinePool: "false"
   KubeadmBootstrapFormatIgnition: "true"
   BootstrapTokenTtl: "15m"
+
+args:
+  - --v=2
+  - --health-addr="0.0.0.0:8081"
+  - --metrics-bind-addr="0.0.0.0:8080"
+  - --diagnostics-address="0.0.0.0:8443"
+  - --insecure-diagnostics=true
+  - --watch-configsecret
+  - --leader-elect=true
+  - --bootstrap-token-ttl=15m
 
 resources:
   manager:

@@ -58,38 +58,10 @@ spec:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
+      {{- with .Values.args }}
       - args:
-        {{- if ne .Values.logLevel "null" }}
-        - --v={{ .Values.logLevel }}
-        {{- end }}
-        {{- if ne .Values.healthAddr "null" }}
-        - --health-addr={{ .Values.healthAddr }}
-        {{- end }}
-        {{- if ne .Values.diagnosticsAddress "null" }}
-        - --diagnostics-address={{ .Values.diagnosticsAddress }}
-        {{- end }}
-        {{- if eq .Values.insecureDiagnostics true }}
-        - --insecure-diagnostics={{ .Values.insecureDiagnostics }}
-        {{- end }}
-        {{- if .Values.watchConfigSecret }}
-        - --watch-configsecret
-        {{- end }}
-        {{- with .Values.leaderElection }}
-        - --leader-elect={{ .enabled }}
-        {{- if .leaseDuration }}
-        - --leader-elect-lease-duration={{ .leaseDuration }}
-        {{- end }}
-        {{- if .renewDeadline }}
-        - --leader-elect-renew-deadline={{ .renewDeadline }}
-        {{- end }}
-        {{- if .retryPeriod }}
-        - --leader-elect-retry-period={{ .retryPeriod }}
-        {{- end }}
-        {{ if eq $.Values.featureGates.enabled true }}
-        - --feature-gates=MachinePool={{ $.Values.featureGates.MachinePool }},KubeadmBootstrapFormatIgnition={{ $.Values.featureGates.KubeadmBootstrapFormatIgnition }}
-        - --bootstrap-token-ttl={{ $.Values.featureGates.BootstrapTokenTtl }}
-        {{- end }}
-        {{- end }}
+      {{- toYaml . | nindent 10 }}
+      {{- end }}
         command:
         - /manager
         {{- with .Values.image.manager }}
@@ -101,7 +73,7 @@ spec:
         - containerPort: 9443
           name: webhook-server
           protocol: TCP
-        - containerPort: {{ ( split ":" $.Values.metricsBindAddr)._1 | int }}
+        - containerPort: 8080
           name: metrics
           protocol: TCP
         {{- with .Values.resources.manager }}
