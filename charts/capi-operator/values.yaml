@@ -1,17 +1,12 @@
----
-# ---
-# Cluster API provider options
 core: ""
 bootstrap: ""
 controlPlane: ""
 infrastructure: ""
 addon: ""
 manager.featureGates: {}
-# ---
-# Common configuration secret options
+
 configSecret: {}
-# ---
-# CAPI operator deployment options
+
 logLevel: 2
 replicaCount: 1
 leaderElection:
@@ -33,9 +28,9 @@ watchConfigSecret: false
 imagePullSecrets: {}
 
 featureGates:
-  MachinePool: false
-  KubeadmBootstrapFormatIgnition: true
-  BootstrapTokenTtl: 15m
+  machinePool: "false"
+  kubeadmBootstrapFormatIgnition: "true"
+  bootstrapTokenTtl: "15m"
 
 resources:
   manager:
@@ -74,6 +69,7 @@ volumes:
     secret:
       defaultMode: 420
       secretName: capi-operator-webhook-service-cert
+
 volumeMounts:
   manager:
     - mountPath: /tmp/k8s-webhook-server/serving-certs
