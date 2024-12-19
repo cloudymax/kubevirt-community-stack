@@ -4,6 +4,6 @@ metadata:
   labels:
     clusterctl.cluster.x-k8s.io/core: capi-operator
   name: capi-operator-selfsigned-issuer
-  namespace: capi
+  namespace: capi-operator-system
 spec:
   selfSigned: {}
