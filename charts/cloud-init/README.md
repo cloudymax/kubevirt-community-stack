@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.2.8](https://img.shields.io/badge/Version-0.2.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -19,7 +19,7 @@ A Helm chart that generates cloud-init config files
 | debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
-| existingConfigMap | bool | `true` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
+| existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
 | extraEnvVars | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname |
 | image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
@@ -33,7 +33,7 @@ A Helm chart that generates cloud-init config files
 | runcmd | list | `[]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
-| serviceAccount | object | `{"create":false,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
+| serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
 | users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"pool","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
 | users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |

@@ -10,13 +10,13 @@ image: deserializeme/kv-cloud-init:v0.0.1
 # -- Choose weather to create a service-account or not. Once a SA has been created
 # you should set this to false on subsequent runs.
 serviceAccount:
-  create: false
+  create: true
   name: cloud-init-sa
   existingServiceAccountName: "cloud-init-sa"
 
 # -- Dont recreate script configmap. Set to true when keeping multiple
 # cloud-init secrets in the same namespace
-existingConfigMap: true
+existingConfigMap: false
 
 # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
 # Not an official part of cloid-init
