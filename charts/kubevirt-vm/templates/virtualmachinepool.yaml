@@ -106,7 +106,9 @@ spec:
             cpu:
               {{- if eq .Values.virtualMachine.machine.pinCores true }}
               dedicatedCpuPlacement: true
-              isolateEmulatorThread: {{ .Values.virtualMachine.machine.emulatorThread }}
+              {{- end }}
+              {{- if eq .Values.virtualMachine.machine.emulatorThread true }}
+              isolateEmulatorThread: true
               {{- end }}
               model: {{ .Values.virtualMachine.machine.cpuModel }}
               {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
