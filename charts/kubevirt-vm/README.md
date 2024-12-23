@@ -14,19 +14,19 @@ Configure a virtual machine for use with Kubevirt
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.7 |
+| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 0.2.8 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cloudinit | object | `{"boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"enabled":true,"envsubst":true,"existingConfigMap":true,"extraEnvVars":[{"name":"VNC_PASS","valueFrom":{"secretKeyRef":{"key":"password","name":"test-password"}}}],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":["docker.io"],"runcmd":["docker run -d --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD=\"$VNC_PASS\" deserializeme/ubuntu-xfce"],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":false,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
+| cloudinit | object | `{"boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"enabled":true,"envsubst":true,"existingConfigMap":false,"extraEnvVars":[{"name":"VNC_PASS","valueFrom":{"secretKeyRef":{"key":"password","name":"test-password"}}}],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":["docker.io"],"runcmd":["docker run -d --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD=\"$VNC_PASS\" deserializeme/ubuntu-xfce"],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
 | cloudinit.boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | cloudinit.ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
 | cloudinit.debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | cloudinit.disable_root | bool | `false` | Disable root login over ssh |
 | cloudinit.envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
-| cloudinit.existingConfigMap | bool | `true` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
+| cloudinit.existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
 | cloudinit.hostname | string | `"test"` | virtual-machine hostname |
 | cloudinit.image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
 | cloudinit.namespace | string | `"kubevirt"` | namespace in which to create resources |
@@ -36,7 +36,7 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.runcmd | list | `["docker run -d --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD=\"$VNC_PASS\" deserializeme/ubuntu-xfce"]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
 | cloudinit.salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | cloudinit.secret_name | string | `"test-scrapmetal-user-data"` | name of secret in which to save the user-data file |
-| cloudinit.serviceAccount | object | `{"create":false,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
+| cloudinit.serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
 | cloudinit.users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | cloudinit.users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
 | cloudinit.users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |
