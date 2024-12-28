@@ -19,11 +19,11 @@ tls-san:
 
 # Required for l2 IP Announcement
 disable-kube-proxy: true
-kube-apiserver-arg:
-  - "default-not-ready-toleration-seconds=30"
-  - "default-unreachable-toleration-seconds=30"
+
 kubelet-arg:
-  - "max_pods=150"
-  - "cpuManagerPolicy=static"
-  - "kube-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi"
-  - "system-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi"
+  - "cpu-manager=true"
+  - "cpu-manager-policy=static"
+  - "cpu-manager-policy-options=full-pcpus-only=true"
+  - "cpu-manager-reconcile-period=0s"
+  - "kubelet-reserved=cpu=1"
+  - "system-reserved=cpu=1"
