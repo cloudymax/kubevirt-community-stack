@@ -1,6 +1,6 @@
 # kubevirt-cdi
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.60.3](https://img.shields.io/badge/AppVersion-v1.60.3-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.61.0](https://img.shields.io/badge/AppVersion-v1.61.0-informational?style=flat-square)
 
 Install the Containerized Data Importer
 
