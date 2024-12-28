@@ -28,6 +28,11 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-cdi https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-manager https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add cluster-api-operator https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-community-stack https://cloudymax.github.io/kubevirt-community-stack
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
