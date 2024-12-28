@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ingress
+  namespace: kube-system
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+  - hosts:
+    - hubble.buildstar.online
+    secretName: "hubble-tls"
+  ingressClassName: nginx
+  rules:
+  - host: hubble.buildstar.online
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hubble-ui
+            port:
+              number: 80
