@@ -9,6 +9,7 @@ spec:
   repo: https://charts.jetstack.io
   version: v1.16.2
   targetNamespace: cert-manager
+  createNamespace: true
   valuesContent: |-
     crds: 
       enabled: true
