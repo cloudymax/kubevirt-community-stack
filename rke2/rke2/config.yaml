@@ -1,7 +1,7 @@
 # /etc/rancher/k3s/config.yaml
 # /etc/rancher/rke2/config.yaml
 ---
-write-kubeconfig-mode: "0644"
+write-kubeconfig-mode: "0600"
 node-label: []
 cni:
   - cilium
@@ -15,7 +15,7 @@ disable:
 node-ip: 192.168.2.70
 
 # VPN IP Address
-node-external-ip: 10.1.0.248
+node-external-ip: 192.168.2.70
 
 # Required for l2 IP Announcement
 disable-kube-proxy: true
