@@ -17,7 +17,7 @@ wget -O /etc/kubernetes/kubeletconfig.yml \
 ```bash
 mkdir -p /var/lib/rancher/rke2/server/manifests 
 wget -O /var/lib/rancher/rke2/server/manifests/rke-cilium.yaml \
-	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/cilium-config.yaml"
+	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/rke-cilium.yaml"
 	
 wget -O /var/lib/rancher/rke2/server/manifests/ingress-nginx.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/ingress-nginx.yaml"
