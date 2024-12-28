@@ -8,3 +8,9 @@ kubeReserved: "[cpu=1,memory=2Gi,ephemeral-storage=1Gi]"
 systemReserved: "[cpu=1,memory=2Gi,ephemeral-storage=1Gi]"
 enableServer: true
 verbosity: 4
+cpu-manager: true
+cpu-manager-policy: static
+cpu-manager-policy-options: full-pcpus-only=true
+cpu-manager-reconcile-period: 0s
+kube-reserved: cpu=1
+system-reserved: cpu=1
