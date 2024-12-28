@@ -13,12 +13,12 @@ spec:
     kubeProxyReplacement: true
     l2announcements:
       enabled: false
-    l7Proxy: true
+    l7Proxy: false
     ingressController:
       enabled: false
       loadbalancerMode: shared
     externalIPs:
-      enabled: true
+      enabled: false
     devices: enp11s0f1np1
     k8sClientRateLimit:
       qps: 5
@@ -43,7 +43,7 @@ spec:
   interfaces:
   - wg0
   - enp11s0f1np1
-  externalIPs: true
+  externalIPs: false
   loadBalancerIPs: true
 ---
 apiVersion: "cilium.io/v2alpha1"
