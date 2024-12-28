@@ -1,5 +1,7 @@
+# /etc/rancher/k3s/config.yaml
+# /etc/rancher/rke2/config.yaml
 ---
-write-kubeconfig-mode: "0600"
+write-kubeconfig-mode: "0644"
 node-label: []
 cni:
   - cilium
@@ -10,7 +12,7 @@ disable:
   - rke2-ingress-nginx
 
 # Internal Network IP
-node-ip: 192.168.2.66
+node-ip: 192.168.2.70
 
 # VPN IP Address
 node-external-ip: 10.1.0.248
@@ -23,7 +25,7 @@ node-label:
 
 kubelet-arg:
 - max_pods=150
-- node-ip=192.168.2.66
+- node-ip=192.168.2.60
 - cpuManagerPolicy=static
 - kube-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
 - system-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
