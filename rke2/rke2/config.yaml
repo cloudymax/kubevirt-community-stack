@@ -25,7 +25,7 @@ node-label:
 
 kubelet-arg:
 - max_pods=150
-- node-ip=192.168.2.60
+- node-ip=192.168.2.70
 - cpuManagerPolicy=static
 - kube-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
 - system-reserved=cpu=1,memory=2Gi,ephemeral-storage=1Gi
