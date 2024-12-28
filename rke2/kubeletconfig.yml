@@ -1,8 +1,13 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 maxPods: 150
-cpuManagerPolicy: "static"
-kubeReserved: "cpu=1"
-systemReserved: "cpu=1"
 verbosity: 4
-cpuManagerReconcilePeriod: "5s"
+cpuManagerPolicy: "static"
+cpuManagerReconcilePeriod: "5s" 
+kubeReserved:
+  cpu: "500m"
+  memory: "1Gi"
+  ephemeral-storage: "1Gi"
+systemReserved:
+  cpu: "200m"
+  memory: "512Mi"
