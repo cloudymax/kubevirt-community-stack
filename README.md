@@ -31,7 +31,7 @@ Kubevirt Community Stack
 
 <p>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
+- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
@@ -40,13 +40,13 @@ Kubevirt Community Stack
       --create-namespace
     ```
 
-- <a href="https://kubernetes-sigs.github.io/cluster-api-operator/02_installation/04_helm-chart-installation.html">Cluster API Operator</a>: Installs the Cluster API Operator.
+- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/cluster-api-operator">Cluster API Operator</a>: Installs the Cluster API Operator.
 
     ```bash
     Work in progress.
     ```
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
+- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
@@ -55,7 +55,7 @@ Kubevirt Community Stack
       --create-namespace
     ```
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
+- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
 
     ```bash
     # Customize your own values.yaml before deploying
@@ -65,6 +65,21 @@ Kubevirt Community Stack
       --create-namespace
     ```
 </p>
+
+
+<h2>
+  Create A VM
+</h2>
+
+- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Installs the Kubevirt Operator.
+
+    ```bash
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+    helm install my-vm kubevirt/kubevirt-vm \
+      --namespace kubevirt \
+      --set virtualMachine.name=my-vm
+      --create-namespace
+    ```
 
 # Components
 
