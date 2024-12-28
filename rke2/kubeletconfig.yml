@@ -7,3 +7,4 @@ cpuManagerPolicy: "static"
 kubeReserved: "[cpu=1,memory=2Gi,ephemeral-storage=1Gi]"
 systemReserved: "[cpu=1,memory=2Gi,ephemeral-storage=1Gi]"
 enableServer: true
+verbosity: 4
