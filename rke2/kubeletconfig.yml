@@ -1,10 +1,8 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-shutdownGracePeriod: "30s"
-shutdownGracePeriodCriticalPods: "10s"
 maxPods: 150
 cpuManagerPolicy: "static"
-kubeReserved: "cpu=1,memory=2Gi,ephemeral-storage=1Gi"
-systemReserved: "cpu=1,memory=2Gi,ephemeral-storage=1Gi"
-enableServer: true
+kubeReserved: "cpu=1"
+systemReserved: "cpu=1"
 verbosity: 4
+cpuManagerReconcilePeriod: "5s"
