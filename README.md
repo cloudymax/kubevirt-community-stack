@@ -13,7 +13,20 @@ Kubevirt Community Stack
 <br>
 
 <h2>
-  Install Charts via Helm
+  Install Combined Chart
+</h2>
+
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
+
+    ```bash
+    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+    helm install kubevirt-stack kubevirt/kubevirt-stack \
+      --namespace kubevirt \
+      --create-namespace
+    ```
+
+<h2>
+  Install Individual Charts
 </h2>
 
 <p>
@@ -30,14 +43,7 @@ Kubevirt Community Stack
 - <a href="https://kubernetes-sigs.github.io/cluster-api-operator/02_installation/04_helm-chart-installation.html">Cluster API Operator</a>: Installs the Cluster API Operator.
 
     ```bash
-    helm repo add capi-operator https://kubernetes-sigs.github.io/cluster-api-operator
-    helm install capi-operator capi-operator/cluster-api-operator \
-      --create-namespace -n capi-operator-system \
-      --set core=cluster-api:v1.7.2 \
-      --set controlPlane=kubeadm:v1.7.2 \
-      --set bootstrap=kubeadm:v1.7.2 \
-      --set infrastructure=kubevirt:v0.1.8 \
-      --wait --timeout 90s
+    Work in progress.
     ```
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
@@ -49,29 +55,12 @@ Kubevirt Community Stack
       --create-namespace
     ```
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/cloud-init">cloud-init</a>: Create an optimized cloud-init user-data file as a kubernetes secret. Adds additional functionality for `wireguard`, `write_files`, and `password` modules.
-
-    ```bash
-    helm repo add cloudinit https://cloudymax.github.io/kubevirt-community-stack
-    helm install <username>-<hostname> cloudinit/cloud-init
-    ```
-
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Create virtual-machines and vm-pools with Kubevirt via helm. Optionally define cloud-init data.
-
-    ```bash
-    # Customize your own values.yaml before deploying
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
-    helm install kubevirt-cdi kubevirt/kubevirt-vm \
-      --file values.yaml  \
-      --create-namespace
-    ```
-
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
 
     ```bash
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
-    helm install kubevirt-cdi kubevirt/kubevirt-manager \
+    helm install kubevirt-manager kubevirt/kubevirt-manager \
       --fnamespace kubevirt-manager \
       --create-namespace
     ```
