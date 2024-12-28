@@ -18,7 +18,7 @@ spec:
       enabled: false
       loadbalancerMode: shared
     externalIPs:
-      enabled: false
+      enabled: true
     devices: enp11s0f1np1
     k8sClientRateLimit:
       qps: 5
