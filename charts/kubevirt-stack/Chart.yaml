@@ -1,5 +1,5 @@
 apiVersion: v2
-name: kubevirt-community-stack
+name: kubevirt-stack
 description: Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
 type: application
