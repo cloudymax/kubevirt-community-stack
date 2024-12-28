@@ -34,30 +34,3 @@ spec:
         enabled: true
       ui:
         enabled: true
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumL2AnnouncementPolicy
-metadata:
-  name: basic-policy
-spec:
-  interfaces:
-  - wg0
-  - enp11s0f1np1
-  externalIPs: false
-  loadBalancerIPs: true
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: "wireguard"
-spec:
-  cidrs:
-  - cidr: "10.1.0.201/30"
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: "internal"
-spec:
-  cidrs:
-  - cidr: "192.168.2.150/30"
