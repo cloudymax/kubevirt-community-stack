@@ -9,7 +9,6 @@ spec:
   repo: https://charts.jetstack.io
   version: v1.16.2
   targetNamespace: cert-manager
-  createNamespace: true
   valuesContent: |-
     crds: 
       enabled: true
@@ -33,3 +32,8 @@ spec:
         ingress:
           # change to 'cilium' if using a cilium ingress
           ingressClassName: nginx
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
