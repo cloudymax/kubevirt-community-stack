@@ -23,7 +23,9 @@ wget -O /var/lib/rancher/rke2/server/manifests/cert-manager.yaml \
 
 wget -O /var/lib/rancher/rke2/server/manifests/hubble-ingress.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/hubble-ingress.yaml"
-	
+
+wget -O /var/lib/rancher/rke2/server/manifests/nginx-hello.yaml \
+    "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/nginx-hello.yaml"
 	
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
