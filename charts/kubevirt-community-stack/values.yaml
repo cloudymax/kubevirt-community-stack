@@ -1,0 +1,301 @@
+################################################################################
+#   ___  _ __   ___ _ __ __ _| |_ ___  _ __
+#  / _ \| '_ \ / _ \ '__/ _` | __/ _ \| '__|
+# | (_) | |_) |  __/ | | (_| | || (_) | |
+#  \___/| .__/ \___|_|  \__,_|\__\___/|_|
+#       |_|
+################################################################################
+operator:
+  replicaCount: 1
+
+  image:
+    # --  container repository
+    repository: quay.io/kubevirt/virt-operator
+    # -- image pull policy
+    pullPolicy: IfNotPresent
+    # -- image tag, use this to set the version of kubevirt
+    tag: "v1.2.0"
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Annotations to add to the service account
+    annotations: {}
+    # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+    name: "kubevirt-operator"
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext:
+    # -- sets the container to privileged
+    privileged: true
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  # -- toleration for CriticalAddonsOnly
+  tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
+
+  # -- by default forces replicas to different knodes
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: kubevirt.io
+                  operator: In
+                  values:
+                    - virt-operator
+            topologyKey: kubernetes.io/hostname
+          weight: 1
+
+  priorityclass:
+    # -- craete priorityclass by default
+    create: true
+    # -- default priorityclass value
+    value: 1000000000
+
+  mediatedDevicesTypes: []
+  permittedHostDevices:
+    pciHostDevices: []
+    mediatedDevices: []
+
+  monitorNamespace: ""
+  monitorAccount: ""
+
+  useEmulation: true
+
+  featureGates: []
+
+################################################################################
+#   ____ ____ ___
+#  / ___|  _ \_ _|
+# | |   | | | | |
+# | |___| |_| | |
+#  \____|____/___|
+################################################################################
+cdi:
+  replicaCount: 1
+
+  image:
+    repository: quay.io/kubevirt/cdi-operator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: "kubevirt-cdi-service-account"
+
+  securityContext:
+    capabilities:
+      drop:
+      - ALL
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+
+  service:
+    type: ClusterIP
+    port: 8080
+    name: metrics
+    protocol: TCP
+
+  uploadProxy:
+    type: ClusterIP
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 150Mi
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+
+  affinity: {}
+
+  cdi:
+    featureGates:
+    - HonorWaitForFirstConsumer
+    resources:
+      limits:
+        cpu: "4"
+        memory: 4Gi
+      requests:
+        cpu: "1"
+        memory: 250Mi
+
+
+################################################################################
+#  __  __
+# |  \/  | __ _ _ __   __ _  __ _  ___ _ __
+# | |\/| |/ _` | '_ \ / _` |/ _` |/ _ \ '__|
+# | |  | | (_| | | | | (_| | (_| |  __/ |
+# |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|
+################################################################################
+manager:
+  enabled: true
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 8080
+    protocol: TCP
+    name: http
+
+  prometheus:
+    enabled: false
+    serviceName: "thanos-app-query-frontend"
+    serviceNamesapce: "default"
+
+  ingress:
+    enabled: false
+    className: "nginx"
+    hostname: "kubevirt.example.com"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      nginx.org/location-snippets: |
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    tls:
+      enabled: false
+      secretName: "tls-kubevirt-manager"
+
+
+################################################################################
+#   ____ _           _                 _    ____ ___
+#  / ___| |_   _ ___| |_ ___ _ __     / \  |  _ \_ _|
+# | |   | | | | / __| __/ _ \ '__|   / _ \ | |_) | |
+# | |___| | |_| \__ \ ||  __/ |     / ___ \|  __/| |
+#  \____|_|\__,_|___/\__\___|_|    /_/   \_\_|  |___|
+#
+################################################################################
+capi:
+  enabled: false
+  core: "cluster-api:v1.7.2"
+  bootstrap: "kubeadm:v1.7.2"
+  controlPlane: "kubeadm:v1.7.2"
+  infrastructure: "kubevirt:v0.1.8"
+  addon: ""
+
+  manager: {}
+  #  featureGates:
+  #    kubeadm:
+  #      MachinePool: true
+  #      KubeadmBootstrapFormatIgnition: true
+  #    core:
+  #      MachinePool: true
+  #      KubeadmBootstrapFormatIgnition: true
+  #    kubevirt:
+  #      MachinePool: true
+  #      KubeadmBootstrapFormatIgnition: true
+  #    bootstrap:
+  #      MachinePool: true
+  #      KubeadmBootstrapFormatIgnition: true
+
+  configSecret: {}
+
+  replicaCount: 1
+
+  image:
+    manager:
+      repository: registry.k8s.io/capi-operator/cluster-api-operator
+      tag: v0.15.0
+      pullPolicy: IfNotPresent
+
+  env:
+    manager: []
+
+  imagePullSecrets: {}
+
+  args:
+    - --leader-elect
+
+  resources: {}
+  #  manager:
+  #    limits:
+  #      cpu: 100m
+  #      memory: 150Mi
+  #    requests:
+  #      cpu: 100m
+  #      memory: 100Mi
+
+  containerSecurityContext: {}
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+                  - arm64
+                  - ppc64le
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                  - linux
+
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+
+  volumes:
+    - name: cert
+      secret:
+        defaultMode: 420
+        secretName: capi-operator-webhook-service-cert
+
+  volumeMounts:
+    manager:
+      - mountPath: /tmp/k8s-webhook-server/serving-certs
+        name: cert
+        readOnly: true
