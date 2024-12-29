@@ -135,7 +135,7 @@ metadata:
     objectset.rio.cattle.io/owner-name: local-storage
     objectset.rio.cattle.io/owner-namespace: kube-system
   name: local-path-config
-  namespace: kube-system
+  namespace: local-path-storage
 data:
   config.json: |-
     {
