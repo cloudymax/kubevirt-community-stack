@@ -66,20 +66,21 @@ Additional Features:
 
    Example:
 
-   ```bash
+  <pre><code class="language-bash">
    export CAPK_GUEST_K8S_VERSION="v1.23.10"
    export CRI_PATH="/var/run/containerd/containerd.sock"
    export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
-
+   
    clusterctl generate cluster capi-quickstart \
    --infrastructure="kubevirt:v0.1.8" \
    --flavor lb \
    --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
    --control-plane-machine-count=1 \
    --worker-machine-count=1 > capi-quickstart.yaml
-
+  
    kubectl apply -f capi-quickstart.yaml
-   ```
+  </code></pre>
+
 </details>
 
 <h1>Dependencies</h1>
@@ -89,19 +90,19 @@ Additional Features:
 This utility will audit a host machine and report what virtualisation capabilities are available
 
   - Installation
-      ```bash
+      <pre><code class="language-bash">
       sudo apt-get install -y libvirt-clients
-      ```
+      </code></pre>
 
   - Usage
-      ```console
+      <pre><code class="language-console">
       $ virt-host-validate qemu
       QEMU: Checking for hardware virtualization          : PASS
       QEMU: Checking if device /dev/kvm exists            : PASS
       QEMU: Checking if device /dev/kvm is accessible     : PASS
       QEMU: Checking if device /dev/vhost-net exists      : PASS
       QEMU: Checking if device /dev/net/tun exists        : PASS
-      ```
+      </code></pre>
 </details>
 
 <details>
@@ -109,25 +110,25 @@ This utility will audit a host machine and report what virtualisation capabiliti
   virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
     
   - Standalone
-      ```bash
+      <pre><code class="language-bash">
       export VERSION=v0.41.0
       wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
-      ```
+      </code></pre>
 
   - Plugin
-      ```bash
+      <pre><code class="language-bash">
       kubectl krew install virt
-      ```
+      </code></pre>
 </details>
 
 <details>
   <summary>clusterctl</summary><br>
   The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
     
-  ```bash
+  <pre><code class="language-bash">
   curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
   sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
-  ```
+  </code></pre>
 </details>
 
 <h1>
