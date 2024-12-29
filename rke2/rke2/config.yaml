@@ -2,8 +2,6 @@
 # /etc/rancher/rke2/config.yaml
 ---
 write-kubeconfig-mode: "0600"
-node-label:
-  - "node-role.kubernetes.io/control-plane=true"
 cni:
   - cilium
 disable:
