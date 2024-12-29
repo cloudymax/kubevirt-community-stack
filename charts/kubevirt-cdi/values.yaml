@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/kubevirt/cdi-controller
+  repository: quay.io/kubevirt/cdi-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -13,7 +13,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "kubevirt-cdi-service-account"
 
 securityContext:
   capabilities:
@@ -64,7 +64,6 @@ tolerations:
 - key: CriticalAddonsOnly
   operator: Exists
 
-
 affinity: {}
 
 cdi:
@@ -77,4 +76,3 @@ cdi:
     requests:
       cpu: "1"
       memory: 250Mi
-

@@ -1,16 +1,8 @@
-{{- if (default .Values.priorityclass.create true) }}
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: kubevirt-cluster-critical
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "kubevirt.labels" . | nindent 4 }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/resource-policy: keep
-    helm.sh/hook-weight: "1"
-value: {{ .Values.priorityclass.value }}
+  namespace: kubevirt
+value: 1000000000
 globalDefault: false
 description: "This priority class should be used for core kubevirt components only."
-{{ end }}

@@ -1,16 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "kubevirt-manager.fullname" . }}
+  name: kubevirt-manager
+  namespace: kubevirt-manager
   labels:
-    {{- include "kubevirt-manager.labels" . | nindent 4 }}
+    app: kubevirt-manager
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 spec:
   type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: {{ .Values.service.protocol }}
-      name: {{ .Values.service.name }}
   selector:
-    {{- include "kubevirt-manager.selectorLabels" . | nindent 4 }}
-
+    app: kubevirt-manager
+  ports:
+    - name: {{ .Values.service.name }}
+      protocol: {{ .Values.service.protocol }}
+      port: {{ .Values.service.port }}
+      targetPort: 8080

@@ -1,0 +1,19 @@
+# /etc/rancher/k3s/config.yaml
+# /etc/rancher/rke2/config.yaml
+---
+write-kubeconfig-mode: "0600"
+cni:
+  - cilium
+disable:
+  - rke2-ingress-nginx
+# Internal Network IP
+node-ip: 192.168.2.70
+bind-address: 192.168.2.70
+node-external-ip: 192.168.2.70
+advertise-address: 192.168.2.70
+tls-san:
+  - 192.168.2.70
+# Required for l2 IP Announcement
+disable-kube-proxy: true
+kubelet-arg:
+- config=/etc/kubernetes/kubelet.yaml

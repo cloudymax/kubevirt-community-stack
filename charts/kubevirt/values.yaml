@@ -10,7 +10,7 @@ image:
   # -- image pull policy
   pullPolicy: IfNotPresent
   # -- image tag, use this to set the version of kubevirt
-  tag: "v1.0.0"
+  tag: "v1.2.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -33,10 +33,6 @@ securityContext:
   privileged: true
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -70,25 +66,27 @@ priorityclass:
   # -- default priorityclass value
   value: 1000000000
 
-kubevirt:
-  # -- create kubebvirt object by default
-  create: true
-  configuration:
-    developerConfiguration:
-      # -- software emulation enabled by default
-      useEmulation: true
-      # -- enable feature gates: https://github.com/kubevirt/kubevirt/blob/main/pkg/virt-config/feature-gates.go#L26
-      featureGates:
-        - ExpandDisks
-        - CPUManager
-        - GPU
-        - HostDevices
-        - VMExport
-        - HotplugVolumes
-        - HostDisk
-        - Macvtap
-        - Passt
-        - HotplugNICs
-        - clientPassthrough
-        - Snapshot
-        - CPUNodeDiscovery
+mediatedDevicesTypes: []
+permittedHostDevices:
+  pciHostDevices: []
+  mediatedDevices: []
+
+monitorNamespace: ""
+monitorAccount: ""
+
+useEmulation: false
+
+featureGates:
+  - ExpandDisks
+  - CPUManager
+  - GPU
+  - HostDevices
+  - VMExport
+  - HotplugVolumes
+  - HostDisk
+  - Macvtap
+  - Passt
+  - HotplugNICs
+  - clientPassthrough
+  - Snapshot
+  - CPUNodeDiscovery

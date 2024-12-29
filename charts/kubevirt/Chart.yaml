@@ -3,11 +3,9 @@ name: kubevirt
 description: Deploy Kebivirt on Kubernetes
 
 type: application
-version: 0.0.3
-appVersion: "v1.0.0"
+version: 0.2.8
+appVersion: "v1.2.0"
 
 maintainers:
-  - name: "jdambly"
-    url: "https://github.com/jdambly"
   - name: "cloudymax"
     url: "https://github.com/cloudymax/"

@@ -1,22 +1,44 @@
-{{ if .Values.kubevirt.create }}
 ---
 apiVersion: kubevirt.io/v1
 kind: KubeVirt
 metadata:
-  labels:
-    kubevirt.io: ""
-    {{- include "kubevirt.labels" . | nindent 4 }}
-  name: {{ include "kubevirt.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
+  name: kubevirt
+  namespace: kubevirt
 spec:
   certificateRotateStrategy: {}
-  {{- with .Values.kubevirt.configuration }}
+  monitorNamespace: {{ .Values.monitorNamespace }}
+  monitorAccount: {{ .Values.monitorAccount }}
   configuration:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    permittedHostDevices:
+      {{- if .Values.permittedHostDevices.pciHostDevices }}
+      {{- with .Values.permittedHostDevices.pciHostDevices }}
+      pciHostDevices:
+        {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- else }}
+      pciHostDevices: []
+      {{- end }}
+      {{- if .Values.permittedHostDevices.mediatedDevices }}
+      {{- with .Values.permittedHostDevices.mediatedDevices }}
+      mediatedDevices:
+        {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- else }}
+      mediatedDevices: []
+      {{- end }}
+    {{- if .Values.mediatedDevicesTypes }}
+    mediatedDevicesConfiguration:
+      {{- with .Values.mediatedDevicesTypes}}
+      mediatedDevicesTypes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    developerConfiguration:
+      useEmulation: {{ .Values.useEmulation }}
+      {{- with .Values.featureGates }}
+      featureGates:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   customizeComponents: {}
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
- {{ end }}

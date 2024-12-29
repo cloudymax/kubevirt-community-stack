@@ -1,6 +1,11 @@
 name: Release Charts
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      [closed]
   workflow_dispatch:
 
 jobs:
@@ -16,15 +21,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v3
+          helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-cdi https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-manager https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add cluster-api-operator https://cloudymax.github.io/kubevirt-community-stack
+          helm repo add kubevirt-community-stack https://cloudymax.github.io/kubevirt-community-stack
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_GENERATE_RELEASE_NOTES: true
