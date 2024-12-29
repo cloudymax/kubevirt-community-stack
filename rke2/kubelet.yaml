@@ -1,0 +1,15 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cpuManagerReconcilePeriod: 0s
+clusterDomain: cluster.local
+kubeReserved:
+  cpu: "1"
+  memory: "2Gi"
+  ephemeral-storage: "1Gi"
+systemReserved:
+  cpu: "500m"
+  memory: "1Gi"
+  ephemeral-storage: "1Gi"
+evictionHard:
+  memory.available: "500Mi"
+  nodefs.available: "10%"
