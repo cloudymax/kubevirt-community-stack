@@ -1,4 +1,3 @@
-
 <h1 align=center>
 Kubevirt Community Stack
 </h1>
@@ -13,10 +12,14 @@ Kubevirt Community Stack
 <br>
 
 <h2>
-  Install Combined Chart
+  Installation
 </h2>
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
+<details>
+  <summary>Combined chart</summary>
+<br>
+
+- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>: Installs the combined chart.
 
     ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
@@ -24,12 +27,11 @@ Kubevirt Community Stack
       --namespace kubevirt \
       --create-namespace
     ```
+</details>
 
-<h2>
-  Install Individual Charts
-</h2>
-
-<p>
+<details>
+  <summary>Individual Charts</summary>
+<br>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
@@ -64,8 +66,7 @@ Kubevirt Community Stack
       --fnamespace kubevirt-manager \
       --create-namespace
     ```
-</p>
-
+</details>
 
 <h2>
   Create A VM
