@@ -1,0 +1,1331 @@
+apiVersion: v1
+entries:
+  cloud-init:
+  - apiVersion: v2
+    created: "2024-12-23T14:20:18.867121504Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 258a3e91743dbd019db6720b8279ceb34fc3454372832d7946d624fabf68d2be
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.8/cloud-init-0.2.8.tgz
+    version: 0.2.8
+  - apiVersion: v2
+    created: "2024-12-14T14:35:29.478169446Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: ab15b00b13853bf888aaee686e50d81d13ca09c551d62fb60db662fbe0d0d152
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.7/cloud-init-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    created: "2024-12-08T17:02:21.574651741Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 8b06397cdc706b430d58aca0f3952e61273fb58ad539ac19b98be69c1e4a15bc
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.6/cloud-init-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
+    created: "2024-12-08T15:12:57.84263395Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 73d01952b39f49cf9e2bfd4a7ac1e701810e03799a322fc965302c418e9017e1
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.5/cloud-init-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    created: "2024-12-08T14:41:54.698589332Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 0d6304f88f6f7b71c84801178e3ecfc26592ea04109eaa54b8999526624583fa
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.4/cloud-init-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    created: "2024-11-24T16:32:44.278525534Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: b6d3e21329a162cceb56014f9b359586776f062000de8424fc543174e2e1a46f
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.3/cloud-init-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    created: "2024-10-28T15:45:53.177852668Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 87c4f88a22cac7dfc4972ba760b922ae1057bea0e6cb51ccd7b02c49389cfc96
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.2/cloud-init-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    created: "2024-10-27T14:45:52.740793575Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: a368d15bb16d071c782c5ff68e6fd0575377956aa028ba48cf479ff2c0efc375
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.1/cloud-init-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    created: "2024-10-24T17:11:02.394822611Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 91121999b3071c8d849640cf20eb1219f5ee4ca91ff063e78e0b3d7b7aff4c84
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.0/cloud-init-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    created: "2023-09-24T10:42:32.480451077Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: c1f0f5ed51573f26acf11ae2511cf23700aad90d69a6f9ff8259a54d5151038e
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/cloud-init-0.1.1/cloud-init-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-09-24T10:27:57.99537718Z"
+    description: A Helm chart for Kubernetes
+    digest: 1c5318b099368e4c6b04cdc649cecf0ce4eb4e779c33088f219477d8ceb35d6e
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/cloud-init-0.0.1/cloud-init-0.0.1.tgz
+    version: 0.0.1
+  cluster-api-operator:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-12-23T13:40:01.724585059Z"
+    description: Cluster API Operator
+    digest: 393c1ccab7305452518c9305a01ad2dd6a9b3213c3bc54de38c7c2d1a4605d47
+    name: cluster-api-operator
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cluster-api-operator-0.0.0/cluster-api-operator-0.0.0.tgz
+    version: 0.0.0
+  kubevirt:
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-12-10T11:22:03.731927224Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 7c12989e5b28afbe3ea7c091fc595506dfaff108319d2fb1e6cafdddbb37ec74
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.8/kubevirt-0.2.8.tgz
+    version: 0.2.8
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-06-30T11:36:30.689461541Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: def10822c22d668b7a6880b2361e78ead57650377998505a038ee857327b8536
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.7/kubevirt-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-06-02T09:21:51.822856823Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 7a9bd851d3b01f3af931fad9d31fc1cf55b86741e08b162e2719433c740b75b7
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.6/kubevirt-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-06-01T17:59:12.497123235Z"
+    dependencies:
+    - condition: cluster-api-operator.enabled
+      name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: v0.10.1
+    description: Deploy Kebivirt on Kubernetes
+    digest: fcf56bda1f58cf39d18665efbee598e1f0dd6e15cbad714aecdca53747884f48
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.5/kubevirt-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-06-01T11:53:32.012459923Z"
+    dependencies:
+    - condition: cluster-api-operator.enabled
+      name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: v0.10.1
+    description: Deploy Kebivirt on Kubernetes
+    digest: 243fcdd03da702d3bb2f77eb0536bf82695646fc4f4df4ba47e84da9d6e617a5
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.4/kubevirt-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-06-01T11:37:00.614099537Z"
+    dependencies:
+    - condition: cluster-api-operator.enabled
+      name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: v0.10.1
+    description: Deploy Kebivirt on Kubernetes
+    digest: 2be8d030f7e43d23449aabb67a65c7521ec54dfef6388461d790eb2912eefe0a
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.3/kubevirt-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-05-31T16:50:02.837456934Z"
+    dependencies:
+    - condition: cluster-api-operator.enabled
+      name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: v0.10.1
+    description: Deploy Kebivirt on Kubernetes
+    digest: 4bb4b8b1704cbadd6e3036f994caee29cf96eeba6ffcc9404587ec9d1833b406
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.2/kubevirt-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-05-11T16:12:11.13358081Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 0b523cb301b1a4249aac07a7c507d126ebdcc792ec060a6ee069c4f0e4789b7b
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.1/kubevirt-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: v1.2.0
+    created: "2024-03-30T14:01:23.753825019Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 9f6207f86f5aaa667d2353cc12056c7ec43b4090c1e3eaecfc7324237207c6e8
+    maintainers:
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.2.0/kubevirt-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2024-02-10T20:10:16.023444517Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 18a6a2457def2727a01cccc9ba9eb58c9b24e9ce9482a8965ccf2a87b0b928c3
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.1.6/kubevirt-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2024-01-13T21:43:51.931326503Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: f33651f40c9ffd39e61cf3e7338201d574ea98e14cf1e5597652a64e242e0b3b
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-0.1.5/kubevirt-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-11-24T09:44:17.779839774Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: f33eee1530acf2d886d2f9709ff32e23a6cd3d649ad153d822456c9fe955c59d
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.1.4/kubevirt-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-10-01T12:25:48.220654508Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: 5bea0069e134337a57be5fb2af98b84a7f8dc59e19106e601aea4b379bbe5440
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.1.3/kubevirt-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-10-01T11:51:59.623442034Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: a2b343e5172e872c704cb927b96bf5d3af9c067b29a30bfb2436a03c5efbda18
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.1.2/kubevirt-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-09-24T10:40:35.66141171Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: d89b605dceaf65787b252e43f5292399c8daf74ab0e91fde9d89574714f8b374
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.1.1/kubevirt-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2023-09-24T10:27:58.208205668Z"
+    description: Deploy Kebivirt on Kubernetes
+    digest: ffe8a3d306c904da29f179e119707458f442d0d847185f8d07352bac82890347
+    maintainers:
+    - name: jdambly
+      url: https://github.com/jdambly
+    - name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.0.3/kubevirt-0.0.3.tgz
+    version: 0.0.3
+  kubevirt-cdi:
+  - apiVersion: v2
+    appVersion: v1.61.0
+    created: "2024-12-28T21:03:18.432514503Z"
+    description: Install the Containerized Data Importer
+    digest: 17b07f424b9c851231e9dfe190d03e64e070b9fd7d92d6783e59a96d72ca357d
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.2.1/kubevirt-cdi-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: v1.60.3
+    created: "2024-10-30T17:49:22.814922959Z"
+    description: Install the Containerized Data Importer
+    digest: 9f9db5f2bf603c7431b2ea6df1c9a1eaae91f7fa2c972c0523b462f0f8761713
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.2.0/kubevirt-cdi-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: v1.59.0
+    created: "2024-06-30T13:13:23.177283496Z"
+    description: Install the Containerized Data Importer
+    digest: da31b53f33f0c2d3ce5e244adc6267821803cc16382d56a6a05e8c62f8008359
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.1.5/kubevirt-cdi-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: v1.59.0
+    created: "2024-06-30T12:53:33.273098399Z"
+    description: Install the Containerized Data Importer
+    digest: 5785e1f70733f0d6815bde95c35aa327f7ecca75c1c4fc262761e2c630d59ed6
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.1.4/kubevirt-cdi-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: v1.57.0
+    created: "2024-02-10T21:57:37.92331902Z"
+    description: Install the Containerized Data Importer
+    digest: 0967d1a6aac60c2fb516cade4d55f5be494c218bcba1c7fbe20ba07ae1d22941
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.1.3/kubevirt-cdi-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: v1.57.0
+    created: "2023-11-24T10:01:02.912190278Z"
+    description: Install the Containerized Data Importer
+    digest: 067c3f1cf63baf853f120bd2287e00fd14e3873b5076d6b3608eb2070751029f
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-cdi-0.1.2/kubevirt-cdi-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: v1.57.0-rc1
+    created: "2023-09-24T10:27:58.407281584Z"
+    description: Install the Containerized Data Importer
+    digest: 90adfb9ae5a4811458f501ef3ab4d9237142e6fc4a180995c657f50e04845d0a
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-cdi-0.1.1/kubevirt-cdi-0.1.1.tgz
+    version: 0.1.1
+  kubevirt-community-stack:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-12-28T13:17:46.416895355Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.0
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.0.0
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 5aaeab8384d7a2d7eb483ca0e95f9911574768d7a36ee2adea1b29b67d4bb765
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-community-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-community-stack-0.0.0/kubevirt-community-stack-0.0.0.tgz
+    version: 0.0.0
+  kubevirt-crds:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-25T09:04:17.524140472Z"
+    description: Install CRDS required for Kubevirt and the CDI
+    digest: af354e2706f08aee2f52d49c110e3923325d739079d3fbe791bb3f42192dedea
+    name: kubevirt-crds
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-crds-0.1.0/kubevirt-crds-0.1.0.tgz
+    version: 0.1.0
+  kubevirt-manager:
+  - apiVersion: v2
+    appVersion: 1.5.0-rc
+    created: "2024-12-10T20:56:15.046845278Z"
+    description: Install the Kubevirt Manager UI
+    digest: 7bca256f2a3735e6787348b9b3fcdcf6afcb3fcd70312cd4cd27f11bf822abba
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.2.2/kubevirt-manager-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 1.4.1
+    created: "2024-11-13T18:36:00.697092233Z"
+    description: Install the Kubevirt Manager UI
+    digest: 80786181e82b86010c454bd3a4d8bd2181f112041a5b055baaeff05553e883c9
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.2.1/kubevirt-manager-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 1.4.1
+    created: "2024-11-10T15:22:25.574918548Z"
+    description: Install the Kubevirt Manager UI
+    digest: 2416552f61cdfedc6293b1cfb0120a4d283d97896e044b555746648cd0f971f3
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.2.0/kubevirt-manager-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.3.3
+    created: "2024-06-30T12:11:38.257450244Z"
+    description: Install the Kubevirt Manager UI
+    digest: 97f22db15f652f249c31c09e26d70f0ef24d33b92f935e00318a89008fd866c7
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.9/kubevirt-manager-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-04-23T19:18:41.682295554Z"
+    description: Install the Kubevirt Manager UI
+    digest: 3d68db0107ba9f5395c96ba01e4e3f56546346f0d0e689d0e2c09d43b8555ece
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.8/kubevirt-manager-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-04-23T18:43:31.542311175Z"
+    description: Install the Kubevirt Manager UI
+    digest: bfa80f50b8b6eac2ad1249e7413878aac0d4668cf37f0c82568597de2a1edbb7
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.7/kubevirt-manager-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-02-11T10:51:55.057169205Z"
+    description: Install the Kubevirt Manager UI
+    digest: 649eaa2a7ec66a849d5e15456b3970b2f8b94fff6d3be979e374608568380b06
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.6/kubevirt-manager-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-02-10T21:01:14.352628148Z"
+    description: Install the Kubevirt Manager UI
+    digest: d01f30d802326275d815e92ecf6469bc01f03e8bd665864ce51c0b3009e70a08
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.5/kubevirt-manager-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-02-10T20:32:29.661738227Z"
+    description: Install the Kubevirt Manager UI
+    digest: 0c7bb1f0339f2c5f303f8b6b7fea60f76166ac56cf509af04e36dbaf68867367
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.4/kubevirt-manager-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-02-10T19:58:34.913045285Z"
+    description: Install the Kubevirt Manager UI
+    digest: da89e32ef7e353c7e3e671fce43122480d7a04f1b2faa2b4aa2ef99b8f3c8e24
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.3/kubevirt-manager-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2024-01-13T21:43:52.041000583Z"
+    description: Install the Kubevirt Manager UI
+    digest: 324e12f57f89beac2a5fbd304ecc6f830f3e9c9b55ec5ee018a5ee42dada91b6
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-manager-0.1.2/kubevirt-manager-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.2.3
+    created: "2023-09-24T10:27:58.591127913Z"
+    description: Install the Kubevirt Manager UI
+    digest: 5e07aae0d2e5cfec714a5081724112bfbd93c82e724581d63f767c6c660f3b6f
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-manager
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-manager-0.1.1/kubevirt-manager-0.1.1.tgz
+    version: 0.1.1
+  kubevirt-stack:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-12-29T14:10:59.572583612Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.0.0
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 362b8c84884410387436ed3e890a77f3ca4760509c46566de4f661590ddefaad
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.0.2/kubevirt-stack-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-12-28T21:09:14.316242361Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.0.0
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 724e6278139d21e4d78a53c384ab8ee8b8727947d646ccf6633027f0184265f4
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.0.1/kubevirt-stack-0.0.1.tgz
+    version: 0.0.1
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-12-28T13:32:14.810887111Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.0
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.0.0
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 419543b91ec9f6911887c26530b5d3b799eb9f5d08276e51bc63c27f79f63729
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.0.0/kubevirt-stack-0.0.0.tgz
+    version: 0.0.0
+  kubevirt-vm:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-29T14:01:05.135941495Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 53b47339591f31fda3343161ae793cd7101b3c3e4a18b41dc527b297f1ac8e52
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.9/kubevirt-vm-0.4.9.tgz
+    version: 0.4.9
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-23T14:26:10.149270083Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 5a031a75d70405ab0f4fcb5a8d6b5770e67d658ca0d29a642a584be9ab1bf336
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.8/kubevirt-vm-0.4.8.tgz
+    version: 0.4.8
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-15T21:04:59.231510236Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.7
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 6bcca1295e7e912ba58a04c00cf6aed7a0e45bd7bbee1a029feb772af0073631
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.7/kubevirt-vm-0.4.7.tgz
+    version: 0.4.7
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-14T14:40:10.386929083Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.7
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 3112bb4ceaa1ad719abccab1094ab5004c223325f04f1a5856fd0b0f2ddbabfc
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.6/kubevirt-vm-0.4.6.tgz
+    version: 0.4.6
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-14T14:35:29.674764316Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.6
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 754f6b94c3e634140f5433424d63ed110b95beb4aa4216031b80d31eec27fd2e
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.5/kubevirt-vm-0.4.5.tgz
+    version: 0.4.5
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-13T21:05:21.71130429Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.6
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 6b011c44b6331129ac4662ea8fdb5976c25c32914f127b96efed0403532f0a2b
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.4/kubevirt-vm-0.4.4.tgz
+    version: 0.4.4
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-12T21:29:19.404543116Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.6
+    description: Configure a virtual machine for use with Kubevirt
+    digest: f88a054d3208a51c18f843e1250b0c36da7dfe705a223c7720b73b2d81aaa2a6
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.3/kubevirt-vm-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-12T21:05:34.560789825Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.6
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 0746824fc310c5a224a4d8cd9606fcd49a073f23be977be7f32715f321dab569
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.2/kubevirt-vm-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-09T07:48:08.414983671Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.6
+    description: Configure a virtual machine for use with Kubevirt
+    digest: c89531891403af6556894b368b10559bb4ccc03ab81942b5008904f9108a5f17
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.1/kubevirt-vm-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-12-08T14:41:54.889535588Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.3
+    description: Configure a virtual machine for use with Kubevirt
+    digest: dcbc5b8459d0df10c2d184cd552b6ff3a334733a6a406759bdb81244a2af1703
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.4.0/kubevirt-vm-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-11-24T16:22:18.422350617Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 6b9a96276c7d622af1401a1d2cf396b8b23ada2b98c4b087ab2bccbc77469f93
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.8/kubevirt-vm-0.3.8.tgz
+    version: 0.3.8
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-11-12T19:17:16.346390375Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 4e7e46f8c339c3370f451c4e001b090d614ccf67ddb018e3e94209b6bcdd3bcf
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.7/kubevirt-vm-0.3.7.tgz
+    version: 0.3.7
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-11-10T15:22:25.652712947Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: ea2de9a9672a1d2a16faca3165f68625242af31b33bebd4c6ee771a9cb466285
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.6/kubevirt-vm-0.3.6.tgz
+    version: 0.3.6
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-11-05T20:27:40.310601594Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 101cf89d0351d0db8e7effa52af497c0661a988b6712900ba484fd1f08eb743b
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.4/kubevirt-vm-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-10-28T19:48:44.015643213Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: eac3539b655b2c27608e3f90894a7e4758d0624a7600e8eede58b8b60bbae7ba
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.3/kubevirt-vm-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-10-28T19:33:03.369013111Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 722657f18dbf269d4c3eb87c6b925df9df4d6caef4edb3d25552aa257d4e64f2
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.2/kubevirt-vm-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-10-28T18:11:00.175132293Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: d84fb6b8f04e6a67a80487d3260d1edcb10757cd858c5630a8700af95462b507
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.1/kubevirt-vm-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-10-27T14:45:52.821938492Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 21ccf0a768d8b949b1829ab809038b27e7d3981d0774047be72c2b45d7462d84
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.3.0/kubevirt-vm-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-04-29T07:00:24.103132819Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: afac2948768122f84e6b2c4227a1e45af92293434e64e8fe980676c0d36c48c6
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.5/kubevirt-vm-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-02-11T16:46:56.54872502Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 54d80b0a60846bc656609f12059c225121ffd36eb66cec6a3752d47f8a7b8e5e
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.4/kubevirt-vm-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-02-05T08:07:47.201254008Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: f7108d21072d2f40236c7bba6db71e2a42880372ce4200a4e77398ee0a913b00
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.3/kubevirt-vm-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-02-01T19:22:12.007122469Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 028d0171fef25534eb1926f90f9fb7d14b80d18b6ed7404e8df6404861c6b2b3
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.2/kubevirt-vm-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-01-28T16:57:11.097894826Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: bae3d4c4b11dc42858ffe30ea6453a61fe5977a4288f3e6fd6d435e4abced190
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.1/kubevirt-vm-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-01-16T18:23:27.413130375Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: ea20c43ea6d02a2cd3a1c15eb525dce6e25925dfc570f97469ba30e227643cc0
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.2.0/kubevirt-vm-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-01-09T13:58:38.283018078Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 94162fc0ebcfc02d4e6f3b1188d313c36fbf34cd8c11f8b91c81e10f41d5185a
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.1.11/kubevirt-vm-0.1.11.tgz
+    version: 0.1.11
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-01-09T11:41:25.879204785Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: aebb482dc50863320061cff8eab7dc6b79e31f32f419e535d4c3438befd4bfbd
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.1.10/kubevirt-vm-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-10-05T16:22:30.364474026Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: d4db6394bafb43db137f9e9b572af12e7697128ac40f9d7878141ac1568cdd6c
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.9/kubevirt-vm-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-10-05T09:50:26.077080355Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 3c99b919d518ab871e1e255d9c762744955bacf38a0d84396c0b2e8844c158f0
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.8/kubevirt-vm-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-10-01T11:23:47.334968565Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 03b6118dcd8f4554155579c802ff3b8b7f6dd31a193ed46a2bd5b1aac23ab0bb
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.7/kubevirt-vm-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-25T11:39:42.191183064Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 7d96088cb8d0bcf4e6eb21948e7de62da91c4c3eccc1cbf6153ad9765aeca10f
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.4/kubevirt-vm-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-25T11:35:17.104774444Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 6c92395a9bbd8ceaba3e295c5b8bdc7355112606cbda875f5afbb05caefbefc0
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.3/kubevirt-vm-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-25T11:29:14.974304388Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: ffa14e62c3ad92d2ca3d96c9ef3f8fcda84fe1fbf6085374144c957f7cdca1e3
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.2/kubevirt-vm-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-24T10:27:58.785639073Z"
+    description: Configure a virtual machine for use with Kubevirt
+    digest: a69ac716cdbc17ffbe68b8b8cb772389c9343a7b67ead0f5cc9eaa48ab143f0a
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-vm-0.1.1/kubevirt-vm-0.1.1.tgz
+    version: 0.1.1
+  okd-dashboard:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-24T10:27:58.974608302Z"
+    description: Install the OpenShift Kubernetes Dashboard
+    digest: 7cc6db96ef82936ab58d29bbd905bce6bb608cf88bb210d45ab199b620468ebd
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: okd-dashboard
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
+    version: 0.1.1
+generated: "2024-12-29T14:10:59.735177817Z"
