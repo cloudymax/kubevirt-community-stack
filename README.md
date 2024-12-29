@@ -141,12 +141,12 @@ This utility will audit a host machine and report what virtualisation capabiliti
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>: Installs the combined chart.
 
-    ```bash
+    <pre><code class="language-bash">
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-stack kubevirt/kubevirt-stack \
       --namespace kubevirt \
       --create-namespace
-    ```
+    </code></pre>
 </details>
 
 <details>
@@ -155,37 +155,37 @@ This utility will audit a host machine and report what virtualisation capabiliti
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
-    ```bash
+    <pre><code class="language-bash">
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt kubevirt/kubevirt \
       --namespace kubevirt \
       --create-namespace
-    ```
+    </code></pre>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/cluster-api-operator">Cluster API Operator</a>: Installs the Cluster API Operator.
 
-    ```bash
+    <pre><code class="language-bash">
     Work in progress.
-    ```
+    </code></pre>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
-    ```bash
+    <pre><code class="language-bash">
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-cdi kubevirt/kubevirt-cdi \
       --namespace cdi \
       --create-namespace
-    ```
+    </code></pre>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
 
-    ```bash
+    <pre><code class="language-bash">
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
     helm install kubevirt-manager kubevirt/kubevirt-manager \
       --fnamespace kubevirt-manager \
       --create-namespace
-    ```
+    </code></pre>
 </details>
 
 <h1>
@@ -194,19 +194,19 @@ This utility will audit a host machine and report what virtualisation capabiliti
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Installs the Kubevirt Operator.
 
-    ```bash
+    <pre><code class="language-bash">
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install my-vm kubevirt/kubevirt-vm \
       --namespace kubevirt \
       --set virtualMachine.name=my-vm
       --create-namespace
-    ```
+    </code></pre>
 
 ## Uninstall
 
 In the event that Kubevirt does not uninstall gracefully, you may need to perform the following steps:
 
-```bash
+<pre><code class="language-bash">
 export RELEASE=v0.17.0
 
 # --wait=true should anyway be default
@@ -231,4 +231,4 @@ kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl g
 
 # If namespace is stuck
 kubectl get namespace "kubevirt" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
-```
+</code></pre>
