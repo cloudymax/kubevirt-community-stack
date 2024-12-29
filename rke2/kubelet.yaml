@@ -4,9 +4,9 @@ cpuManagerReconcilePeriod: 0s
 clusterDomain: cluster.local
 cpuManagerPolicy: static
 cpuManagerPolicyOptions: 
-  full-pcpus-only: true
-  distribute-cpus-across-numa: true
-  align-by-socket: true
+  full-pcpus-only: "true"
+  distribute-cpus-across-numa: "true"
+  align-by-socket: "true"
 kubeReserved:
   cpu: "1"
   memory: "2Gi"
@@ -19,7 +19,7 @@ evictionHard:
   memory.available: "500Mi"
   nodefs.available: "10%"
 featureGates:
-  CPUManager: true
-  CPUManagerPolicyOptions: true
-  CPUManagerPolicyAlphaOptions: true
-  CPUManagerPolicyBetaOptions: true
+  CPUManager: "true"
+  CPUManagerPolicyOptions: "true"
+  CPUManagerPolicyAlphaOptions: "true"
+  CPUManagerPolicyBetaOptions: "true"
