@@ -68,3 +68,12 @@ sudo cp /etc/rancher/rke2/rke2.yaml /home/friend/.config/kube/config && \
 chown friend:friend /home/friend/.config/kube/config && \
 export KUBECONFIG=/home/friend/.config/kube/config
 ```
+
+5. Install Kubevirt Stack
+
+```bash
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+helm install kubevirt-stack kubevirt/kubevirt-stack \
+  --namespace kubevirt \
+  --create-namespace
+```
