@@ -8,8 +8,8 @@ wget -O /etc/rancher/rke2/config.yaml \
 	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/rke2/config.yaml"
 
 mkdir -p /etc/kubernetes
-wget -O /etc/kubernetes/kubeletconfig.yml \
-    "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/kubeletconfig.yml"
+wget -O /etc/kubernetes/kubelet.yaml \
+    "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/kubelet.yaml"
 ```
 
 2. Download Add-on helm-charts and manifests
