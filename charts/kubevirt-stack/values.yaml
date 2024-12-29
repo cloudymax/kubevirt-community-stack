@@ -78,9 +78,22 @@ operator:
   monitorNamespace: ""
   monitorAccount: ""
 
-  useEmulation: true
+  useEmulation: false
 
-  featureGates: []
+  featureGates:
+    - ExpandDisks
+    - CPUManager
+    - GPU
+    - HostDevices
+    - VMExport
+    - HotplugVolumes
+    - HostDisk
+    - Macvtap
+    - Passt
+    - HotplugNICs
+    - clientPassthrough
+    - Snapshot
+    - CPUNodeDiscovery
 
 ################################################################################
 #   ____ ____ ___
