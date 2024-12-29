@@ -82,6 +82,54 @@ Additional Features:
    ```
 </details>
 
+<h1>Dependencies</h1>
+
+<details>
+  <summary>libvirt-clients</summary><br>
+This utility will audit a host machine and report what virtualisation capabilities are available
+
+  - Installation
+      ```bash
+      sudo apt-get install -y libvirt-clients
+      ```
+
+  - Usage
+      ```console
+      $ virt-host-validate qemu
+      QEMU: Checking for hardware virtualization          : PASS
+      QEMU: Checking if device /dev/kvm exists            : PASS
+      QEMU: Checking if device /dev/kvm is accessible     : PASS
+      QEMU: Checking if device /dev/vhost-net exists      : PASS
+      QEMU: Checking if device /dev/net/tun exists        : PASS
+      ```
+</details>
+
+<details>
+  <summary>virtctl</summary><br>
+  virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
+    
+  - Standalone
+      ```bash
+      export VERSION=v0.41.0
+      wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
+      ```
+
+  - Plugin
+      ```bash
+      kubectl krew install virt
+      ```
+</details>
+
+<details>
+  <summary>clusterctl</summary><br>
+  The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
+    
+  ```bash
+  curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
+  sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
+  ```
+</details>
+
 <h1>
   Install Kubevirt
 </h1>
@@ -151,55 +199,6 @@ Additional Features:
       --namespace kubevirt \
       --set virtualMachine.name=my-vm
       --create-namespace
-    ```
-
-## Utilities
-
-1. libvirt-clients
-
-    This utility will audit a host machine and report what virtualisation capabilities are available
-
-    - Installation
-
-        ```bash
-        sudo apt-get install -y libvirt-clients
-        ```
-
-    - Usage
-
-        ```console
-        $ virt-host-validate qemu
-        QEMU: Checking for hardware virtualization          : PASS
-        QEMU: Checking if device /dev/kvm exists            : PASS
-        QEMU: Checking if device /dev/kvm is accessible     : PASS
-        QEMU: Checking if device /dev/vhost-net exists      : PASS
-        QEMU: Checking if device /dev/net/tun exists        : PASS
-        ```
-
-2. virtctl
-
-    virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
-
-    - Standalone
-
-        ```bash
-        export VERSION=v0.41.0
-        wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
-        ```
-
-    - Plugin
-
-        ```bash
-        kubectl krew install virt
-        ```
-
-3. clusterctl
-
-    The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
-
-    ```bash
-    curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
-    sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
     ```
 
 ## Uninstall
