@@ -37,7 +37,7 @@ wget -O /var/lib/rancher/rke2/server/manifests/hubble-ingress.yaml \
 wget -O /var/lib/rancher/rke2/server/manifests/nginx-hello.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/nginx-hello.yaml"
 
-wget -O /etc/kubernetes/local-path-provisioner.yaml \
+wget -O /var/lib/rancher/rke2/server/manifests/local-path-provisioner.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/local-path-provisioner.yaml"
 ```
 
