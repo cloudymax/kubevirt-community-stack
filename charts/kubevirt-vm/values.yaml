@@ -105,18 +105,19 @@ virtualMachine:
     # -- Number of simulated CPU sockets.
     # Note: Multiple cpu-bound microbenchmarks show a significant
     # performance advantage when using sockets instead of cores
-    sockets: 2
+    # Does not work with some cpuManagerPolicy options.
+    sockets: 1
 
     # -- Number of Virtual cores to pass to the Guest
     # ignored when instancetype is defined
-    vCores: 1
+    vCores: 2
 
     # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
     threads: 1
 
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
-    pinCores: true
+    pinCores: false
 
     # -- In order to enhance the real-time support in KubeVirt and provide
     # improved latency, KubeVirt will allocate an additional dedicated CPU,
