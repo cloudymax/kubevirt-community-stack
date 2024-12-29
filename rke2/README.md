@@ -1,4 +1,14 @@
-# Install
+# RKE2 test stack
+
+I normally use k3s but im trying out RKE since its has etcd and works better with cilium. This is my installation process.
+
+## ToDo
+
+1. Cilium auto-creates NetworkPolicies (probably due to rate-limits) that cause Kubevirt Operator to crash
+2. Cant get host-passthrough or pinned-cores working properly. Causes VM to crashloop
+3. Disk uploads seem slower than usual
+
+## Install
 
 1. Download RKE2 and kubelet config files
 
