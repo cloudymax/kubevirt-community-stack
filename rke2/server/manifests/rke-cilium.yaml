@@ -11,6 +11,14 @@ spec:
     k8sServiceHost: 192.168.2.70
     k8sServicePort: 6443
     kubeProxyReplacement: true
+    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+    autoDirectNodeRoutes: true
+    routingMode: native
+    socketLB:
+      hostNamespaceOnly: true
+    bpf:
+      masquerade: true
+      hostLegacyRouting: true
     l2announcements:
       enabled: false
     l7Proxy: false
