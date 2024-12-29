@@ -5,18 +5,89 @@ Kubevirt Community Stack
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  A Collection of community-developed Helm3 charts for use with Kubevirt <br> (Work In Progress)
+  Create and manage Kubevirt VMs using Helm & ArgoCD.
+  <br>
   <br>
   <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
 </p>
 <br>
 
-<h2>
-  Installation
-</h2>
+<h1>Components</h1>
 
 <details>
-  <summary>Combined chart</summary>
+  <summary>Kubervirt Operator</summary>
+  <br>
+  The operator controls virtual machine instances and provides the CRDs that define them
+</details>
+
+<details>
+  <summary>Kubevirt CDI</summary>
+  <br>The Containerized Data Importer can pull virtual machine images, ISO files, and other types of bootable media from sources like S3, HTTP, or OCI images. This data is then written to PVCs which are mounted as disks. For examples of various ways to use the CDI, see the notes in the <a href="https://github.com/small-hack/argocd-apps/blob/main/kubevirt/examples/disks/Disks.md">argocd-apps repo</a></br></br>
+</details>
+
+<details>
+  <summary>Cloud-Init</summary>
+  <br>
+  The Cloud-init helm chart allows the user to define the specification of a linux-based vm's operating system as code. In addition to basec cloud-init functions, his chart provides some extra functionality via an initjob that makes cloud-init more GitOps friendly. 
+<br><br>
+Additional Features:
+
+  - Regex values using existing secrets or environmental variables via envsubst
+  - Create random user passwords or use an existing secret
+  - Download files from a URL
+  - Base64 encode + gzip your `write_files` content
+  - Populate Wireguard configuration values from an existsing secret
+  - Track the total size of user-data and check file for valid syntax
+  <br>
+</details>
+
+<details>
+  <summary>Kubevirt VM</summary>
+<br>
+</details>
+
+<details>
+  <summary>Kubevirt Manager</summary>
+  <br>
+      This is a community-developed web-ui which allows users to create, manage, and interact with virtual machines running in Kubevirt. See their official docs at <a href="https://kubevirt-manager.io/">kubevirt-manager.io</a></br></br>
+
+<p align="center">
+  <a href="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72">
+      <img src="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72" alt="Screenshot showing the default page of Kubevirt-manager. The screen is devided into 2 sections. On the left, there is a vertical navigation tab with a grey background. The options in this bar are Dashboard, Virtual Machines, VM Pools, Auto Scaling, Nodes, Data Volumes, Instance Types, and Load Balancers.  On the right, there is a grid of blue rectangular icons each representing one of the option in the navigation tab, but with an icon and text representing metrics about that option." width=500>
+  </a>
+</p>
+<br>
+</details>
+
+<details>
+  <summary>Cluster API Operator & Kubevirt Provider</summary>
+<br>
+   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs.
+
+   Example:
+
+   ```bash
+   export CAPK_GUEST_K8S_VERSION="v1.23.10"
+   export CRI_PATH="/var/run/containerd/containerd.sock"
+   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
+
+   clusterctl generate cluster capi-quickstart \
+   --infrastructure="kubevirt:v0.1.8" \
+   --flavor lb \
+   --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
+   --control-plane-machine-count=1 \
+   --worker-machine-count=1 > capi-quickstart.yaml
+
+   kubectl apply -f capi-quickstart.yaml
+   ```
+</details>
+
+<h1>
+  Install Kubevirt
+</h1>
+
+<details>
+  <summary>Combined Chart</summary>
 <br>
 
 - <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>: Installs the combined chart.
@@ -68,9 +139,9 @@ Kubevirt Community Stack
     ```
 </details>
 
-<h2>
-  Create A VM
-</h2>
+<h1>
+  Create VMs
+</h1>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Installs the Kubevirt Operator.
 
@@ -81,51 +152,6 @@ Kubevirt Community Stack
       --set virtualMachine.name=my-vm
       --create-namespace
     ```
-
-# Components
-
-Kubevirt is made up of several pieces:
-
-1. **Kubervirt Operator**
-
-    The operator controls virtual machine instances and provides the CRDs that define them
-</br></br>
-
-2. **Kubevirt CDI**
-
-    The Containerized Data Importer can pull virtual machine images, ISO files, and other types of bootable media from sources like S3, HTTP, or OCI images. This data is then written to PVCs which are mounted as disks. For examples of various ways to use the CDI, see the notes in the [argocd-apps repo](https://github.com/small-hack/argocd-apps/blob/main/kubevirt/examples/disks/Disks.md) </br></br>
-
-3. **Kubevirt Manager**
-
-    This is a community-developed web-ui which allows users to create, manage, and interact with virtual machines running in Kubevirt. See their official docs at [kubevirt-manager.io](https://kubevirt-manager.io/)
-
-<p align="center">
-  <a href="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72">
-      <img src="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72" alt="Screenshot showing the default page of Kubevirt-manager. The screen is devided into 2 sections. On the left, there is a vertical navigation tab with a grey background. The options in this bar are Dashboard, Virtual Machines, VM Pools, Auto Scaling, Nodes, Data Volumes, Instance Types, and Load Balancers.  On the right, there is a grid of blue rectangular icons each representing one of the option in the navigation tab, but with an icon and text representing metrics about that option." width=500>
-  </a>
-</p>
-
-4. **Cluster API Operator + Kubevirt Provider**
-
-   [Cluster API](https://cluster-api.sigs.k8s.io/) provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The [Cluster API Operator](https://cluster-api-operator.sigs.k8s.io/) can be installed via Helm and configured to bootstrap the [Cluster API Kubevirt Provider](https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt) which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs.
-
-   Example:
-
-   ```bash
-   export CAPK_GUEST_K8S_VERSION="v1.23.10"
-   export CRI_PATH="/var/run/containerd/containerd.sock"
-   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
-
-   clusterctl generate cluster capi-quickstart \
-   --infrastructure="kubevirt:v0.1.8" \
-   --flavor lb \
-   --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
-   --control-plane-machine-count=1 \
-   --worker-machine-count=1 > capi-quickstart.yaml
-
-   kubectl apply -f capi-quickstart.yaml
-   ```
-
 
 ## Utilities
 
