@@ -4,7 +4,7 @@ I normally use k3s but im trying out RKE since its has etcd and works better wit
 
 ## ToDo
 
-1. Cilium auto-creates NetworkPolicies (probably due to rate-limits) that cause Kubevirt Operator to crash
+1. NetworkPolicies in kubevirt namespace cause Kubevirt Operator to crash - need to debug flows
 2. Disk uploads seem slower than usual
 
 ## Install
