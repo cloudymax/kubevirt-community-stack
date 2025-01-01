@@ -71,12 +71,12 @@ Additional Features:
    export CRI_PATH="/var/run/containerd/containerd.sock"
    export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2204-container-disk:${CAPK_GUEST_K8S_VERSION}"
    
-   clusterctl generate cluster capi-quickstart \
+   clusterctl generate cluster capi \
    --infrastructure="kubevirt:v0.1.9" \
-   --flavor kccm \
+   --flavor lb-kccm \
    --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
    --control-plane-machine-count=1 \
-   --worker-machine-count=1 > capi-quickstart.yaml
+   --worker-machine-count=2 > capi-quickstart.yaml
   
    kubectl apply -f capi-quickstart.yaml
   </code></pre>
