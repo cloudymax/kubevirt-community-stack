@@ -5,7 +5,8 @@ Kubevirt Community Stack
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  Create and manage Kubevirt VMs using Helm & ArgoCD.
+  Create Kubevirt VMs via Helm <br> 
+  Works with ArgoCD, Argo Workflows, KEDA, Cluster-API etc..
   <br>
   <br>
   <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
