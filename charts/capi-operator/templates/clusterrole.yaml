@@ -5,6 +5,7 @@ metadata:
   labels:
     clusterctl.cluster.x-k8s.io/core: capi-operator
   name: capi-operator-manager-role
+  namespace: capi-operator-system
 rules:
   - apiGroups:
       - '*'
