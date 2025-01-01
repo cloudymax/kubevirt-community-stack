@@ -63,6 +63,14 @@
     - Remove the node selector from the kubevirt-cloud-controller-manager Deployment. This prevents a failure to deploy the manager pod.
 
     - Un-quote the cluster-name string from the args section of the kubevirt-cloud-controller-manager Deployment. This prevents an issue where the quotes are perceived as part of the label value and causes an invalid name error to prevent LB creation.
+    
+    - Add labels to nodes:
+	
+	```yaml
+	labels:
+ 	  cluster.x-k8s.io/cluster-name: <tenant-cluster-name>
+	  cluster.x-k8s.io/role: worker
+ 	```
 
 4. Apply the manifests to create the tenant cluster:
 
