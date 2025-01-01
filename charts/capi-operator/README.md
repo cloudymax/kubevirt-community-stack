@@ -1,6 +1,6 @@
 # cluster-api-operator
 
-![Version: 0.0.0](https://img.shields.io/badge/Version-0.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
 
 Cluster API Operator
 
@@ -8,8 +8,6 @@ Cluster API Operator
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| "manager.featureGates".KubeadmBootstrapFormatIgnition | bool | `true` |  |
-| "manager.featureGates".MachinePool | bool | `true` |  |
 | addon | string | `""` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key | string | `"kubernetes.io/arch"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator | string | `"In"` |  |
@@ -19,30 +17,19 @@ Cluster API Operator
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].key | string | `"kubernetes.io/os"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].operator | string | `"In"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].values[0] | string | `"linux"` |  |
-| args[0] | string | `"--v=2"` |  |
-| args[1] | string | `"--health-addr=\"0.0.0.0:8081\""` |  |
-| args[2] | string | `"--metrics-bind-addr=\"0.0.0.0:8080\""` |  |
-| args[3] | string | `"--diagnostics-address=\"0.0.0.0:8443\""` |  |
-| args[4] | string | `"--insecure-diagnostics=true"` |  |
-| args[5] | string | `"--watch-configsecret"` |  |
-| args[6] | string | `"--leader-elect=true"` |  |
-| args[7] | string | `"--bootstrap-token-ttl=15m"` |  |
-| bootstrap | string | `"kubeadm:v1.7.2"` |  |
+| args[0] | string | `"--leader-elect"` |  |
+| bootstrap | string | `"kubeadm:v1.9.1"` |  |
 | configSecret | object | `{}` |  |
 | containerSecurityContext | object | `{}` |  |
-| controlPlane | string | `"kubeadm:v1.7.2"` |  |
-| core | string | `"cluster-api:v1.7.2"` |  |
+| controlPlane | string | `"kubeadm:v1.9.1"` |  |
+| core | string | `"cluster-api:v1.9.1"` |  |
 | env.manager | list | `[]` |  |
-| featureGates.BootstrapTokenTtl | string | `"15m"` |  |
-| featureGates.KubeadmBootstrapFormatIgnition | string | `"true"` |  |
-| featureGates.MachinePool | string | `"false"` |  |
-| featureGates.enabled | bool | `false` |  |
 | image.manager.pullPolicy | string | `"IfNotPresent"` |  |
 | image.manager.repository | string | `"registry.k8s.io/capi-operator/cluster-api-operator"` |  |
 | image.manager.tag | string | `"v0.15.0"` |  |
 | imagePullSecrets | object | `{}` |  |
-| infrastructure | string | `"kubevirt:v0.1.8"` |  |
-| leaderElection.enabled | bool | `true` |  |
+| infrastructure | string | `"kubevirt:v0.1.9"` |  |
+| manager | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources.manager.limits.cpu | string | `"100m"` |  |
 | resources.manager.limits.memory | string | `"150Mi"` |  |
