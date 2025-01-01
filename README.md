@@ -67,12 +67,11 @@ Additional Features:
    Example:
 
   <pre><code class="language-bash">
-   export CAPK_GUEST_K8S_VERSION="v1.23.10"
+   export CAPK_GUEST_K8S_VERSION="v1.30.1"
    export CRI_PATH="/var/run/containerd/containerd.sock"
-   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2004-container-disk:${CAPK_GUEST_K8S_VERSION}"
-   
+   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2204-container-disk:${CAPK_GUEST_K8S_VERSION}"
    clusterctl generate cluster capi-quickstart \
-   --infrastructure="kubevirt:v0.1.8" \
+   --infrastructure="kubevirt:v0.1.9" \
    --flavor lb \
    --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
    --control-plane-machine-count=1 \
