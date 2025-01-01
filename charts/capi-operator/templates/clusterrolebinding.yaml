@@ -5,6 +5,7 @@ metadata:
   labels:
     clusterctl.cluster.x-k8s.io/core: capi-operator
   name: capi-operator-manager-rolebinding
+  namespace: capi-operator-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
