@@ -28,7 +28,7 @@ Kubevirt Community Stack
 <details>
   <summary>Cloud-Init</summary>
   <br>
-  The Cloud-init helm chart allows the user to define the specification of a linux-based vm's operating system as code. In addition to basec cloud-init functions, his chart provides some extra functionality via an initjob that makes cloud-init more GitOps friendly. 
+  The Cloud-init helm chart allows the user to define the specification of a linux-based vm's operating system as code. In addition to basec cloud-init functions, his chart provides some extra functionality via an initjob that makes cloud-init more GitOps friendly.
 <br><br>
 Additional Features:
 
@@ -62,24 +62,9 @@ Additional Features:
 <details>
   <summary>Cluster API Operator & Kubevirt Provider</summary>
 <br>
-   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs.
+   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. See [CAPI.md](/CAPI.md) for a basic walkthrough of creating a CAPI-based tenant cluster.
 
-   Example:
 
-  <pre><code class="language-bash">
-   export CAPK_GUEST_K8S_VERSION="v1.30.1"
-   export CRI_PATH="/var/run/containerd/containerd.sock"
-   export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2204-container-disk:${CAPK_GUEST_K8S_VERSION}"
-   
-   clusterctl generate cluster capi \
-   --infrastructure="kubevirt:v0.1.9" \
-   --flavor lb-kccm \
-   --kubernetes-version ${CAPK_GUEST_K8S_VERSION} \
-   --control-plane-machine-count=1 \
-   --worker-machine-count=2 > capi-quickstart.yaml
-  
-   kubectl apply -f capi-quickstart.yaml
-  </code></pre>
 
 </details>
 
@@ -108,7 +93,7 @@ This utility will audit a host machine and report what virtualisation capabiliti
 <details>
   <summary>virtctl</summary><br>
   virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
-    
+
   - Standalone
       <pre><code class="language-bash">
       export VERSION=v0.41.0
@@ -124,7 +109,7 @@ This utility will audit a host machine and report what virtualisation capabiliti
 <details>
   <summary>clusterctl</summary><br>
   The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
-    
+
   <pre><code class="language-bash">
   curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
   sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
