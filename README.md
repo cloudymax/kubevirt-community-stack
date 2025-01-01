@@ -62,7 +62,7 @@ Additional Features:
 <details>
   <summary>Cluster API Operator & Kubevirt Provider</summary>
 <br>
-   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. See [CAPI.md](/CAPI.md) for a basic walkthrough of creating a CAPI-based tenant cluster.
+   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. See [<a href=https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAPI.md>CAPI.md</a> for a basic walkthrough of creating a CAPI-based tenant cluster.
 
 
 
