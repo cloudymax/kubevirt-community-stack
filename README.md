@@ -27,8 +27,8 @@ Kubevirt Community Stack
   <summary>Kubevirt CDI</summary>
   <br>
   The <a href="https://github.com/kubevirt/containerized-data-importer">Containerized Data Importer</a> can pull virtual machine images, ISO files, and other types of bootable media from sources like S3, HTTP, or OCI images. This data is then written to PVCs which are mounted as disks. For examples of various ways to use the CDI, see the notes in <a href="https://github.com/small-hack/argocd-apps/blob/main/kubevirt/examples/disks/Disks.md">Argocd-Apps</a>
-  </br>
-  </br>
+  <br>
+  <br>
 </details>
 
 <details>
@@ -60,7 +60,9 @@ Additional Features:
 <details>
   <summary>Kubevirt Manager</summary>
   <br>
-      This is a community-developed web-ui which allows users to create, manage, and interact with virtual machines running in Kubevirt. See their official docs at <a href="https://kubevirt-manager.io/">kubevirt-manager.io</a></br></br>
+      This is a community-developed web-ui which allows users to create, manage, and interact with virtual machines running in Kubevirt. See their official docs at <a href="https://kubevirt-manager.io/">kubevirt-manager.io</a>
+  <br>
+  <br>
 
   <p align="center">
   <a href="https://github.com/cloudymax/kubevirt-community-stack/assets/84841307/eeb87969-4dd6-49ce-b25e-37404e05fa72">
@@ -77,7 +79,7 @@ Additional Features:
    <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The combined chart can install the <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> as well as bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. Cluster-api-provider-kubevirt also includes <a href="https://github.com/kubevirt/cloud-provider-kubevirt">cloud-provider-kubevirt</a> which enables the exposeure of LoadBalancer type services within tenant clusters to the host cluster. This negates the need for a dedicated loadbalancer such as <a href="https://metallb.io/">MetalLB</a> inside the tenant cluster.
   <br>
   <br>
-See <a href=https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAPI.md>CAPI.md</a> for a basic walkthrough of creating a CAPI-based tenant cluster.
+See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAPI.md">CAPI.md</a> for a basic walkthrough of creating a CAPI-based tenant cluster.
   <br>
   <br>
 </details>
