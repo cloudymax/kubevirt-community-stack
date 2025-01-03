@@ -196,34 +196,25 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
-# - name: harddrive
-#
-#   # -- Disk type: disk, cdrom, filesystem, or lun
-#   type: disk
-#
-#   # -- Bus type: sata or virtio
-#   bus: virtio
-#
-#   # -- Sets disk position in boot order, lower numbers are checked earlier
-#   bootorder: 2
-#
-#   # -- Set disk to be Read-only
-#   readonly: false
-#
-#   # -- Size of disk in GB
-#   pvsize: 16Gi
-#
-#   # -- Storage class to use for the pvc
-#   pvstorageClass: fast-raid
-#
-#   # -- Access mode for the PVC
-#   pvaccessMode: ReadWriteOnce
-#
-#   # -- source type of the disk image. One of `url`, `pvc`
-#   source: url
-#
-#   # -- URL of cloud-image
-#   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+ - name: harddrive
+   # -- Disk type: disk, cdrom, filesystem, or lun
+   type: disk
+   # -- Bus type: sata or virtio
+   bus: virtio
+   # -- Sets disk position in boot order, lower numbers are checked earlier
+   bootorder: 2
+   # -- Set disk to be Read-only
+   readonly: false
+   # -- Size of disk in GB
+   pvsize: 16Gi
+   # -- Storage class to use for the pvc
+   pvstorageClassName: fast-raid
+   # -- Access mode for the PVC
+   pvaccessMode: ReadWriteOnce
+   # -- source type of the disk image. One of `url`, `pvc`
+   source: url
+   # -- URL of cloud-image
+   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
@@ -231,13 +222,13 @@ disks:
 # requires an existing PVC as a backing file.
 # Performance degrades at liarge sizes (100G+)
 #########################################################
-  - name: harddrive
-    type: disk
-    bus: virtio
-    bootorder: 2
-    readonly: false
-    pvc: debian12
-    ephemeral: true
+#  - name: harddrive
+#    type: disk
+#    bus: virtio
+#    bootorder: 2
+#    readonly: false
+#    pvc: debian12
+#    ephemeral: true
 
 ########################################################
 # DataVolume disk with existing PVC source example
@@ -470,7 +461,7 @@ cloudinit:
   # -- Run arbitrary commands
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
   runcmd:
-    - docker run -d --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD="$VNC_PASS" deserializeme/ubuntu-xfce
+    - docker run -d -p 8080:80 nginx
 
 ################################################################################
 # ____                  _             ___     ___
@@ -487,33 +478,29 @@ service:
   type: NodePort
   externalTrafficPolicy: Cluster
   ports:
-    - name: ssh
-      port: 22
-      targetPort: 22
-      protocol: TCP
-    - name: novnc
+    - name: nginx
       port: 8080
       targetPort: 8080
       protocol: TCP
 
 # -- Ingress configuration
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   hostname: "novnc.buildstar.online"
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  tls:
-    enabled: true
-    secretName: "tls-kubevirt-manager"
-  paths:
-  - path: /
-    pathType: Prefix
-    backend:
-      service:
-        name: test-service
-        port:
-          number: 8080
+  annotations: {}
+  #  cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  tls: []
+  #  enabled: true
+  #  secretName: "tls-kubevirt-manager"
+  # paths:
+  # - path: /
+  #   pathType: Prefix
+  #   backend:
+  #     service:
+  #       name: test-service
+  #       port:
+  #         number: 8080
 
 ################################################################################
 #  _   _      _                      _      ____       _ _      _
@@ -524,7 +511,7 @@ ingress:
 ################################################################################
 networkPolicy:
   # -- Enable the creation of network policies
-  enabled: true
+  enabled: false
   egress:
     # Allow communication to Kubernetes DNS service
     - to:

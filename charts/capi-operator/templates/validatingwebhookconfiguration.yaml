@@ -7,6 +7,7 @@ metadata:
   labels:
     clusterctl.cluster.x-k8s.io/core: capi-operator
   name: capi-operator-validating-webhook-configuration
+  name: capi-operator-system
 webhooks:
   - admissionReviewVersions:
       - v1
