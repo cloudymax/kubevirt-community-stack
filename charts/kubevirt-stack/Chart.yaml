@@ -3,7 +3,7 @@ name: kubevirt-stack
 description: Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
 type: application
-version: 0.0.3
+version: 0.0.4
 appVersion: "0.0.0"
 
 maintainers:
@@ -27,6 +27,6 @@ dependencies:
   condition: manager.enabled
 - name: cluster-api-operator
   alias: capi
-  version: 0.0.1
+  version: 0.0.2
   repository: https://cloudymax.github.io/kubevirt-community-stack
   condition: capi.enabled

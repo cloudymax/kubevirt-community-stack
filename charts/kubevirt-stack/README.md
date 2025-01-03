@@ -1,6 +1,6 @@
 # kubevirt-stack
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
 
 Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
@@ -14,7 +14,7 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | capi(cluster-api-operator) | 0.0.1 |
+| https://cloudymax.github.io/kubevirt-community-stack | capi(cluster-api-operator) | 0.0.2 |
 | https://cloudymax.github.io/kubevirt-community-stack | operator(kubevirt) | 0.2.8 |
 | https://cloudymax.github.io/kubevirt-community-stack | cdi(kubevirt-cdi) | 0.2.1 |
 | https://cloudymax.github.io/kubevirt-community-stack | manager(kubevirt-manager) | 0.2.1 |
@@ -33,18 +33,18 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 | capi.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].operator | string | `"In"` |  |
 | capi.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].values[0] | string | `"linux"` |  |
 | capi.args[0] | string | `"--leader-elect"` |  |
-| capi.bootstrap | string | `"kubeadm:v1.7.2"` |  |
+| capi.bootstrap | string | `"rke2:v0.10.0"` |  |
 | capi.configSecret | object | `{}` |  |
 | capi.containerSecurityContext | object | `{}` |  |
-| capi.controlPlane | string | `"kubeadm:v1.7.2"` |  |
-| capi.core | string | `"cluster-api:v1.7.2"` |  |
-| capi.enabled | bool | `false` |  |
+| capi.controlPlane | string | `"rke2:v0.10.0"` |  |
+| capi.core | string | `"cluster-api:v1.9.0"` |  |
+| capi.enabled | bool | `true` |  |
 | capi.env.manager | list | `[]` |  |
 | capi.image.manager.pullPolicy | string | `"IfNotPresent"` |  |
 | capi.image.manager.repository | string | `"registry.k8s.io/capi-operator/cluster-api-operator"` |  |
 | capi.image.manager.tag | string | `"v0.15.0"` |  |
 | capi.imagePullSecrets | object | `{}` |  |
-| capi.infrastructure | string | `"kubevirt:v0.1.8"` |  |
+| capi.infrastructure | string | `"kubevirt:v0.1.9"` |  |
 | capi.manager | object | `{}` |  |
 | capi.replicaCount | int | `1` |  |
 | capi.resources | object | `{}` |  |
@@ -96,13 +96,12 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 | cdi.uploadProxy.targetPort | int | `8443` |  |
 | cdi.uploadProxy.type | string | `"ClusterIP"` |  |
 | manager.enabled | bool | `true` |  |
-| manager.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-staging"` |  |
 | manager.ingress.annotations."nginx.org/location-snippets" | string | `"proxy_set_header Upgrade $http_upgrade;\nproxy_set_header Connection $connection_upgrade;\n"` |  |
 | manager.ingress.className | string | `"nginx"` |  |
-| manager.ingress.enabled | bool | `false` |  |
-| manager.ingress.hostname | string | `"kubevirt.example.com"` |  |
+| manager.ingress.enabled | bool | `true` |  |
+| manager.ingress.hostname | string | `"manager.buildstar.online"` |  |
 | manager.ingress.tls.enabled | bool | `false` |  |
-| manager.ingress.tls.secretName | string | `"tls-kubevirt-manager"` |  |
+| manager.ingress.tls.secretName | string | `"tls-manager"` |  |
 | manager.prometheus.enabled | bool | `false` |  |
 | manager.prometheus.serviceName | string | `"thanos-app-query-frontend"` |  |
 | manager.prometheus.serviceNamesapce | string | `"default"` |  |
@@ -130,12 +129,13 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 | operator.image.repository | string | `"quay.io/kubevirt/virt-operator"` | container repository |
 | operator.image.tag | string | `"v1.2.0"` | image tag, use this to set the version of kubevirt |
 | operator.imagePullSecrets | list | `[]` |  |
-| operator.mediatedDevicesTypes | list | `[]` |  |
+| operator.mediatedDevicesTypes[0] | string | `"nvidia-18"` |  |
 | operator.monitorAccount | string | `""` |  |
 | operator.monitorNamespace | string | `""` |  |
 | operator.nameOverride | string | `""` |  |
 | operator.nodeSelector | object | `{}` |  |
-| operator.permittedHostDevices.mediatedDevices | list | `[]` |  |
+| operator.permittedHostDevices.mediatedDevices[0].mdevNameSelector | string | `"GRID RTX6000-4Q"` |  |
+| operator.permittedHostDevices.mediatedDevices[0].resourceName | string | `"nvidia.com/GRID_RTX6000-4Q"` |  |
 | operator.permittedHostDevices.pciHostDevices | list | `[]` |  |
 | operator.podAnnotations | object | `{}` |  |
 | operator.podSecurityContext | object | `{}` |  |
