@@ -710,6 +710,40 @@ entries:
   kubevirt-stack:
   - apiVersion: v2
     appVersion: 0.0.0
+    created: "2025-01-03T22:38:56.151325593Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.8
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.2.1
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.0.2
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 888cc72c02e2bf2eb0a49cb1e9737f9b399e200b51776597fc3baf3406132b87
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.0.4/kubevirt-stack-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.0
     created: "2025-01-01T19:53:06.108998674Z"
     dependencies:
     - alias: cdi
@@ -1402,4 +1436,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-01-03T22:30:38.476847455Z"
+generated: "2025-01-03T22:38:56.151498197Z"
