@@ -16,14 +16,14 @@ Kubevirt Community Stack
 <h1>Components</h1>
 
 <details>
-  <summary>Kubervirt Operator</summary>
+  <summary>Kubervirt</summary>
   <br>
-  The operator controls virtual machine instances and provides the CRDs that define them
+  <a href="https://github.com/kubevirt/kubevirt">Kubevirt</a> is a Kubernetes Virtualization API and runtime which controls QEMU/KVM virtual machine instances and provides the CRDs that define them
 </details>
 
 <details>
   <summary>Kubevirt CDI</summary>
-  <br>The Containerized Data Importer can pull virtual machine images, ISO files, and other types of bootable media from sources like S3, HTTP, or OCI images. This data is then written to PVCs which are mounted as disks. For examples of various ways to use the CDI, see the notes in the <a href="https://github.com/small-hack/argocd-apps/blob/main/kubevirt/examples/disks/Disks.md">argocd-apps repo</a></br></br>
+  <br>The <a href="https://github.com/kubevirt/containerized-data-importer">Containerized Data Importer</a> can pull virtual machine images, ISO files, and other types of bootable media from sources like S3, HTTP, or OCI images. This data is then written to PVCs which are mounted as disks. For examples of various ways to use the CDI, see the notes in <a href="https://github.com/small-hack/argocd-apps/blob/main/kubevirt/examples/disks/Disks.md">Argocd-Apps</a></br></br>
 </details>
 
 <details>
