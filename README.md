@@ -29,7 +29,7 @@ Kubevirt Community Stack
 <details>
   <summary>Cloud-Init</summary>
   <br>
-  The Cloud-init helm chart allows the user to define the specification of a linux-based vm's operating system as code. In addition to basec cloud-init functions, his chart provides some extra functionality via an initjob that makes cloud-init more GitOps friendly.
+  The <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/cloud-init">Cloud-init helm chart</a> allows the user to define the specification of a linux-based vm's operating system as code. In addition to basec cloud-init functions, his chart provides some extra functionality via an initjob that makes cloud-init more GitOps friendly.
 <br><br>
 Additional Features:
 
@@ -44,6 +44,8 @@ Additional Features:
 
 <details>
   <summary>Kubevirt VM</summary>
+  The <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a> allows a user to easily template a Kubevirt VirtualMachine or VirtualMachinePool and its associated resources sudch as Disks, DataVolumes, Horizontal Pod Autoscaler, Network Policies, Service, Ingres, Probes, and Cloud-init data (via bundled cloud-init subchart).
+
 <br>
 </details>
 
@@ -61,9 +63,11 @@ Additional Features:
 </details>
 
 <details>
-  <summary>Cluster API Operator & Kubevirt Provider</summary>
+  <summary>Cluster API Operator & Addons</summary>
 <br>
-   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> can be installed via Helm and configured to bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. See <a href=https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAPI.md>CAPI.md</a> for a basic walkthrough of creating a CAPI-based tenant cluster.
+   <a href="https://cluster-api.sigs.k8s.io/">Cluster API</a> provides a standardised kubernetes-native interface for creating k8s clusters using a wide variety of providers. The combined chart can install the <a href="https://cluster-api-operator.sigs.k8s.io/">Cluster API Operator</a> as well as bootstrap the <a href="https://github.com/kubernetes-sigs/cluster-api-provider-kubevirt">Cluster API Kubevirt Provider</a> which allows creating k8s clusters from the CLI or as YAML using Kubevirt VMs. Cluster-api-provider-kubevirt also includes <a href="https://github.com/kubevirt/cloud-provider-kubevirt">cloud-provider-kubevirt</a> which enables the exposeure of LoadBalancer type services within tenant clusters to the host cluster. This negates the need for a dedicated loadbalancer such as <a href="https://metallb.io/">MetalLB</a> inside the tenant cluster.
+<br><br>
+See <a href=https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAPI.md>CAPI.md</a> for a basic walkthrough of creating a CAPI-based tenant cluster.
 
 
 
