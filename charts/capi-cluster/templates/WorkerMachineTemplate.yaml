@@ -1,0 +1,47 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: {{ .Values.cluster.name }}-md-0
+  namespace: {{ .Values.cluster.namespace }}
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        metadata:
+          namespace: {{ .Values.cluster.namespace }}
+          labels:
+          cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
+          cluster.x-k8s.io/role: worker
+        spec:
+          runStrategy: Always
+          template:
+            spec:
+              domain:
+                resources:
+                  requests:
+                    ephemeral-storage: "8Gi"
+                cpu:
+                  model: EPYC-Rome
+                  cores: 2
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: containervolume
+                    - name: emptydisk
+                      disk:
+                        bus: virtio
+                  networkInterfaceMultiqueue: true
+                memory:
+                  guest: 4Gi
+              evictionStrategy: External
+              volumes:
+                - containerDisk:
+                    image: quay.io/capk/ubuntu-2204-container-disk:{{ .Values.cluster.version }}
+                  name: containervolume
+                - name: emptydisk
+                  emptyDisk:
+                    capacity: 8Gi

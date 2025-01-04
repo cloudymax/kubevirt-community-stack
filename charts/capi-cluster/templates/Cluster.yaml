@@ -1,0 +1,27 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: {{ .Values.cluster.name }}
+  namespace: {{ .Values.cluster.namespace }}
+  labels:
+    {{- range $reg, $props := .Values.helmCharts }}
+    {{ $props.name }}: enabled
+    {{- end }}
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - {{ .Values.cluster.podCidrBlock }}
+    services:
+      cidrBlocks:
+      - {{ .Values.cluster.serviceCidrBlock }}
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    kind: KubeadmControlPlane
+    name: {{ .Values.cluster.name }}-control-plane
+    namespace: {{ .Values.cluster.namespace }}
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: KubevirtCluster
+    name: {{ .Values.cluster.name }}
+    namespace: {{ .Values.cluster.namespace }}

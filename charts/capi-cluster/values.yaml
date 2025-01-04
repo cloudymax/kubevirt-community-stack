@@ -1,0 +1,121 @@
+###############################################################
+#  ____ _           _
+# / ___| |_   _ ___| |_ ___ _ __
+#| |   | | | | / __| __/ _ \ '__|
+#| |___| | |_| \__ \ ||  __/ |
+# \____|_|\__,_|___/\__\___|_|
+#
+###############################################################
+cluster:
+  # -- Name of the cluster to create
+  name: capi
+
+  # -- Version of kubernetes to deploy
+  version: v1.30.1
+
+  # -- Namespace in which to host cluster components
+  namespace: kubevirt
+
+  # -- Cluster internal DNS domain
+  dnsDomain: cluster.local
+
+  # -- Disable the deployment of kube-proxy
+  disableKubeProxy: false
+
+  # -- CIDR block for pod network
+  podCidrBlock: "10.243.0.0/16"
+
+  # -- CIDR block for services
+  serviceCidrBlock: "10.95.0.0/16"
+
+  # -- Type of service to use when exposing control plane endpoint on Host
+  controlPlaneServiceType: ClusterIP
+
+  # -- Extra args to pass to kubelet
+  kubeletExtraArgs:
+    kube-reserved: cpu=1,memory=2Gi,ephemeral-storage=1Gi
+    system-reserved: cpu=500m,memory=1Gi,ephemeral-storage=1Gi
+    eviction-hard: memory.available<500Mi,nodefs.available<10%
+
+###############################################################
+# __     ____  __   ____             _
+# \ \   / /  \/  | |  _ \ ___   ___ | |___
+#  \ \ / /| |\/| | | |_) / _ \ / _ \| / __|
+#   \ V / | |  | | |  __/ (_) | (_) | \__ \
+#    \_/  |_|  |_| |_|   \___/ \___/|_|___/
+###############################################################
+MachineTemplates:
+  controlPlane:
+    size: 1
+  workers:
+    size: 2
+
+
+###############################################################
+# _   _      _              ____ _                _
+#| | | | ___| |_ __ ___    / ___| |__   __ _ _ __| |_ ___
+#| |_| |/ _ \ | '_ ` _ \  | |   | '_ \ / _` | '__| __/ __|
+#|  _  |  __/ | | | | | | | |___| | | | (_| | |  | |_\__ \
+#|_| |_|\___|_|_| |_| |_|  \____|_| |_|\__,_|_|   \__|___/
+###############################################################
+helmCharts:
+  # Helm Chart for Cilium CNI
+  - name: cilium
+    repoUrl: https://helm.cilium.io/
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      createNamespace: true
+    values:
+      operator:
+        replicas: 1
+      encryption:
+        enabled: false
+        type: wireguard
+      hubble:
+        enabled: true
+        relay:
+          enabled: true
+        ui:
+          enabled: true
+
+  - name: cert-manager
+    repoUrl: https://charts.jetstack.io
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      createNamespace: true
+    values:
+      crds:
+        enabled: true
+
+  - name: metrics-server
+    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      createNamespace: true
+    values:
+      defaultArgs:
+        - --cert-dir=/tmp
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+      args: []
+      apiService:
+        create: true
+        insecureSkipTLSVerify: true
+      tls:
+        type: "metrics-server"
+
+  - name: ingress-nginx
+    repoUrl: https://kubernetes.github.io/ingress-nginx
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      createNamespace: true
+
