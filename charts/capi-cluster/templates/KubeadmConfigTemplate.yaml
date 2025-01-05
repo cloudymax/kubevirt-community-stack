@@ -11,6 +11,6 @@ spec:
         nodeRegistration:
           {{- with .Values.cluster.kubeletExtraArgs }}
           kubeletExtraArgs:
-            {{ toYaml . | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
 

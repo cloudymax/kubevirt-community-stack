@@ -9,15 +9,26 @@ spec:
     matchLabels:
       {{ $props.name }}: enabled
   repoURL: {{ $props.repoUrl }}
-  chartName: {{ $props.name }}
+  chartName: {{ $props.chartName }}
+  namespace: {{ $props.namespace }}
+  {{- if $props.releaseName }}
+  releaseName: {{ $props.releaseName }}
+  {{- end }}
+  {{- if $props.reconcileStrategy }}
+  reconcileStrategy: {{ $props.reconcileStrategy }}
+  {{- end }}
+  {{- if $props.targetNamespace }}
+  targetNamespace: {{ $props.targetNamespace }}
+  {{- end }}
+  {{- if $props.version }}
+  version: {{ $props.version }}
+  {{- end }}
+  {{- with $props.options }}
   options:
-    waitForJobs: {{ $props.options.waitForJobs }}
-    wait: {{ $props.options.wait }}
-    timeout: {{ $props.options.timeout }}
-    install:
-      createNamespace: {{ $props.options.createNamespace }}
-    {{- with $props.values }}
-  valuesTemplate: |
     {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- end }}
+  {{- with $props.valuesTemplate }}
+  valuesTemplate: |
+    {{- . | nindent 4 }}
+  {{- end }}
 {{- end }}

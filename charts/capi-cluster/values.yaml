@@ -45,10 +45,18 @@ cluster:
 #    \_/  |_|  |_| |_|   \___/ \___/|_|___/
 ###############################################################
 MachineTemplates:
+  # -- Control Plane VM pool spec
   controlPlane:
     size: 1
+    cores: 2
+    memory: 4Gi
+    cpuModel: host-passthrough
+  # -- Worker VM spec
   workers:
     size: 2
+    cores: 4
+    memory: 8Gi
+    cpuModel: host-passthrough
 
 
 ###############################################################
@@ -62,12 +70,13 @@ helmCharts:
   # Helm Chart for Cilium CNI
   - name: cilium
     repoUrl: https://helm.cilium.io/
+    targetNamespace: kube-system
     options:
       waitForJobs: true
       wait: true
-      timeout: 5m
-      createNamespace: true
-    values:
+      install:
+        createNamespace: true
+    valuesTemplate: |
       operator:
         replicas: 1
       encryption:
@@ -82,40 +91,19 @@ helmCharts:
 
   - name: cert-manager
     repoUrl: https://charts.jetstack.io
+    targetNamespace: cert-manager
+    version: v1.16.2
     options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      createNamespace: true
-    values:
+      install:
+        createNamespace: true
+    valuesTemplate: |-
       crds:
         enabled: true
 
-  - name: metrics-server
-    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      createNamespace: true
-    values:
-      defaultArgs:
-        - --cert-dir=/tmp
-        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-        - --kubelet-use-node-status-port
-        - --metric-resolution=15s
-      args: []
-      apiService:
-        create: true
-        insecureSkipTLSVerify: true
-      tls:
-        type: "metrics-server"
-
   - name: ingress-nginx
     repoUrl: https://kubernetes.github.io/ingress-nginx
+    targetNamespace: ingress-nginx
     options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      createNamespace: true
+      install:
+        createNamespace: true
 
