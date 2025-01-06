@@ -31,5 +31,5 @@ spec:
       kind: KubevirtMachineTemplate
       name: {{ .Values.cluster.name }}-control-plane
       namespace: {{ .Values.cluster.namespace }}
-  replicas: 1
+  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
   version: {{ .Values.cluster.version }}

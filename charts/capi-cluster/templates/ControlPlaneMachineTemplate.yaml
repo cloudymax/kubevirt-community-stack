@@ -19,10 +19,10 @@ spec:
               domain:
                 resources:
                   requests:
-                    ephemeral-storage: "8Gi"
+                    ephemeral-storage: {{ .Values.MachineTemplates.controlPlane.disk }}
                 cpu:
-                  model: EPYC-Rome
-                  cores: 2
+                  model: {{ .Values.MachineTemplates.controlPlane.cpuModel }}
+                  cores: {{ .Values.MachineTemplates.controlPlane.cores }}
                 devices:
                   disks:
                     - disk:
@@ -33,7 +33,7 @@ spec:
                         bus: virtio
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 4Gi
+                  guest: {{ .Values.MachineTemplates.controlPlane.memory }}
               evictionStrategy: External
               volumes:
                 - containerDisk:

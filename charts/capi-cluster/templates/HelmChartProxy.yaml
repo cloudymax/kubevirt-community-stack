@@ -3,32 +3,14 @@
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
 metadata:
-  name: {{ $props.name }}
+  {{- with $props.metadata }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   clusterSelector:
     matchLabels:
       {{ $props.name }}: enabled
-  repoURL: {{ $props.repoUrl }}
-  chartName: {{ $props.chartName }}
-  namespace: {{ $props.namespace }}
-  {{- if $props.releaseName }}
-  releaseName: {{ $props.releaseName }}
-  {{- end }}
-  {{- if $props.reconcileStrategy }}
-  reconcileStrategy: {{ $props.reconcileStrategy }}
-  {{- end }}
-  {{- if $props.targetNamespace }}
-  targetNamespace: {{ $props.targetNamespace }}
-  {{- end }}
-  {{- if $props.version }}
-  version: {{ $props.version }}
-  {{- end }}
-  {{- with $props.options }}
-  options:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- with $props.valuesTemplate }}
-  valuesTemplate: |
-    {{- . | nindent 4 }}
+  {{- with $props.spec }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end }}

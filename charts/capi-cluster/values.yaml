@@ -45,19 +45,22 @@ cluster:
 #    \_/  |_|  |_| |_|   \___/ \___/|_|___/
 ###############################################################
 MachineTemplates:
+
   # -- Control Plane VM pool spec
   controlPlane:
     size: 1
     cores: 2
     memory: 4Gi
+    disk: 32Gi
     cpuModel: host-passthrough
+
   # -- Worker VM spec
   workers:
     size: 2
     cores: 4
     memory: 8Gi
+    disk: 32Gi
     cpuModel: host-passthrough
-
 
 ###############################################################
 # _   _      _              ____ _                _
@@ -69,41 +72,58 @@ MachineTemplates:
 helmCharts:
   # Helm Chart for Cilium CNI
   - name: cilium
-    repoUrl: https://helm.cilium.io/
-    targetNamespace: kube-system
-    options:
-      waitForJobs: true
-      wait: true
-      install:
-        createNamespace: true
-    valuesTemplate: |
-      operator:
-        replicas: 1
-      encryption:
-        enabled: false
-        type: wireguard
-      hubble:
-        enabled: true
-        relay:
+    metadata:
+      name: clilum
+      namespace: kubevirt
+    spec:
+      repoURL: https://helm.cilium.io/
+      chartName: cilium
+      namespace: kube-system
+      options:
+        waitForJobs: true
+        wait: true
+        install:
+          createNamespace: true
+      valuesTemplate: |-
+        operator:
+          replicas: 1
+        hubble:
           enabled: true
-        ui:
-          enabled: true
+          relay:
+            enabled: true
+          ui:
+            enabled: true
 
+  # Helm Chart for Cert-Manager
   - name: cert-manager
-    repoUrl: https://charts.jetstack.io
-    targetNamespace: cert-manager
-    version: v1.16.2
-    options:
-      install:
-        createNamespace: true
-    valuesTemplate: |-
-      crds:
-        enabled: true
+    metadata:
+      name: cert-manager
+      namespace: kubevirt
+    spec:
+      repoURL: https://charts.jetstack.io
+      chartName: cert-manager
+      namespace: cert-manager
+      version: v1.16.2
+      options:
+        install:
+          createNamespace: true
+      valuesTemplate: |-
+        crds:
+          enabled: true
 
+  # Helm Chart for ingress-nginx
   - name: ingress-nginx
-    repoUrl: https://kubernetes.github.io/ingress-nginx
-    targetNamespace: ingress-nginx
-    options:
-      install:
-        createNamespace: true
+    metadata:
+      name: ingress-nginx
+      namespace: kubevirt
+    spec:
+      repoURL: https://kubernetes.github.io/ingress-nginx
+      chartName: ingress-nginx
+      namespace: ingress-nginx
+      options:
+        install:
+          createNamespace: true
+      valuesTemplate: |-
+        install:
+          createNamespace: true
 
