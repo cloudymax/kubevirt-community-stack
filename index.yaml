@@ -119,6 +119,17 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/cloud-init-0.0.1/cloud-init-0.0.1.tgz
     version: 0.0.1
+  cluster-api-cluster:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2025-01-07T10:15:39.611761885Z"
+    description: Cluster API Cluster using Kubevirt and Kubeadm
+    digest: 9bf9cd9d63ea8c0752c47a5e5b9450bb8ef0f489925d5e255a27f863fdf8b550
+    name: cluster-api-cluster
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cluster-api-cluster-0.0.0/cluster-api-cluster-0.0.0.tgz
+    version: 0.0.0
   cluster-api-operator:
   - apiVersion: v2
     appVersion: 0.0.0
@@ -1436,4 +1447,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-01-03T22:38:56.151498197Z"
+generated: "2025-01-07T10:15:39.612153823Z"
