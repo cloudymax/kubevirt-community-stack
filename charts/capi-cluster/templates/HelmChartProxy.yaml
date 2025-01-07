@@ -1,0 +1,16 @@
+{{- range $reg, $props := .Values.helmCharts }}
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  {{- with $props.metadata }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  clusterSelector:
+    matchLabels:
+      {{ $props.name }}: enabled
+  {{- with $props.spec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}
