@@ -84,6 +84,13 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
   <br>
 </details>
 
+<details>
+  <summary>CAPI Cluster</summary>
+  <br>
+  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure provider and Kubeadm Bootstrap + ControlPlane, and Helm Addon providers. 
+  <br>
+  <br>
+</details>
 <h1>Dependencies</h1>
 
 <details>
