@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  </head>
+
+  <body>
+    <main class="container">
+        <div class="grid-container">
+
+            <div class="item1">
+                <center><h1>Create Workflow</h1></center>
+            </div>
+
+            <div class="item2">
+                <center>
+                    <form id="createVm">
+
+                    <label for="action">Action:</label>
+                    <br>
+                    <input type="text" id="action" name="action" placeholder="create" required>
+                    <br>
+
+                    <label for="name">Name:</label>
+                    <br>
+                    <input type="text" id="name" name="name" placeholder="scrapmetal" required>
+                    <br>
+
+                    <br><br>
+                   <button type="submit">Submit</button>
+                   </form>
+                </center>
+            </div>
+        </div>
+  </body>
+            <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" crossorigin=""></script>
+            <script>
+                document.getElementById('createVm').addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    // Collect form data
+                    const formData = new FormData(this);
+                    const jsonData = {};
+                    formData.forEach((value, key) => {
+                        jsonData[key] = value;
+                    });
+
+                    // Send JSON data using Fetch API
+                    const response = await fetch('http://192.168.2.36:30853/api', {
+                        method: 'POST',
+                        mode: "no-cors",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
+
+                    if (response.ok) {
+                        console.log('Success:', result);
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                });
+            </script>
+</html>
