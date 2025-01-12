@@ -234,7 +234,7 @@ Command Line:
 <details>
 <summary>Command Line:</summary>
 <br>
-<pre><code class="language-bash">
+```bash
 helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
 helm install example kubevirt/kubevirt-vm \
     --namespace kubevirt \
@@ -272,7 +272,7 @@ helm install example kubevirt/kubevirt-vm \
 	--set service[0].ports[0].targePort="8080" \
 	--set service[0].ports[0].protocol="TCP" \
 	--create-namespace
-</code></pre>
+```
 <br>
 <br>
 </details>
