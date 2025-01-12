@@ -75,5 +75,5 @@ export KUBECONFIG=/home/friend/.config/kube/config
 helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
 helm install kubevirt-stack kubevirt/kubevirt-stack \
   --namespace kubevirt \
-  --create-namespace
+  --create-namespace --wait
 ```

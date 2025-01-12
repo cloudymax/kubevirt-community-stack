@@ -5,20 +5,30 @@ Kubevirt Community Stack
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  Create Kubevirt VMs via Helm <br> 
-  Works with ArgoCD, Argo Workflows, KEDA, Cluster-API etc..
+  Create Kubevirt VMs via Helm <br>
+  for use with <a href="https://argoproj.github.io/cd/">ArgoCD</a>, <a href="https://argoproj.github.io/workflows/">Argo Workflows</a>, <a href="https://keda.sh/">KEDA</a>, <a href="https://cluster-api.sigs.k8s.io/">ClusterAPI</a>, <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> etc...
   <br>
   <br>
-  <a href="https://cloudymax.github.io/kubevirt-community-stack/">cloudymax.github.io/kubevirt-community-stack</a>
 </p>
 <br>
 
-<h1>Components</h1>
+## Who is this for:
+
+The Kubevirt-Community-Stack may be of interest if you:
+- operate one or more physical computers which you would like to split into smaller virtual machiens.
+- are already running kubernetes to orchestrate container workloads
+- are already in the <a href="https://argoproj.github.io/cd/">ArgoCD</a> or <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> ecosystem and/or work primarily with some other Helm-based tooling.
+- want/need fully-featured VMs for hardware emulation, hardware-passthrough, Virtual Desktops, vGPU which are not suppoted by Micro-VMs like <a href="https://firecracker-microvm.github.io/">Firecracker</a>
+- want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
+- want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
+
+
+## Component charts
 
 <details>
   <summary>Kubervirt</summary>
   <br>
-  <a href="https://github.com/kubevirt/kubevirt">Kubevirt</a> is a Kubernetes Virtualization API and runtime which controls QEMU/KVM virtual machine instances and provides the CRDs that define them
+  <a href="https://github.com/kubevirt/kubevirt">Kubevirt</a> is a Kubernetes Virtualization API and runtime which controls QEMU/KVM virtual machine instances and provides the CRDs that define them. It's distrubuted as a Kubernetes Operator which is install via the <a href="https://github.com/kubevirt/kubevort">kubevirt</a> chart.
   <br>
   <br>
 </details>
@@ -84,26 +94,35 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
   <br>
 </details>
 
-<h1>Dependencies</h1>
+<details>
+  <summary>CAPI Cluster</summary>
+  <br>
+  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure, Kubeadm Bootstrap + ControlPlane, and Helm providers.
+  <br>
+  <br>
+</details>
+
+
+## Dependencies
 
 <details>
   <summary>libvirt-clients</summary><br>
 This utility will audit a host machine and report what virtualisation capabilities are available
 
   - Installation
-      <pre><code class="language-bash">
+      ```bash
       sudo apt-get install -y libvirt-clients
-      </code></pre>
+      ```
 
   - Usage
-      <pre><code class="language-console">
+      ```console
       $ virt-host-validate qemu
       QEMU: Checking for hardware virtualization          : PASS
       QEMU: Checking if device /dev/kvm exists            : PASS
       QEMU: Checking if device /dev/kvm is accessible     : PASS
       QEMU: Checking if device /dev/vhost-net exists      : PASS
       QEMU: Checking if device /dev/net/tun exists        : PASS
-      </code></pre>
+      ```
 </details>
 
 <details>
@@ -111,103 +130,257 @@ This utility will audit a host machine and report what virtualisation capabiliti
   virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
 
   - Standalone
-      <pre><code class="language-bash">
+      ```bash
       export VERSION=v0.41.0
       wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
-      </code></pre>
+      ```
 
   - Plugin
-      <pre><code class="language-bash">
+      ```bash
       kubectl krew install virt
-      </code></pre>
+      ```
 </details>
 
 <details>
   <summary>clusterctl</summary><br>
   The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
 
-  <pre><code class="language-bash">
+  ```bash
   curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
   sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
-  </code></pre>
+  ```
 </details>
 
-<h1>
-  Install Kubevirt
-</h1>
 
-<details>
-  <summary>Combined Chart</summary>
-<br>
+##  Install The Kubevirt-Community-Stack
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>: Installs the combined chart.
-
-    <pre><code class="language-bash">
+- Install the combined chart (<a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>).
+   ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-stack kubevirt/kubevirt-stack \
       --namespace kubevirt \
       --create-namespace
-    </code></pre>
-</details>
+    ```
 
 <details>
-  <summary>Individual Charts</summary>
+  <summary>Expand to see individual chart installation</summary>
 <br>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
-    <pre><code class="language-bash">
+    ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt kubevirt/kubevirt \
       --namespace kubevirt \
       --create-namespace
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/cluster-api-operator">Cluster API Operator</a>: Installs the Cluster API Operator.
 
-    <pre><code class="language-bash">
+    ```bash
     Work in progress.
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
-    <pre><code class="language-bash">
+    ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-cdi kubevirt/kubevirt-cdi \
       --namespace cdi \
       --create-namespace
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
 
-    <pre><code class="language-bash">
+    ```bash
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
     helm install kubevirt-manager kubevirt/kubevirt-manager \
       --fnamespace kubevirt-manager \
       --create-namespace
-    </code></pre>
+    ```
 </details>
 
-<h1>
-  Create VMs
-</h1>
+## Creating a VM
 
-- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Installs the Kubevirt Operator.
+This is a qucik walkthrough of how I create VMs using kubevirt-community-stack. All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a>  chart.
 
-    <pre><code class="language-bash">
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
-    helm install my-vm kubevirt/kubevirt-vm \
+From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
+
+> With the command or file below we will:
+>   1. Create a new VM named `example` with with `2` cores and `2Gi` of RAM.
+>   2. Create a `16Gi` PVC named `harddrive` which holds a debian12 cloud-image.
+>   3. Define a user named `example` and assign the user some groups and a random password which will be stored in a secret.
+>   4. Save our user-data as a secret named `example-user-data`
+>   5. Update apt-packes and install docker.
+>   6. Run the nginx docker container with port `8080` exposed from the container to the VM
+>   7. Define a service over which to expose port `8080` from the VM to the host.
+
+<details>
+<summary>Requirements</summary>
+<br>
+
+- you are running on bare-metal, not inside a VM
+	
+- you set `cpuManagerPolicy: static` in your kubelet config
+ 
+- you have `yq` and either `virtctl` or `krew virt` installed
+
+- your host system passes all `virt-host-validate qemu` checks for KVM
+	
+  ```console
+  QEMU: Checking for hardware virtualization                                 : PASS
+  QEMU: Checking if device /dev/kvm exists                                   : PASS
+  QEMU: Checking if device /dev/kvm is accessible                            : PASS
+  ```
+</details>
+
+<details>
+<summary>Command Line method:</summary>
+
+```bash
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+helm install example kubevirt/kubevirt-vm \
+    --namespace kubevirt \
+    --set virtualMachine.name="example" \
+	--set virtualMachine.namespace="kubevirt" \
+	--set virtualMachine.machine.vCores=2 \
+	--set virtualMachine.machine.memory.base="2Gi" \
+	--set disks[0].name="harddrive" \
+	--set disks[0].type="disk" \
+	--set disks[0].bus="virtio" \
+	--set disks[0].bootorder=2 \
+	--set disks[0].readonly="false" \
+	--set disks[0].pvsize="16Gi" \
+	--set disks[0].pvstorageClassName="fast-raid" \
+	--set disks[0].pvaccessMode="ReadWriteOnce" \
+	--set disks[0].source="url" \
+	--set disks[0].url="https://buildstars.online/debian-12-generic-amd64-daily.qcow2" \
+	--set cloudinit.hostname="example" \
+	--set cloudinit.namespace="kubevirt" \
+	--set cloudinit.users[0].name="example" \
+	--set cloudinit.users[0].groups="users\, admin\, docker\, sudo\, kvm" \
+	--set cloudinit.users[0].sudo="ALL=(ALL) NOPASSWD:ALL" \
+	--set cloudinit.users[0].shell="/bin/bash" \
+	--set cloudinit.users[0].lock_passwd="false" \
+	--set cloudinit.users[0].password.random="true" \
+	--set cloudinit.secret_name="example-user-data" \
+	--set cloudinit.package_update="true" \
+	--set cloudinit.packages[0]="docker.io" \
+	--set cloudinit.runcmd[0]="docker run -d -p 8080:80 nginx" \
+	--set service[0].name="example" \
+	--set service[0].type="NodePort" \
+	--set service[0].externalTrafficPolicy="Cluster" \
+	--set service[0].ports[0].name="nginx" \
+	--set service[0].ports[0].port="8080" \
+	--set service[0].ports[0].targePort="8080" \
+	--set service[0].ports[0].protocol="TCP" \
+	--create-namespace
+```
+
+</details>
+
+
+<details>
+<summary>Values File method:</summary>
+
+```bash
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+
+cat <<EOF > example.yaml
+---
+virtualMachine:
+  name: example
+  namespace: kubevirt
+  machine:
+    vCores: "2"
+    memory:
+      base: "2Gi"
+disks:
+  - name: harddrive
+    type:disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvsize: 16Gi
+    pvstorageClassName: fast-raid
+    pvaccessMode: ReadWriteOnce
+    source: url
+    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+cloudinit:
+  hostname: example
+  namespace: kubevirt
+  users:
+  - name: example
+    groups: "users, admin, docker, sudo, kvm"
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell:"/bin/bash"
+    lock_passwd:"false"
+    password:
+      random: "true"
+  secret_name: "example-user-data"
+package_update: "true"
+packages:
+  - docker.io
+runcmd:
+  - "docker run -d -p 8080:80 nginx"
+service:
+  name: example
+  type: ClusterIP
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: "nginx"
+    port: "8080"
+    targePort: "8080"
+    protocol: "TCP"
+EOF
+```
+
+- Install VM as a helm-chart (or template it out as manifests):
+
+    ```bash
+    helm install example kubevirt/kubevirt-vm \
       --namespace kubevirt \
-      --set virtualMachine.name=my-vm
-      --create-namespace
-    </code></pre>
+      --create-namespace \
+      -f example.yaml
+    ```
+</details>
+
+1. Find the secret create to hold our user's password:
+
+    ```bash
+    kubectl get secret example-password -n kubevirt -o yaml \
+  	  |yq '.data.password' |base64 -d
+    ```
+
+2. Connect to the vm over console & login as user "example":
+
+    ```console
+    kubectl virt console example -n kubevirt
+    Successfully connected to example console. The escape sequence is ^]
+
+    example login: example
+    Password:
+    ```
+
+3. Port-forward the nginx service and vistit in your browser:
+
+    ```bash
+    kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
+    ```
+
+4. Uninstall/Delete the VM
+
+    ```bash
+    helm uninstall example
+    ```
+
 
 ## Uninstall
 
 In the event that Kubevirt does not uninstall gracefully, you may need to perform the following steps:
 
-<pre><code class="language-bash">
+```bash
 export RELEASE=v0.17.0
 
 # --wait=true should anyway be default
@@ -232,4 +405,4 @@ kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl g
 
 # If namespace is stuck
 kubectl get namespace "kubevirt" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
-</code></pre>
+```
