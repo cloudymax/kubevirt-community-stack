@@ -5,7 +5,7 @@ Kubevirt Community Stack
   <img width="64" src="https://avatars.githubusercontent.com/u/18700703?s=200&v=4">
 </p>
 <p align=center>
-  Create Kubevirt VMs via Helm <br> 
+  Create Kubevirt VMs via Helm <br>
   Works with ArgoCD, Argo Workflows, KEDA, Cluster-API etc..
   <br>
   <br>
@@ -87,7 +87,7 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
 <details>
   <summary>CAPI Cluster</summary>
   <br>
-  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure provider and Kubeadm Bootstrap + ControlPlane, and Helm Addon providers. 
+  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure provider and Kubeadm Bootstrap + ControlPlane, and Helm Addon providers.
   <br>
   <br>
 </details>
@@ -196,19 +196,190 @@ This utility will audit a host machine and report what virtualisation capabiliti
     </code></pre>
 </details>
 
-<h1>
-  Create VMs
-</h1>
+# Creating VMs
 
-- <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-vm">kubevirt-vm</a>: Installs the Kubevirt Operator.
+This is a qucik walkthrough of how I create VMs using kubevirt-community-stack
 
-    <pre><code class="language-bash">
-    helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
-    helm install my-vm kubevirt/kubevirt-vm \
-      --namespace kubevirt \
-      --set virtualMachine.name=my-vm
-      --create-namespace
-    </code></pre>
+## Assumptions
+
+- you set `cpuManagerPolicy: static` in your kubelet config
+- you have `yq` and either `virtctl` or `krew virt` installed
+- your host system passes all `virt-host-validate qemu` checks for KVM
+
+```console
+  QEMU: Checking for hardware virtualization                                 : PASS
+  QEMU: Checking if device /dev/kvm exists                                   : PASS
+  QEMU: Checking if device /dev/kvm is accessible                            : PASS
+```
+
+## Define a VM
+
+All the configuration for the VM happens in the values.yaml file of the kubevirt-vm chart.
+From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
+Because of the number of configuration options, its easier to just open the file and make your edits, but for th sake of the exmaple we will configure the options via the command line with helm as well.
+
+With the command/file below we will:
+
+1. Create a new VM named "example" with with 2 cores and 2 gigs of ram.
+2. Create a 16Gi PVC named "harddrive" which holds a debian12 cloud-image.
+3. Define a user named "example" and assign the user some groups and a random password which will be stored in a secret.
+4. Save our user-data as a secret named "example-user-data"
+5. Update apt-packes and install docker.
+6. run the nginx docker container with port 8080 exposed from the container to the VM
+7. define a NodePort service over which to expose port 8080 from the VM to the host.
+
+
+Command Line:
+
+<details>
+<summary>Command Line:</summary>
+<br>
+<pre><code class="language-bash">
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+helm install example kubevirt/kubevirt-vm \
+    --namespace kubevirt \
+    --set virtualMachine.name=example \
+	--set virtualMachine.namespace=kubevirt \
+	--set virtualMachine.machine.vCores=2 \
+	--set virtualMachine.machine.memory.base=2Gi \
+	--set disks[0].name=harddrive \
+	--set disks[0].type=disk \
+	--set disks[0].bus=virtio \
+	--set disks[0].bootorder=2 \
+	--set disks[0].readonly=false \
+	--set disks[0].pvsize=16Gi \
+	--set disks[0].pvstorageClassName=fast-raid \
+	--set disks[0].pvaccessMode=ReadWriteOnce \
+	--set disks[0].source=url \
+	--set disks[0].url="https://buildstars.online/debian-12-generic-amd64-daily.qcow2" \
+	--set cloudinit.hostname=example \
+	--set cloudinit.namespace=kubevirt \
+	--set cloudinit.users[0].name=example \
+	--set cloudinit.users[0].groups="users\, admin\, docker\, sudo\, kvm" \
+	--set cloudinit.users[0].sudo="ALL=(ALL) NOPASSWD:ALL" \
+	--set cloudinit.users[0].shell="/bin/bash" \
+	--set cloudinit.users[0].lock_passwd="false" \
+	--set cloudinit.users[0].password.random="true" \
+	--set cloudinit.secret_name=example-user-data \
+	--set cloudinit.package_update=true \
+	--set cloudinit.packages[0]=docker.io \
+	--set cloudinit.runcmd[0]="docker run -d -p 8080:80 nginx" \
+	--set service[0].name=example \
+	--set service[0].type=NodePort \
+	--set service[0].externalTrafficPolicy=Cluster \
+	--set service[0].ports[0].name="nginx" \
+	--set service[0].ports[0].port="8080" \
+	--set service[0].ports[0].targePort="8080" \
+	--set service[0].ports[0].protocol="TCP" \
+	--create-namespace
+</code></pre>
+<br>
+<br>
+</details>
+
+
+<details>
+<summary>Values File:</summary>
+<br>
+<pre><code class="language-yaml">
+---
+virtualMachine:
+  name: example
+  namespace: kubevirt
+  machine:
+    vCores: "2"
+    memory:
+      base: "2Gi"
+disks:
+  - name: harddrive
+    type:disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvsize: 16Gi
+    pvstorageClassName: fast-raid
+    pvaccessMode: ReadWriteOnce
+    source: url
+    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+cloudinit:
+  hostname: example
+  namespace: kubevirt
+  users:
+  - name: example
+    groups: "users, admin, docker, sudo, kvm"
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell:"/bin/bash"
+    lock_passwd:"false"
+    password:
+      random: "true"
+  secret_name: "example-user-data"
+package_update: "true"
+packages:
+  - docker.io
+runcmd:
+  - "docker run -d -p 8080:80 nginx"
+service:
+  name: example
+  type: ClusterIP
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: "nginx"
+    port: "8080"
+    targePort: "8080"
+    protocol: "TCP"
+</code></pre>
+<br>
+<br>
+</details>
+
+
+## Installation
+
+Install VM as a helm-chart (or template it out as manifests):
+
+  <pre><code class="language-bash">
+  helm install example kubevirt/kubevirt-vm \
+    --namespace kubevirt \
+  	--create-namespace \
+  	-f test-values.yaml
+  </code></pre>
+
+Find the secret create to hold our user's password:
+
+  <pre><code class="language-bash">
+  kubectl get secret example-password -n kubevirt -o yaml \
+  	|yq '.data.password' |base64 -d
+  </code></pre>
+
+Connect to the vm over console & login as user "example":
+
+  <pre><code class="language-bash">
+  kubectl virt console example -n kubevirt
+  Successfully connected to example console. The escape sequence is ^]
+
+  example login: example
+  Password:
+  </code></pre>
+
+On the host, find the nodeport of the service
+
+  <pre><code class="language-bash">
+  kubectl get service example -n kubevirt -o yaml \
+  	|yq '.spec.ports[0].nodePort'
+  </code></pre>
+
+Port-forward the nginx service and vistit in your browser:
+
+  <pre><code class="language-bash">
+  kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
+  </code></pre>
+
+Uninstall/Delete the VM
+
+  <pre><code class="language-bash">
+  helm uninstall example
+  </code></pre>
+
 
 ## Uninstall
 
