@@ -212,76 +212,72 @@ This is a qucik walkthrough of how I create VMs using kubevirt-community-stack
   QEMU: Checking if device /dev/kvm is accessible                            : PASS
 ```
 
-## Define a VM
+## VM Example
 
-All the configuration for the VM happens in the values.yaml file of the kubevirt-vm chart.
+All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a>  chart.
 From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
-Because of the number of configuration options, its easier to just open the file and make your edits, but for th sake of the exmaple we will configure the options via the command line with helm as well.
 
-With the command/file below we will:
+> With the command or file below we will:
+>   1. Create a new VM named `example` with with `2` cores and `2Gi` of RAM.
+>   2. Create a `16Gi` PVC named `harddrive` which holds a debian12 cloud-image.
+>   3. Define a user named `example` and assign the user some groups and a random password which will be stored in a secret.
+>   4. Save our user-data as a secret named `example-user-data`
+>   5. Update apt-packes and install docker.
+>   6. Run the nginx docker container with port `8080` exposed from the container to the VM
+>   7. Define a service over which to expose port `8080` from the VM to the host.
 
-1. Create a new VM named "example" with with 2 cores and 2 gigs of ram.
-2. Create a 16Gi PVC named "harddrive" which holds a debian12 cloud-image.
-3. Define a user named "example" and assign the user some groups and a random password which will be stored in a secret.
-4. Save our user-data as a secret named "example-user-data"
-5. Update apt-packes and install docker.
-6. run the nginx docker container with port 8080 exposed from the container to the VM
-7. define a NodePort service over which to expose port 8080 from the VM to the host.
-
-
-Command Line:
 
 <details>
 <summary>Command Line:</summary>
-<br>
+
 ```bash
 helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
 helm install example kubevirt/kubevirt-vm \
     --namespace kubevirt \
-    --set virtualMachine.name=example \
-	--set virtualMachine.namespace=kubevirt \
+    --set virtualMachine.name="example" \
+	--set virtualMachine.namespace="kubevirt" \
 	--set virtualMachine.machine.vCores=2 \
-	--set virtualMachine.machine.memory.base=2Gi \
-	--set disks[0].name=harddrive \
-	--set disks[0].type=disk \
-	--set disks[0].bus=virtio \
+	--set virtualMachine.machine.memory.base="2Gi" \
+	--set disks[0].name="harddrive" \
+	--set disks[0].type="disk" \
+	--set disks[0].bus="virtio" \
 	--set disks[0].bootorder=2 \
-	--set disks[0].readonly=false \
-	--set disks[0].pvsize=16Gi \
-	--set disks[0].pvstorageClassName=fast-raid \
-	--set disks[0].pvaccessMode=ReadWriteOnce \
-	--set disks[0].source=url \
+	--set disks[0].readonly="false" \
+	--set disks[0].pvsize="16Gi" \
+	--set disks[0].pvstorageClassName="fast-raid" \
+	--set disks[0].pvaccessMode="ReadWriteOnce" \
+	--set disks[0].source="url" \
 	--set disks[0].url="https://buildstars.online/debian-12-generic-amd64-daily.qcow2" \
-	--set cloudinit.hostname=example \
-	--set cloudinit.namespace=kubevirt \
-	--set cloudinit.users[0].name=example \
+	--set cloudinit.hostname="example" \
+	--set cloudinit.namespace="kubevirt" \
+	--set cloudinit.users[0].name="example" \
 	--set cloudinit.users[0].groups="users\, admin\, docker\, sudo\, kvm" \
 	--set cloudinit.users[0].sudo="ALL=(ALL) NOPASSWD:ALL" \
 	--set cloudinit.users[0].shell="/bin/bash" \
 	--set cloudinit.users[0].lock_passwd="false" \
 	--set cloudinit.users[0].password.random="true" \
-	--set cloudinit.secret_name=example-user-data \
-	--set cloudinit.package_update=true \
-	--set cloudinit.packages[0]=docker.io \
+	--set cloudinit.secret_name="example-user-data" \
+	--set cloudinit.package_update="true" \
+	--set cloudinit.packages[0]="docker.io" \
 	--set cloudinit.runcmd[0]="docker run -d -p 8080:80 nginx" \
-	--set service[0].name=example \
-	--set service[0].type=NodePort \
-	--set service[0].externalTrafficPolicy=Cluster \
+	--set service[0].name="example" \
+	--set service[0].type="NodePort" \
+	--set service[0].externalTrafficPolicy="Cluster" \
 	--set service[0].ports[0].name="nginx" \
 	--set service[0].ports[0].port="8080" \
 	--set service[0].ports[0].targePort="8080" \
 	--set service[0].ports[0].protocol="TCP" \
 	--create-namespace
 ```
-<br>
-<br>
+
 </details>
 
 
 <details>
 <summary>Values File:</summary>
-<br>
-<pre><code class="language-yaml">
+
+```bash
+cat <<EOF > example.yaml
 ---
 virtualMachine:
   name: example
@@ -327,58 +323,57 @@ service:
     port: "8080"
     targePort: "8080"
     protocol: "TCP"
-</code></pre>
-<br>
-<br>
+EOF
+```
 </details>
 
 
 ## Installation
 
-Install VM as a helm-chart (or template it out as manifests):
+1. Install VM as a helm-chart (or template it out as manifests):
 
-  <pre><code class="language-bash">
-  helm install example kubevirt/kubevirt-vm \
-    --namespace kubevirt \
-  	--create-namespace \
-  	-f test-values.yaml
-  </code></pre>
+    ```bash
+    helm install example kubevirt/kubevirt-vm \
+      --namespace kubevirt \
+      --create-namespace \
+      -f example.yaml
+    ```
 
-Find the secret create to hold our user's password:
+2. Find the secret create to hold our user's password:
 
-  <pre><code class="language-bash">
-  kubectl get secret example-password -n kubevirt -o yaml \
-  	|yq '.data.password' |base64 -d
-  </code></pre>
+    ```bash
+    kubectl get secret example-password -n kubevirt -o yaml \
+  	  |yq '.data.password' |base64 -d
+    ```
 
-Connect to the vm over console & login as user "example":
+3. Connect to the vm over console & login as user "example":
 
-  <pre><code class="language-bash">
-  kubectl virt console example -n kubevirt
-  Successfully connected to example console. The escape sequence is ^]
+    ```console
+    kubectl virt console example -n kubevirt
+    Successfully connected to example console. The escape sequence is ^]
 
-  example login: example
-  Password:
-  </code></pre>
+    example login: example
+    Password:
+    ```
 
-On the host, find the nodeport of the service
+4. On the host, find the nodeport of the service
 
-  <pre><code class="language-bash">
-  kubectl get service example -n kubevirt -o yaml \
+    ```bash
+    kubectl get service example -n kubevirt -o yaml \
   	|yq '.spec.ports[0].nodePort'
-  </code></pre>
+    ```
 
-Port-forward the nginx service and vistit in your browser:
+5. Port-forward the nginx service and vistit in your browser:
 
-  <pre><code class="language-bash">
-  kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
-  </code></pre>
+    ```bash
+    kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
+    ```
 
-Uninstall/Delete the VM
+6. Uninstall/Delete the VM
 
-  <pre><code class="language-bash">
-  helm uninstall example
-  </code></pre>
+    ```bash
+    helm uninstall example
+    ```
 
 
 ## Uninstall
