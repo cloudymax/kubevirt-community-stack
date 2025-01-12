@@ -13,7 +13,17 @@ Kubevirt Community Stack
 </p>
 <br>
 
-<h2>Component charts:</h2>
+## Who is this for:
+
+The Kubevirt-Community-Stack may be of interest if you:
+- already running kubernetes
+- are already in the ArgoCD ecosystem and/or work primarily with some other helm-based tooling.
+- operate one or more physical computers which you would like to split into smaller virtual computer computers
+- want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
+- want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
+
+
+## Component charts
 
 <details>
   <summary>Kubervirt</summary>
@@ -100,19 +110,19 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
 This utility will audit a host machine and report what virtualisation capabilities are available
 
   - Installation
-      <pre><code class="language-bash">
+      ```bash
       sudo apt-get install -y libvirt-clients
-      </code></pre>
+      ```
 
   - Usage
-      <pre><code class="language-console">
+      ```console
       $ virt-host-validate qemu
       QEMU: Checking for hardware virtualization          : PASS
       QEMU: Checking if device /dev/kvm exists            : PASS
       QEMU: Checking if device /dev/kvm is accessible     : PASS
       QEMU: Checking if device /dev/vhost-net exists      : PASS
       QEMU: Checking if device /dev/net/tun exists        : PASS
-      </code></pre>
+      ```
 </details>
 
 <details>
@@ -120,25 +130,25 @@ This utility will audit a host machine and report what virtualisation capabiliti
   virtctl is the command-line utility for managing Kubevirt resources. It can be installed as a standalone CLI or as a Kubectl plugin via krew.
 
   - Standalone
-      <pre><code class="language-bash">
+      ```bash
       export VERSION=v0.41.0
       wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-linux-amd64
-      </code></pre>
+      ```
 
   - Plugin
-      <pre><code class="language-bash">
+      ```bash
       kubectl krew install virt
-      </code></pre>
+      ```
 </details>
 
 <details>
   <summary>clusterctl</summary><br>
   The clusterctl CLI tool handles the lifecycle of a Cluster API management cluster.
 
-  <pre><code class="language-bash">
+  ```bash
   curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.7.2/clusterctl-linux-amd64 -o clusterctl
   sudo install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl
-  </code></pre>
+  ```
 </details>
 
 
@@ -158,45 +168,56 @@ This utility will audit a host machine and report what virtualisation capabiliti
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
 
-    <pre><code class="language-bash">
+    ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt kubevirt/kubevirt \
       --namespace kubevirt \
       --create-namespace
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/cluster-api-operator">Cluster API Operator</a>: Installs the Cluster API Operator.
 
-    <pre><code class="language-bash">
+    ```bash
     Work in progress.
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-cdi">kubevirt-cdi</a>: Install the Containerized Data Importer.
 
-    <pre><code class="language-bash">
+    ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-cdi kubevirt/kubevirt-cdi \
       --namespace cdi \
       --create-namespace
-    </code></pre>
+    ```
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt-manager">kubevirt-manager</a>: Deploy the Kubevirt-Manager UI
 
-    <pre><code class="language-bash">
+    ```bash
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
     helm install kubevirt-manager kubevirt/kubevirt-manager \
       --fnamespace kubevirt-manager \
       --create-namespace
-    </code></pre>
+    ```
 </details>
 
 ## Creating a VM
 
 This is a qucik walkthrough of how I create VMs using kubevirt-community-stack. All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a>  chart.
 
+From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
+
+> With the command or file below we will:
+>   1. Create a new VM named `example` with with `2` cores and `2Gi` of RAM.
+>   2. Create a `16Gi` PVC named `harddrive` which holds a debian12 cloud-image.
+>   3. Define a user named `example` and assign the user some groups and a random password which will be stored in a secret.
+>   4. Save our user-data as a secret named `example-user-data`
+>   5. Update apt-packes and install docker.
+>   6. Run the nginx docker container with port `8080` exposed from the container to the VM
+>   7. Define a service over which to expose port `8080` from the VM to the host.
+
 <details>
-<summary>Assumptions</summary>
+<summary>Requirements</summary>
 <br>
 
 - you are running on bare-metal, not inside a VM
@@ -214,20 +235,8 @@ This is a qucik walkthrough of how I create VMs using kubevirt-community-stack. 
   ```
 </details>
 
-From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
-
-> With the command or file below we will:
->   1. Create a new VM named `example` with with `2` cores and `2Gi` of RAM.
->   2. Create a `16Gi` PVC named `harddrive` which holds a debian12 cloud-image.
->   3. Define a user named `example` and assign the user some groups and a random password which will be stored in a secret.
->   4. Save our user-data as a secret named `example-user-data`
->   5. Update apt-packes and install docker.
->   6. Run the nginx docker container with port `8080` exposed from the container to the VM
->   7. Define a service over which to expose port `8080` from the VM to the host.
-
-
 <details>
-<summary>Command Line:</summary>
+<summary>Command Line method:</summary>
 
 ```bash
 helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
@@ -273,9 +282,11 @@ helm install example kubevirt/kubevirt-vm \
 
 
 <details>
-<summary>Values File:</summary>
+<summary>Values File method:</summary>
 
 ```bash
+helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
+
 cat <<EOF > example.yaml
 ---
 virtualMachine:
@@ -324,9 +335,8 @@ service:
     protocol: "TCP"
 EOF
 ```
-</details>
 
-1. Install VM as a helm-chart (or template it out as manifests):
+- Install VM as a helm-chart (or template it out as manifests):
 
     ```bash
     helm install example kubevirt/kubevirt-vm \
@@ -334,15 +344,16 @@ EOF
       --create-namespace \
       -f example.yaml
     ```
+</details>
 
-2. Find the secret create to hold our user's password:
+1. Find the secret create to hold our user's password:
 
     ```bash
     kubectl get secret example-password -n kubevirt -o yaml \
   	  |yq '.data.password' |base64 -d
     ```
 
-3. Connect to the vm over console & login as user "example":
+2. Connect to the vm over console & login as user "example":
 
     ```console
     kubectl virt console example -n kubevirt
@@ -352,13 +363,13 @@ EOF
     Password:
     ```
 
-4. Port-forward the nginx service and vistit in your browser:
+3. Port-forward the nginx service and vistit in your browser:
 
     ```bash
     kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
     ```
 
-5. Uninstall/Delete the VM
+4. Uninstall/Delete the VM
 
     ```bash
     helm uninstall example
@@ -369,7 +380,7 @@ EOF
 
 In the event that Kubevirt does not uninstall gracefully, you may need to perform the following steps:
 
-<pre><code class="language-bash">
+```bash
 export RELEASE=v0.17.0
 
 # --wait=true should anyway be default
@@ -394,4 +405,4 @@ kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl g
 
 # If namespace is stuck
 kubectl get namespace "kubevirt" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
-</code></pre>
+```
