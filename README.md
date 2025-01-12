@@ -356,20 +356,13 @@ EOF
     Password:
     ```
 
-4. On the host, find the nodeport of the service
-
-    ```bash
-    kubectl get service example -n kubevirt -o yaml \
-  	|yq '.spec.ports[0].nodePort'
-    ```
-
-5. Port-forward the nginx service and vistit in your browser:
+4. Port-forward the nginx service and vistit in your browser:
 
     ```bash
     kubectl port-forward service/example -n kubevirt 8080:8080 --address 0.0.0.0
     ```
 
-6. Uninstall/Delete the VM
+5. Uninstall/Delete the VM
 
     ```bash
     helm uninstall example
