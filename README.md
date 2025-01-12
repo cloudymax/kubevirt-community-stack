@@ -13,12 +13,12 @@ Kubevirt Community Stack
 </p>
 <br>
 
-<h1>Components</h1>
+<h2>Component charts:</h2>
 
 <details>
   <summary>Kubervirt</summary>
   <br>
-  <a href="https://github.com/kubevirt/kubevirt">Kubevirt</a> is a Kubernetes Virtualization API and runtime which controls QEMU/KVM virtual machine instances and provides the CRDs that define them
+  <a href="https://github.com/kubevirt/kubevirt">Kubevirt</a> is a Kubernetes Virtualization API and runtime which controls QEMU/KVM virtual machine instances and provides the CRDs that define them. It's distrubuted as a Kubernetes Operator which is install via the <a href="https://github.com/kubevirt/kubevort">kubevirt</a> chart.
   <br>
   <br>
 </details>
@@ -87,11 +87,13 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
 <details>
   <summary>CAPI Cluster</summary>
   <br>
-  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure provider and Kubeadm Bootstrap + ControlPlane, and Helm Addon providers.
+  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure, Kubeadm Bootstrap + ControlPlane, and Helm providers.
   <br>
   <br>
 </details>
-<h1>Dependencies</h1>
+
+
+## Dependencies
 
 <details>
   <summary>libvirt-clients</summary><br>
@@ -139,26 +141,19 @@ This utility will audit a host machine and report what virtualisation capabiliti
   </code></pre>
 </details>
 
-<h1>
-  Install Kubevirt
-</h1>
 
-<details>
-  <summary>Combined Chart</summary>
-<br>
+##  Install The Kubevirt-Community-Stack
 
-- <a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>: Installs the combined chart.
-
-    <pre><code class="language-bash">
+- Install the combined chart (<a href="https://github.com/cloudymax/kubevirt-charts/blob/main/charts/kubevirt-stack">kubevirt-stack</a>).
+   ```bash
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-community-stack
     helm install kubevirt-stack kubevirt/kubevirt-stack \
       --namespace kubevirt \
       --create-namespace
-    </code></pre>
-</details>
+    ```
 
 <details>
-  <summary>Individual Charts</summary>
+  <summary>Expand to see individual chart installation</summary>
 <br>
 
 - <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/charts/kubevirt">kubevirt</a>: Installs the Kubevirt Operator.
@@ -196,25 +191,29 @@ This utility will audit a host machine and report what virtualisation capabiliti
     </code></pre>
 </details>
 
-# Creating VMs
+## Creating a VM
 
-This is a qucik walkthrough of how I create VMs using kubevirt-community-stack
+This is a qucik walkthrough of how I create VMs using kubevirt-community-stack. All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a>  chart.
 
-## Assumptions
+<details>
+<summary>Assumptions</summary>
+<br>
 
+- you are running on bare-metal, not inside a VM
+	
 - you set `cpuManagerPolicy: static` in your kubelet config
+ 
 - you have `yq` and either `virtctl` or `krew virt` installed
-- your host system passes all `virt-host-validate qemu` checks for KVM
 
-```console
+- your host system passes all `virt-host-validate qemu` checks for KVM
+	
+  ```console
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
   QEMU: Checking if device /dev/kvm is accessible                            : PASS
-```
+  ```
+</details>
 
-## VM Example
-
-All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a>  chart.
 From this file we can configure the VM, Disks, Cloudinit config, services, probes and more.
 
 > With the command or file below we will:
@@ -326,9 +325,6 @@ service:
 EOF
 ```
 </details>
-
-
-## Installation
 
 1. Install VM as a helm-chart (or template it out as manifests):
 
