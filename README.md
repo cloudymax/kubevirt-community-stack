@@ -211,7 +211,7 @@ Example documentation is a work in progress.
 - Add a GPU to your VM (ToDo)
 - Deploy a CAPI Cluster (ToDo)
 - Create a Windows VM (ToDo)
-- Capture and deploy a system image using Clonezilla Live (ToDo)
+- Capture and deploy system images using Clonezilla Live (ToDo)
 - [Deploying via ArgoCD](https://github.com/cloudymax/kubevirt-community-stack/tree/main/examples/argocd)
 - [Integrate with Argo Workflows/Events](https://github.com/cloudymax/kubevirt-community-stack/tree/main/examples/argo-workflows)
 
