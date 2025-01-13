@@ -207,10 +207,11 @@ Example documentation is a work in progress.
 
 - [Work with Disk Images via the CDI](https://github.com/cloudymax/kubevirt-community-stack/tree/main/examples/disks)
 - [Create your first linux VM](https://github.com/cloudymax/kubevirt-community-stack/blob/main/examples/basic-vm-example.md)
-- Create a VM pool (ToDo)
-- Create a GPU-enabled VM (ToDo)
+- Deploy a VirtialMachinePool and scale it using KEDA (ToDo)
+- Add a GPU to your VM (ToDo)
+- Deploy a CAPI Cluster (ToDo)
 - Create a Windows VM (ToDo)
-- Creating a CAPI Cluster (ToDo)
+- Capture and deploy a system image using Clonezilla Live (ToDo)
 - [Deploying via ArgoCD](https://github.com/cloudymax/kubevirt-community-stack/tree/main/examples/argocd)
 - [Integrate with Argo Workflows/Events](https://github.com/cloudymax/kubevirt-community-stack/tree/main/examples/argo-workflows)
 
