@@ -18,7 +18,7 @@ The Kubevirt-Community-Stack may be of interest if you:
 - operate one or more physical computers which you would like to split into smaller virtual machiens.
 - are already running kubernetes to orchestrate container workloads
 - are already in the <a href="https://argoproj.github.io/cd/">ArgoCD</a> or <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> ecosystem and/or work primarily with some other Helm-based tooling.
-- want/need fully-featured VMs for hardware emulation, hardware-passthrough, Virtual Desktops, vGPU which are not suppoted by Micro-VMs like <a href="https://firecracker-microvm.github.io/">Firecracker</a>
+- want/need fully-featured VMs for things like hardware emulation, hardware-passthrough, Virtual Desktops, vGPU, etc... which are not suppoted by Micro-VMs such as <a href="https://firecracker-microvm.github.io/">Firecracker</a>.
 - want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
 - want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
 
