@@ -2,5 +2,15 @@ apiVersion: v2
 name: cluster-api-cluster
 description: Cluster API Cluster using Kubevirt and Kubeadm
 type: application
-version: 0.0.0
+version: 0.0.1
 appVersion: "0.0.0"
+
+dependencies:
+- name: kubevirt-vm
+  alias: workers
+  version: 0.4.10
+  repository: https://cloudymax.github.io/kubevirt-community-stack
+- name: kubevirt-vm
+  alias: control
+  version: 0.4.10
+  repository: https://cloudymax.github.io/kubevirt-community-stack

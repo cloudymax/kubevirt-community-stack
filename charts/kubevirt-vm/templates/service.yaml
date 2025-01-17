@@ -1,3 +1,4 @@
+{{ if eq .Values.virtualMachine.capiMachineTemplate false }}
 {{- range $reg, $props := .Values.service }}
 ---
 apiVersion: v1
@@ -23,4 +24,5 @@ spec:
     {{- end }}
   selector:
     kubevirt.io/domain: {{ $.Values.virtualMachine.name }}
+{{- end }}
 {{- end }}

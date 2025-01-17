@@ -11,6 +11,10 @@ virtualMachine:
   # -- namespace to deploy to
   namespace: kubevirt
 
+  # -- Create the VM as a KubevirtMachineTemplate for use with Cluster API
+  # Does not support VM Pools
+  capiMachineTemplate: false
+
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
   # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "Always"
@@ -117,7 +121,7 @@ virtualMachine:
 
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
-    pinCores: false
+    pinCores: true
 
     # -- In order to enhance the real-time support in KubeVirt and provide
     # improved latency, KubeVirt will allocate an additional dedicated CPU,
@@ -361,6 +365,7 @@ cloudinit:
   serviceAccount:
     create: true
     name: cloud-init-sa
+    # Ignored is `create` set to true
     existingServiceAccountName: "cloud-init-sa"
 
   # -- Dont recreate script configmap. Set to true when keeping multiple
@@ -369,14 +374,14 @@ cloudinit:
 
   # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
   # Not an official part of cloid-init
-  envsubst: true
+  envsubst: false
 
-  extraEnvVars:
-    - name: VNC_PASS
-      valueFrom:
-        secretKeyRef:
-          name: test-password
-          key: "password"
+  extraEnvVars: []
+  #  - name: VNC_PASS
+  #    valueFrom:
+  #      secretKeyRef:
+  #        name: test-password
+  #        key: "password"
 
   # -- virtual-machine hostname
   hostname: test
@@ -455,13 +460,13 @@ cloudinit:
   package_reboot_if_required: false
   package_update: true
   package_upgrade: false
-  packages:
-    - docker.io
+  packages: []
+  #  - docker.io
 
   # -- Run arbitrary commands
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
-  runcmd:
-    - docker run -d -p 8080:80 nginx
+  runcmd: []
+  #  - docker run -d -p 8080:80 nginx
 
 ################################################################################
 # ____                  _             ___     ___
@@ -553,19 +558,19 @@ networkPolicy:
 # |_|   |_|  \___/|_.__/ \___||___/
 ################################################################################
 # -- set tieming and port number for liveness probe
-livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  tcpSocket:
-    port: 8080
-  timeoutSeconds: 10
+#  livenessProbe:
+#  initialDelaySeconds: 60
+#  periodSeconds: 10
+#  tcpSocket:
+#    port: 8080
+#  timeoutSeconds: 10
 
 # -- set tieming and port number for readiness probe
-readinessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  timeoutSeconds: 10
-  failureThreshold: 6
-  successThreshold: 1
-  httpGet:
-    port: 8080
+# readinessProbe:
+#   initialDelaySeconds: 60
+#   periodSeconds: 10
+#   timeoutSeconds: 10
+#   failureThreshold: 6
+#   successThreshold: 1
+#   httpGet:
+#     port: 8080
