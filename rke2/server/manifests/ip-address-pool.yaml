@@ -1,3 +1,4 @@
+---
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
@@ -5,8 +6,48 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 10.1.0.248/32
   - 192.168.2.70/32
   - 192.168.2.71/32
   - 192.168.2.72/32
   - 192.168.2.73/32
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: vpn
+  namespace: metallb-system
+spec:
+  addresses:
+  - 10.1.0.248/32
+  - 10.1.0.200/32
+  - 10.1.0.201/32
+  - 10.1.0.202/32
+  - 10.1.0.203/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: primary
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - primary
+  nodeSelectors:
+  - matchLabels:
+      kubernetes.io/hostname: scremlin
+  interfaces:
+   - enp11s0f1np1
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: vpn
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - vpn
+  nodeSelectors:
+  - matchLabels:
+      kubernetes.io/hostname: scremlin
+  interfaces:
+   - wg0
