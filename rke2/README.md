@@ -9,9 +9,13 @@ This is my installation process.
 
 - MetalLB remains the load-balancer of choice but is now paired with Cilium as the CNI running as a KubeProxy replacement. This choice was made due to Cilium's LB implementation not working well for non-contiguous IP ranges and to maintain continuity with Smol-K8s-Lab.
 
-- Ingress-nginx remains the choice for ingress ad cilium's ingress did not work without manual intervention and the use of the `acme.cert-manager.io/http01-edit-in-place` annotation when using cert-manager and letsencrypt. Plus, having access to the build-in ModSecurity WAF on Nginx + its synergy with Vouch-proxy is a highly desired.
+- Ingress-nginx remains the choice for ingress ad cilium's ingress did not work without manual intervention and the use of the `acme.cert-manager.io/http01-edit-in-place` annotation when using cert-manager and letsencrypt. Plus, having access to the built-in ModSecurity WAF on Nginx + its synergy with Vouch-proxy is a highly desired.
 
 - local-path-provisioner is provided for simplicity and quality of life but another file-system such as Longhorn is advised to be installed at the operators discretion.
+
+## Networking
+
+Each node is connected to a Wireguard VPN and has a virtual `wg0` ethernet device which Cilium is configured to attach to. MetalLB can then advertise IP's on both the internal `192.168.X.X` and/or Wireguard `10.1.X.X` network ranges. LoadBalancer services can be swapped between networks by setting the `metallb.universe.tf/address-pool` annotation. If the primary node needs to be brought down for maintenance, its Wireguard configuration may be moved to another node during that time to avoid long disruptions. Supporting real BGP is a future goal though.
 
 ## Install
 
