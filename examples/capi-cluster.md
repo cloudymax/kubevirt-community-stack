@@ -8,7 +8,7 @@ Install a cluster named "capi"
 helm install capi kubevirt/cluster-api-cluster \
 	--set "cluster.name=capi" \
 	--set "MachineTemplates.controlPlane.size=1" \
-	--set "MachineTemplates.workers.size=2" \
+	--set "MachineTemplates.workers.size=2"
 ```
 
 Use clusterctl to get the kubeconfig from a secret
