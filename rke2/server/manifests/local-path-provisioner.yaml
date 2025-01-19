@@ -142,13 +142,37 @@ data:
         "nodePathMap": [
                 {
                         "node": "DEFAULT_PATH_FOR_NON_LISTED_NODES",
-                        "paths": ["/opt/local-path-provisioner"]
+                        "paths": [
+                                "/var/lib/rancher/k3s/storage"
+                        ]
+                },
+                {
+                        "node": "bradley",
+                        "paths": [
+                                "/mnt/raid0",
+                                "/mnt/raid1",
+                                "/var/lib/rancher/k3s/storage"
+                        ]
+                },
+                {
+                        "node": "node0",
+                        "paths": [
+                                "/mnt/raid1",
+                                "/var/lib/rancher/k3s/storage"
+                        ]
+                },
+                {
+                        "node": "compufam",
+                        "paths": [
+                                "/mnt/raid1",
+                                "/var/lib/rancher/k3s/storage"
+                        ]
                 },
                 {
                         "node": "scremlin",
                         "paths": [
                                 "/mnt/raid1",
-                                "/opt/local-path-provisioner"
+                                "/var/lib/rancher/k3s/storage"
                         ]
                 }
         ]
