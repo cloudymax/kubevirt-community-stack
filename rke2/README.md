@@ -83,6 +83,8 @@ wget -O /var/lib/rancher/rke2/server/manifests/local-path-provisioner.yaml \
 
 ```bash
 curl -sfL https://get.rke2.io | sh -
+
+export INSTALL_RKE2_CHANNEL=v1.30.8+rke2r1
 systemctl enable rke2-server.service
 systemctl start rke2-server.service &
 journalctl -u rke2-server -f
