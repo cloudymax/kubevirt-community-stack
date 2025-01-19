@@ -18,8 +18,8 @@ spec:
     socketLB:
       hostNamespaceOnly: true
     bpf:
-      masquerade: true
-      hostLegacyRouting: true
+      masquerade: false
+      hostLegacyRouting: false
     l2announcements:
       enabled: false
     l7Proxy: false
