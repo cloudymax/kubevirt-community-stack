@@ -19,8 +19,9 @@ spec:
     routingMode: tunnel
     socketLB:
       hostNamespaceOnly: true
-    masquerade: false
-    hostLegacyRouting: false
+    bpf:
+      masquerade: true
+      hostLegacyRouting: false
     l2announcements:
       enabled: false
     l7Proxy: false
