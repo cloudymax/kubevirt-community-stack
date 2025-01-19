@@ -33,6 +33,8 @@ spec:
     devices: 
     - enp11s0f1np1
     - wg0
+    - enp6s0
+    - br0
     #k8sClientRateLimit:
     #  qps: 5
     #  burst: 10
