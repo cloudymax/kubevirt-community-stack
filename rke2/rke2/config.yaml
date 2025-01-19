@@ -15,6 +15,6 @@ tls-san:
   - 192.168.2.70
   - 10.1.0.248
 # Required for l2 IP Announcement
-disable-kube-proxy: true
+# disable-kube-proxy: true
 kubelet-arg:
 - config=/etc/kubernetes/kubelet.yaml
