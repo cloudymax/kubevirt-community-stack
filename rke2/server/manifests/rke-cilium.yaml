@@ -10,11 +10,11 @@ spec:
       enabled: true
     k8sServiceHost: 10.1.0.248
     k8sServicePort: 6443
-    kubeProxyReplacement: strict
+    kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    autoDirectNodeRoutes: true
-    ipv4NativeRoutingCIDR: 100.64.0.0/17
-    routingMode: native
+    autoDirectNodeRoutes: false
+    # ipv4NativeRoutingCIDR: 100.64.0.0/17
+    routingMode: tunnel
     socketLB:
       hostNamespaceOnly: true
     bpf:
@@ -35,7 +35,7 @@ spec:
       qps: 5
       burst: 10
     operator:
-      replicas: 1
+      replicas: 2
     encryption:
       enabled: false
       type: wireguard
