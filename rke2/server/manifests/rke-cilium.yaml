@@ -13,8 +13,8 @@ spec:
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     autoDirectNodeRoutes: false
-    # ipv4NativeRoutingCIDR: 100.64.0.0/17
-    routingMode: tunnel
+    ipv4NativeRoutingCIDR: 100.64.0.0/17
+    routingMode: native
     socketLB:
       hostNamespaceOnly: true
     bpf:
