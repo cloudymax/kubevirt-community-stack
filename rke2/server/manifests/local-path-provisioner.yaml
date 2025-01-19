@@ -142,15 +142,13 @@ data:
         "nodePathMap": [
                 {
                         "node": "DEFAULT_PATH_FOR_NON_LISTED_NODES",
-                        "paths": [
-                                "/var/lib/rancher/k3s/storage"
-                        ]
+                        "paths": ["/opt/local-path-provisioner"]
                 },
                 {
                         "node": "scremlin",
                         "paths": [
                                 "/mnt/raid1",
-                                "/var/lib/rancher/k3s/storage"
+                                "/opt/local-path-provisioner"
                         ]
                 }
         ]
