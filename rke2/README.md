@@ -97,3 +97,90 @@ chown friend:friend /home/friend/.config/kube/config && \
 export KUBECONFIG=/home/friend/.config/kube/config
 ```
 
+## Adding more nodes
+
+1. Get the node token from the control-plane
+
+```bash
+sudo cat /var/lib/rancher/rke2/server/node-token
+```
+
+2. Create the RKE2 config for the agent
+
+```bash
+mkdir -p /etc/rancher/rke2/
+
+cat <<EOF > /etc/rancher/rke2/config.yaml
+# /etc/rancher/k3s/config.yaml
+# /etc/rancher/rke2/config.yaml
+---
+write-kubeconfig-mode: "0600"
+server: https://192.168.2.70:9345
+token: K1053e95ddccfd6f2cfab02bba29e8a419db70d44f96d1092b3ced37b31fab9271c::server:47f5d2e07a3a22e54b76f7c33140543c
+node-ip: 192.168.2.36
+bind-address: 192.168.2.36
+node-external-ip: 192.168.2.36
+kubelet-arg:
+- config=/etc/kubernetes/kubelet.yaml
+EOF
+```
+
+3. Create the kubelet config
+
+```bash
+mkdir -p /etc/kubernetes
+cat <<EOF > /etc/kubernetes/kubelet.yaml 
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cpuManagerReconcilePeriod: 0s
+cpuManagerPolicy: static
+cpuManagerPolicyOptions:
+  full-pcpus-only: "true"
+  distribute-cpus-across-numa: "true"
+  align-by-socket: "true"
+kubeReserved:
+  cpu: "1"
+  memory: "2Gi"
+  ephemeral-storage: "1Gi"
+systemReserved:
+  cpu: "500m"
+  memory: "1Gi"
+  ephemeral-storage: "1Gi"
+evictionHard:
+  memory.available: "500Mi"
+  nodefs.available: "10%"
+featureGates:
+  CPUManager: true
+  CPUManagerPolicyOptions: true
+  CPUManagerPolicyAlphaOptions: true
+  CPUManagerPolicyBetaOptions: true
+node-labels:
+  node-role.kubernetes.io/worker: true
+node-taints: 
+  node-role.kubernetes.io/worker: "NoSchedule"
+EOF
+```
+
+4. Download and run the installation script
+
+```bash
+export RKE2_VERSION="v1.30.8+rke2r1"
+curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION=${RKE2_VERSION} sh -
+systemctl enable rke2-agent.service
+systemctl start rke2-agent.service &
+journalctl -u rke2-agent -f
+```
+
+## Cleanup
+
+- Delete RKE2 on workers and the control-plane
+
+```bash
+sudo rke2-uninstall.sh
+```
+
+- If only deleting a worker, remove its node secret from the control-plane
+
+```
+kubectl -n kube-system delete secrets bradley.node-password.rke2
+```
