@@ -82,9 +82,8 @@ wget -O /var/lib/rancher/rke2/server/manifests/local-path-provisioner.yaml \
 3. Download RKE2 and start cluster
 
 ```bash
-curl -sfL https://get.rke2.io | sh -
-
-export INSTALL_RKE2_CHANNEL=v1.30.8+rke2r1
+export RKE2_VERSION="v1.30.8+rke2r1 "
+curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=${RKE2_VERSION} sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service &
 journalctl -u rke2-server -f
