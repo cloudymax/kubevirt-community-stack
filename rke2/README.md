@@ -7,7 +7,7 @@ This is my installation process.
 
 - [RKE2](https://docs.rke2.io/) is used as the kubernetes distro instead of [k3s](https://docs.k3s.io/) because it is a "full-fat" distro that is suitable for enterprise deployments. This choice was made because we wanted to test our K8s systems beyond the scale of just a "Lab" with a few nodes.
 
-- We chose [Cilium](https://cilium.io/) as our CNI and run it in [KubeProxyReplacement](https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/) mode.
+- We chose [Cilium](https://cilium.io/) as our CNI and are working on running it in [KubeProxyReplacement](https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/) mode. There are currently issues with this where DNS works properly in single-node setups but not in multi-node setups.
 
 - [MetalLB](https://metallb.io/) remains our load-balancer of choice. This choice was made due to Cilium's LB implementation not working well for non-contiguous IP ranges (https://github.com/cilium/cilium/issues/28637) Using MetalLb also allows us to maintain continuity with Smol-K8s-Lab, and leaves room to impliment BGP routing at a later date.
 
