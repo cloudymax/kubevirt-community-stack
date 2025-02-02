@@ -97,6 +97,12 @@ chown friend:friend /home/friend/.config/kube/config && \
 export KUBECONFIG=/home/friend/.config/kube/config
 ```
 
+5. (GPUs) Install nvidia device exporter
+
+```bash
+kubecl apply -f https://raw.githubusercontent.com/NVIDIA/kubevirt-gpu-device-plugin/refs/heads/master/manifests/nvidia-kubevirt-gpu-device-plugin.yaml
+```
+
 ## Adding more nodes
 
 1. Get the node token from the control-plane
