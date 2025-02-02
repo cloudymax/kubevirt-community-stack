@@ -7,10 +7,10 @@ cni:
 disable:
   - rke2-ingress-nginx
 # Internal Network IP
-node-ip: 192.168.2.70
-bind-address: 192.168.2.70
-node-external-ip: 192.168.2.70
-advertise-address: 192.168.2.70
+node-ip: 10.1.0.248
+bind-address: 10.1.0.248
+node-external-ip: 10.1.0.248
+advertise-address: 10.1.0.248
 tls-san:
   - 192.168.2.70
   - 10.1.0.248
