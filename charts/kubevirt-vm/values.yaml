@@ -360,6 +360,14 @@ cloudinit:
   # -- image version
   image: deserializeme/kv-cloud-init:v0.0.1
 
+  # -- Set up mount points. mounts contains a list of lists.
+  # The inner list contains entries for an /etc/fstab line
+  mounts: []
+  swap:
+    enabled: false
+    filename: /swapfile
+    size: 1G
+    maxsize: 1G
   # -- Choose weather to create a service-account or not. Once a SA has been created
   # you should set this to false on subsequent runs.
   serviceAccount:
