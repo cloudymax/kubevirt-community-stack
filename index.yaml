@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   cloud-init:
   - apiVersion: v2
+    created: "2025-02-06T20:55:44.095854858Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: ed6001a836f1a0a649ea750eb43c7723c218d0ecfdbd8254f614e07a5f188789
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-0.2.9/cloud-init-0.2.9.tgz
+    version: 0.2.9
+  - apiVersion: v2
     created: "2024-12-23T14:20:18.867121504Z"
     description: A Helm chart that generates cloud-init config files
     digest: 258a3e91743dbd019db6720b8279ceb34fc3454372832d7946d624fabf68d2be
@@ -120,6 +131,25 @@ entries:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/cloud-init-0.0.1/cloud-init-0.0.1.tgz
     version: 0.0.1
   cluster-api-cluster:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2025-02-06T20:55:44.244961894Z"
+    dependencies:
+    - alias: workers
+      name: kubevirt-vm
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.4.10
+    - alias: control
+      name: kubevirt-vm
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.4.10
+    description: Cluster API Cluster using Kubevirt and Kubeadm
+    digest: 7275b29f548d234ee92b819783c574c0e14cf7acba612216dcb2361b429f21da
+    name: cluster-api-cluster
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cluster-api-cluster-0.0.1/cluster-api-cluster-0.0.1.tgz
+    version: 0.0.1
   - apiVersion: v2
     appVersion: 0.0.0
     created: "2025-01-07T10:15:39.611761885Z"
@@ -1447,4 +1477,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-01-07T10:15:39.612153823Z"
+generated: "2025-02-06T20:55:44.479075321Z"
