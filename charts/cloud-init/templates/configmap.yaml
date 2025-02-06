@@ -15,6 +15,16 @@ data:
     network:
         {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.mounts }}
+    mounts:
+        {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if eq .Values.swap.enabled true }}
+    swap:
+      filesname: {{ .Values.swap.filename }}
+      size: {{ .Values.swap.size }}
+      maxsize: {{ .Values.swap.maxsize }}
+    {{- end }}
     {{- with .Values.groups }}
     groups:
         {{- toYaml . | nindent 4 }}

@@ -14,6 +14,17 @@ serviceAccount:
   name: cloud-init-sa
   existingServiceAccountName: "cloud-init-sa"
 
+# Set up mount points. mounts contains a list of lists.
+# The inner list contains entries for an /etc/fstab line
+mounts: []
+
+# creates a 2 GB swap file at /swapfile using human-readable values.
+swap:
+  enabled: false
+  filename: /swapfile
+  size: 1G
+  maxsize: 1G
+
 # -- Dont recreate script configmap. Set to true when keeping multiple
 # cloud-init secrets in the same namespace
 existingConfigMap: false
