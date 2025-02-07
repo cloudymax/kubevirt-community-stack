@@ -29,66 +29,63 @@ Cloud-Init is module-based and now has a very large ecosystem of supported sofwa
   3. PRs are welcome but you must provide proof of testing until such a time as automated tests can be written.
 
 
-|symbol|meaning|
+|Module|Status|
 |:--|:--|
-|Checked box | Supported|
-|Empty Box | Not Supported|
-|Checked Box + * | Functionality availabe via `write_files`|
 
-- [ ] Ansible
-- [ ] APK Configure
-- [ ] Apt Configure
-- [ ] Apt Pipelining
-- [x] Bootcmd
-- [ ] Byobu
-- [ ] CA Certificates
-- [ ] Chef
-- [ ] Disable EC2 Instance Metadata Service
-- [ ] Disk Setup
-- [ ] Fan
-- [ ] Final Message
-- [ ] Growpart
-- [ ] GRUB dpkg
-- [ ] Install Hotplug
-- [x] Keyboard*
-- [ ] Keys to Console
-- [ ] Landscape
-- [x] Locale*
-- [ ] LXD
-- [ ] MCollective
-- [x] Mounts
-- [x] NTP*
-- [ ] Package Update Upgrade Install
-- [ ] Phone Home
-- [ ] Power State Change
-- [ ] Puppet
-- [ ] Resizefs
-- [ ] Resolv Conf
-- [ ] Red Hat Subscription
-- [ ] Rsyslog
-- [x] Runcmd
-- [ ] Salt Minion
-- [x] Scripts Per Boot*
-- [x] Scripts Per Instance*
-- [x] Scripts Per Once*
-- [x] Scripts User*
-- [x] Scripts Vendor*
-- [ ] Seed Random
-- [x] Set Hostname
-- [ ] Set Passwords
-- [ ] Snap
-- [ ] Spacewalk
-- [ ] SSH
-- [ ] SSH AuthKey Fingerprints
-- [ ] SSH Import ID
-- [ ] Timezone
-- [ ] Ubuntu Drivers
-- [ ] Ubuntu Autoinstall
-- [ ] Ubuntu Pro
-- [ ] Update Etc Hosts
-- [ ] Update Hostname
-- [x] Users and Groups
-- [x] Wireguard
-- [x] Write Files
-- [ ] Yum Add Repo
-- [ ] Zypper Add Repo
+|Ansible||
+|APK Configure||
+|Apt Configure||
+|Apt Pipelining||
+|Bootcmd||
+|Byobu||
+|CA Certificates||
+|Chef||
+|Disable EC2 Instance Metadata Service||
+|Disk Setup||
+|Fan||
+|Final Message||
+|Growpart||
+|GRUB dpkg||
+|Install Hotplug||
+|Keyboard||
+|Keys to Console||
+|Landscape||
+|Locale||
+|LXD||
+|MCollective||
+|Mounts||
+|NTP||
+|Package Update Upgrade Install||
+|Phone Home||
+|Power State Change||
+|Puppet||
+|Resizefs||
+|Resolv Conf||
+|Red Hat Subscription||
+|Rsyslog||
+|Runcmd||
+|Salt Minion||
+|Scripts Per Boot||
+|Scripts Per Instance||
+|Scripts Per Once||
+|Scripts User||
+|Scripts Vendor||
+|Seed Random||
+|Set Hostname||
+|Set Passwords||
+|Snap||
+|Spacewalk||
+|SSH||
+|SSH AuthKey Fingerprints||
+|SSH Import ID||
+|Timezone||
+|Ubuntu Drivers||
+|Ubuntu Autoinstall||
+|Ubuntu Pro||
+|Update Etc Hosts||
+|Update Hostname||
+|Users and Groups||
+|Wireguard||
+|Write Files||
+|Yum Add Repo||
+|Zypper Add Repo||
