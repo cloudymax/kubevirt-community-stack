@@ -1,0 +1,90 @@
+## Operating Systems which Support Cloud-init
+
+- AlmaLinux
+- Alpine Linux
+- AOSC OS
+- Arch Linux
+- CentOS
+- CloudLinux
+- Container-Optimized OS
+- Debian
+- DragonFlyBSD
+- EuroLinux
+- Fedora
+- FreeBSD
+- Gentoo
+- MarinerOS
+- MIRACLE LINUX
+- NetBSD
+- OpenBSD
+- openEuler
+- OpenCloudOS
+- OpenMandriva
+- PhotonOS
+- Red Hat Enterprise Linux
+- Rocky
+- SLES/openSUSE
+- TencentOS
+- Ubuntu
+- Virtuozzo
+
+
+## Module List
+
+- [ ] Ansible
+- [ ] APK Configure
+- [ ] Apt Configure
+- [ ] Apt Pipelining
+- [x] Bootcmd
+- [ ] Byobu
+- [ ] CA Certificates
+- [ ] Chef
+- [ ] Disable EC2 Instance Metadata Service
+- [ ] Disk Setup
+- [ ] Fan
+- [ ] Final Message
+- [ ] Growpart
+- [ ] GRUB dpkg
+- [ ] Install Hotplug
+- [ ] Keyboard
+- [ ] Keys to Console
+- [ ] Landscape
+- [ ] Locale
+- [ ] LXD
+- [ ] MCollective
+- [x] Mounts
+- [ ] NTP
+- [ ] Package Update Upgrade Install
+- [ ] Phone Home
+- [ ] Power State Change
+- [ ] Puppet
+- [ ] Resizefs
+- [ ] Resolv Conf
+- [ ] Red Hat Subscription
+- [ ] Rsyslog
+- [x] Runcmd
+- [ ] Salt Minion
+- [ ] Scripts Per Boot
+- [ ] Scripts Per Instance
+- [ ] Scripts Per Once
+- [ ] Scripts User
+- [ ] Scripts Vendor
+- [ ] Seed Random
+- [x] Set Hostname
+- [ ] Set Passwords
+- [ ] Snap
+- [ ] Spacewalk
+- [ ] SSH
+- [ ] SSH AuthKey Fingerprints
+- [ ] SSH Import ID
+- [ ] Timezone
+- [ ] Ubuntu Drivers
+- [ ] Ubuntu Autoinstall
+- [ ] Ubuntu Pro
+- [ ] Update Etc Hosts
+- [ ] Update Hostname
+- [x] Users and Groups
+- [x] Wireguard
+- [x] Write Files
+- [ ] Yum Add Repo
+- [ ] Zypper Add Repo
