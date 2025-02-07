@@ -1,35 +1,39 @@
 ## Operating Systems which Support Cloud-init
 
-- AlmaLinux
-- Alpine Linux
-- AOSC OS
-- Arch Linux
-- CentOS
-- CloudLinux
-- Container-Optimized OS
-- Debian
-- DragonFlyBSD
+Cloud-init is supported across a wide-range of OS's though I do not and cannot test all of them.
+I only test on Ubuntu Server and Debian cloud-images.
+
+Below is a list of all distros Cloud-init says it supports:
+
+- AlmaLinux, Alpine Linux, AOSC OS, Arch Linux
+- CentOS, CloudLinux, Container-Optimized OS
+- Debian, DragonFlyBSD
 - EuroLinux
-- Fedora
-- FreeBSD
+- Fedora, FreeBSD
 - Gentoo
-- MarinerOS
-- MIRACLE LINUX
+- MarinerOS, MIRACLE LINUX
 - NetBSD
-- OpenBSD
-- openEuler
-- OpenCloudOS
-- OpenMandriva
+- OpenBSD, openEuler, OpenCloudOS, OpenMandriva
 - PhotonOS
-- Red Hat Enterprise Linux
-- Rocky
+- Red Hat Enterprise Linux, Rocky
 - SLES/openSUSE
 - TencentOS
 - Ubuntu
 - Virtuozzo
 
-
 ## Module List
+
+Cloud-Init is module-based and now has a very large ecosystem of supported sofware, please be aware of the following:
+  1. I do not aim to support all of them and only add the ones I need as I encounter a need for them.
+  2. Some modules are somewat redundant as their functionality can be fully or mostly replaced by using the `write_files` module.
+  3. PRs are welcome but you must provide proof of testing until such a time as automated tests can be written.
+
+
+|symbol|meaning|
+|:--|:--|
+|Checked box | Supported|
+|Empty Box | Not Supported|
+|Checked Box + * | Functionality availabe via `write_files`|
 
 - [ ] Ansible
 - [ ] APK Configure
@@ -46,14 +50,14 @@
 - [ ] Growpart
 - [ ] GRUB dpkg
 - [ ] Install Hotplug
-- [ ] Keyboard
+- [x] Keyboard*
 - [ ] Keys to Console
 - [ ] Landscape
-- [ ] Locale
+- [x] Locale*
 - [ ] LXD
 - [ ] MCollective
 - [x] Mounts
-- [ ] NTP
+- [x] NTP*
 - [ ] Package Update Upgrade Install
 - [ ] Phone Home
 - [ ] Power State Change
@@ -64,11 +68,11 @@
 - [ ] Rsyslog
 - [x] Runcmd
 - [ ] Salt Minion
-- [ ] Scripts Per Boot
-- [ ] Scripts Per Instance
-- [ ] Scripts Per Once
-- [ ] Scripts User
-- [ ] Scripts Vendor
+- [x] Scripts Per Boot*
+- [x] Scripts Per Instance*
+- [x] Scripts Per Once*
+- [x] Scripts User*
+- [x] Scripts Vendor*
 - [ ] Seed Random
 - [x] Set Hostname
 - [ ] Set Passwords
