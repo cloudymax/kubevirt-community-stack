@@ -21,7 +21,7 @@ Kubevirt Community Stack
 ## Who is this for:
 
 The Kubevirt-Community-Stack may be of interest if you:
-- operate one or more physical computers which you would like to split into smaller virtual machiens.
+- operate one or more physical computers which you would like to split into smaller virtual machines.
 - are already running kubernetes to orchestrate container workloads
 - are already in the <a href="https://argoproj.github.io/cd/">ArgoCD</a> or <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> ecosystem and/or work primarily with some other Helm-based tooling.
 - want/need fully-featured VMs for things like hardware emulation, hardware-passthrough, Virtual Desktops, vGPU, etc... which are not suppoted by Micro-VMs such as <a href="https://firecracker-microvm.github.io/">Firecracker</a>.
