@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.4.12](https://img.shields.io/badge/Version-0.4.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.13](https://img.shields.io/badge/Version-0.4.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -20,7 +20,7 @@ Configure a virtual machine for use with Kubevirt
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cloudinit | object | `{"boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"enabled":true,"envsubst":false,"existingConfigMap":false,"extraEnvVars":[],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","mounts":[],"namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
+| cloudinit | object | `{"boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"disk_setup":{},"enabled":true,"envsubst":false,"existingConfigMap":false,"extraEnvVars":[],"fs_setup":[],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","mounts":[],"namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
 | cloudinit.boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | cloudinit.ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
 | cloudinit.debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
@@ -38,6 +38,7 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | cloudinit.secret_name | string | `"test-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | cloudinit.serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
+| cloudinit.swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
 | cloudinit.users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | cloudinit.users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
 | cloudinit.users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |

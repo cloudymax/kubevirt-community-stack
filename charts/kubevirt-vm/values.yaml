@@ -360,14 +360,6 @@ cloudinit:
   # -- image version
   image: deserializeme/kv-cloud-init:v0.0.1
 
-  # -- Set up mount points. mounts contains a list of lists.
-  # The inner list contains entries for an /etc/fstab line
-  mounts: []
-  swap:
-    enabled: false
-    filename: /swapfile
-    size: 1G
-    maxsize: 1G
   # -- Choose weather to create a service-account or not. Once a SA has been created
   # you should set this to false on subsequent runs.
   serviceAccount:
@@ -375,6 +367,41 @@ cloudinit:
     name: cloud-init-sa
     # Ignored is `create` set to true
     existingServiceAccountName: "cloud-init-sa"
+
+  # -- Set up mount points. mounts contains a list of lists.
+  # The inner list contains entries for an /etc/fstab line
+  mounts: []
+
+  # -- creates a swap file using human-readable values.
+  swap:
+    enabled: false
+    filename: /swapfile
+    size: 1G
+    maxsize: 1G
+
+  disk_setup: {}
+    # -- The name of the device.
+  #  - name: /dev/vdb
+  #    # -- This is a list of values, with the percentage of disk that
+  #    # the partition will take. When layout is “true”, it instructs cloud-init
+  #    # to single-partition the entire device. When layout is “false” it means
+  #    # “don’t partition” or “ignore existing partitioning”.
+  #    layout: true
+      # -- “false” is the default which means that the device will be checked for
+  #    # a partition table and/or filesystem. “true” is cowboy mode, no checks.
+  #    overwrite: false
+  #    # -- Supported options ate `gpt` and `mbr`
+  #    table_type: 'gpt'
+
+  fs_setup: []
+    # -- The device name.
+  #  - device: /dev/vdb
+  #    # -- The filesystem type. Supports ext{2,3,4} and vfat
+  #    filesystem: ext4
+  #    # -- The filesystem label to be used. If set to “None”, no label is used.
+  #    label: None
+  #    # -- Options are `auto|any`, `auto`, or `any`
+  #    partition: 'auto|any'
 
   # -- Dont recreate script configmap. Set to true when keeping multiple
   # cloud-init secrets in the same namespace
