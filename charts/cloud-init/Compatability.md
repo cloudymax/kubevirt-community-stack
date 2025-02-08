@@ -62,7 +62,7 @@ Cloud-Init is module-based and now has a very large ecosystem of supported sofwa
 |⭐️Resolv Conf| use write_files |
 |Red Hat Subscription| not planned |
 |Rsyslog| desired |
-|Runcmd| supported |
+|⭐️Runcmd| supported |
 |Salt Minion| not planned |
 |⭐️Scripts Per Boot| use write_files |
 |⭐️Scripts Per Instance| use write_files |
