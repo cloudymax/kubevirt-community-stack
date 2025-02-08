@@ -14,7 +14,7 @@ Kubevirt Community Stack
 </p>
 
 <p align="center">
-<i>This project is in an alpha state. It is functional but missing automated tests and is only partially documented.Some chart schemas may still change as more features are integrated.</i>
+<i>This project is in an alpha state. It is functional but missing automated tests and is only partially documented. Some chart schemas may still change as more features are integrated.</i>
   <br>
 </p>
 
