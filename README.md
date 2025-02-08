@@ -6,13 +6,18 @@ Kubevirt Community Stack
 </p>
 <p align=center>
   Create Kubevirt VMs via Helm <br>
-  for use with <a href="https://argoproj.github.io/cd/">ArgoCD</a>, <a href="https://argoproj.github.io/workflows/">Argo Workflows</a>, <a href="https://keda.sh/">KEDA</a>, <a href="https://cluster-api.sigs.k8s.io/">ClusterAPI</a>, <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> etc...<br><br>
-<i>This project is in an alpha state. It is functional but missing automated tests and is only partially documented.<br>
-  Some chart schemas may still change as more features are integrated.</i>
+  for use with <a href="https://argoproj.github.io/cd/">ArgoCD</a>, <a href="https://argoproj.github.io/workflows/">Argo Workflows</a>, <a href="https://keda.sh/">KEDA</a>, <a href="https://cluster-api.sigs.k8s.io/">ClusterAPI</a>, <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> etc...
+<br>
+
+<p align="center">
+  <img width="500" src="https://github.com/user-attachments/assets/89a74735-52d9-43c3-ba90-25b3e1c2923d">
+</p>
+
+<p align="center">
+<i>This project is in an alpha state. It is functional but missing automated tests and is only partially documented.Some chart schemas may still change as more features are integrated.</i>
   <br>
 </p>
-<br>
-  
+
 ## Who is this for:
 
 The Kubevirt-Community-Stack may be of interest if you:
