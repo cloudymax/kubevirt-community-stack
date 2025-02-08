@@ -40,7 +40,7 @@ Cloud-Init is module-based and now has a very large ecosystem of supported sofwa
 |CA Certificates| desired |
 |Chef| not planned |
 |Disable EC2 Instance Metadata Service| not planned |
-|Disk Setup| desired |
+|⭐️Disk Setup| supported |
 |Fan| not planned |
 |Final Message| desired |
 |Growpart| desired |
