@@ -27,6 +27,8 @@ The Kubevirt-Community-Stack may be of interest if you:
 - want/need fully-featured VMs for things like hardware emulation, hardware-passthrough, Virtual Desktops, vGPU, etc... which are not suppoted by Micro-VMs such as <a href="https://firecracker-microvm.github.io/">Firecracker</a>.
 - want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
 - want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
+- desire tight integration with cloud-init while respecting git-ops best practices
+- prefer to use cloud-init for system configuration over ansible & packer based workflows
 
 ## Component charts
 
