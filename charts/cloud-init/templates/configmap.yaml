@@ -25,6 +25,17 @@ data:
       size: {{ .Values.swap.size }}
       maxsize: {{ .Values.swap.maxsize }}
     {{- end }}
+    {{- range $reg, $props := .Values.disk_setup }}
+    disk_setup:
+      {{ $props.name }}:
+        layout: {{ $props.layout }}
+        overwrite: {{ $props.overwrite }}
+        table_type: {{ $props.table_type }}
+    {{- end }}
+    {{- with .Values.fs_setup }}
+    fs_setup:
+        {{- toYaml . | nindent 4 }}
+    {{- end }}
     {{- with .Values.groups }}
     groups:
         {{- toYaml . | nindent 4 }}
