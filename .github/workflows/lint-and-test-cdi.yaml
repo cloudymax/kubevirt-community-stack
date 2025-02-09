@@ -47,7 +47,7 @@ jobs:
         run: |
           kubectl create namespace kubevirt
           kubectl create namespace cdi
-          kubectl label namespaces cdi app.kubernetes.io/managed-by=helm --overwrite=true
+          kubectl label namespaces cdi app.kubernetes.io/managed-by=Helm --overwrite=true
           kubectl label namespaces cdi meta.helm.sh/release-name=cdi --overwrite=true
           kubectl label namespaces cdi meta.helm.sh/release-namespace=cdi --overwrite=true
           helm install kubevirt kubevirt/kubevirt \
