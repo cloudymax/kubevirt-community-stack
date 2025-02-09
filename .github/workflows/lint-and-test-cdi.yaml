@@ -57,6 +57,7 @@ jobs:
           ct install \
           --target-branch ${{ github.event.repository.default_branch }} \
           --helm-extra-set-args '' \
-          --charts charts/kubevirt-cdi
+          --charts charts/kubevirt-cdi \
+          --namespace cdi
         env:
           changed: true
