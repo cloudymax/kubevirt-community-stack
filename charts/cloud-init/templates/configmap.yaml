@@ -73,7 +73,9 @@ data:
       {{- end}}
       {{- if $props.content }}
         content: |-
-          {{ $props.content}}
+        {{- with $props.content }}
+          {{- . | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- end }}
     {{- end }}
