@@ -34,7 +34,7 @@ jobs:
         run: |
           ct lint \
           --target-branch ${{ github.event.repository.default_branch }} \
-          --chart-dirs charts/cloud-init
+          --charts charts/cloud-init
         env:
           changed: true
 
@@ -49,6 +49,6 @@ jobs:
           ct install \
           --target-branch ${{ github.event.repository.default_branch }} \
           --helm-extra-set-args '' \
-          --chart-dirs charts/cloud-init
+          --charts charts/cloud-init
         env:
           changed: true
