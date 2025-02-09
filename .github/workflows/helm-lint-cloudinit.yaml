@@ -35,6 +35,8 @@ jobs:
           ct lint \
           --target-branch ${{ github.event.repository.default_branch }} \
           --chart-dirs charts/cloud-init
+        env:
+          changed: true
 
       - uses: debianmaster/actions-k3s@master
         id: k3s
@@ -48,3 +50,5 @@ jobs:
           --target-branch ${{ github.event.repository.default_branch }} \
           --helm-extra-set-args '' \
           --chart-dirs charts/cloud-init
+        env:
+          changed: true
