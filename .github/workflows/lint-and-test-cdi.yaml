@@ -46,7 +46,6 @@ jobs:
       - name: Install helm deps
         run: |
           kubectl create namespace kubevirt
-          kubectl create namespace cdi
           helm install kubevirt kubevirt/kubevirt \
             --namespace kubevirt \
             --wait
