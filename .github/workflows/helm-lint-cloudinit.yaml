@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
