@@ -1,4 +1,4 @@
-name: Lint and Test Chart
+name: Lint & Test Cloudinit
 
 on: 
   workflow_dispatch:
