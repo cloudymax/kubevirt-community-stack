@@ -143,29 +143,13 @@ data:
                 {
                         "node": "bradley",
                         "paths": [
-                                "/mnt/raid1",
-                                "/opt/local-path-provisioner"
-                        ]
-                },
-                {
-                        "node": "node0",
-                        "paths": [
-                                "/mnt/raid1",
-                                "/opt/local-path-provisioner"
-                        ]
-                },
-                {
-                        "node": "compufam",
-                        "paths": [
-                                "/mnt/raid1",
                                 "/opt/local-path-provisioner"
                         ]
                 },
                 {
                         "node": "scremlin",
                         "paths": [
-                                "/mnt/raid1",
-                                "/opt/local-path-provisioner"
+                                "/mnt/raid1"
                         ]
                 }
         ]
