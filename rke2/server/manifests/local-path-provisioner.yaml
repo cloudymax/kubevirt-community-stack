@@ -143,7 +143,6 @@ data:
                 {
                         "node": "bradley",
                         "paths": [
-                                "/mnt/raid0",
                                 "/mnt/raid1",
                                 "/opt/local-path-provisioner"
                         ]
