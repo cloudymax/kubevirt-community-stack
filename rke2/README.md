@@ -123,9 +123,9 @@ cat <<EOF > /etc/rancher/rke2/config.yaml
 write-kubeconfig-mode: "0600"
 server: https://192.168.2.70:9345
 token: K1053e95ddccfd6f2cfab02bba29e8a419db70d44f96d1092b3ced37b31fab9271c::server:47f5d2e07a3a22e54b76f7c33140543c
-node-ip: 192.168.2.36
-bind-address: 192.168.2.36
-node-external-ip: 192.168.2.36
+node-ip: 192.168.2.71
+bind-address: 192.168.2.71
+node-external-ip: 192.168.2.71
 kubelet-arg:
 - config=/etc/kubernetes/kubelet.yaml
 EOF
