@@ -6,28 +6,14 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
-    #ipam:
-    #  mode: "kubernetes"
+    # Required for multus
+    manifests:
+      dhcpDaemonSet: true
+    cni:
+      exclusive: false
+    # Tells Cilium what the main IP is
     k8sServiceHost: 192.168.2.70
     k8sServicePort: 6443
-    #kubeProxyReplacement: true
-    #localRedirectPolicy: true
-    #kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    #enableIPv4Masquerade: false
-    #autoDirectNodeRoutes: false
-    # ipv4NativeRoutingCIDR: 100.64.0.0/17
-    #routingMode: tunnel
-    #socketLB:
-    #  hostNamespaceOnly: true
-    #bpf:
-    #  masquerade: false
-    #  hostLegacyRouting: false
-    #l2announcements:
-    #  enabled: false
-    #l7Proxy: false
-    #ingressController:
-    #  enabled: false
-    #  loadbalancerMode: shared
     externalIPs:
       enabled: true
     devices: 
@@ -35,14 +21,8 @@ spec:
     - wg0
     - enp6s0
     - br0
-    #k8sClientRateLimit:
-    #  qps: 5
-    #  burst: 10
     operator:
       replicas: 2
-    #encryption:
-    #  enabled: false
-    #  type: wireguard
     hubble:
       enabled: true
       relay:
