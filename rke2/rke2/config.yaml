@@ -3,6 +3,7 @@
 ---
 write-kubeconfig-mode: "0600"
 cni:
+  - multus
   - cilium
 disable:
   - rke2-ingress-nginx
