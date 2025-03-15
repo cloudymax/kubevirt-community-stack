@@ -17,10 +17,11 @@ This is my installation process.
 
 ## Networking
 
-- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enabled via RKE2 configuration and allows attaching additional network interfaces to pod using a [`NetworkAttachmentDefinition`](https://github.com/cloudymax/kubevirt-community-stack/tree/main/rke2/networkAttachmentDefinitions). Example here: https://github.com/cloudymax/kubevirt-community-stack/blob/main/examples/pod-with-multus.yaml
+- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enabled via RKE2 configuration and allows attaching additional network interfaces to pod using a [`NetworkAttachmentDefinition`](https://github.com/cloudymax/kubevirt-community-stack/tree/main/rke2/networkAttachmentDefinitions). Example [here](https://github.com/cloudymax/kubevirt-community-stack/blob/main/examples/pod-with-multus.yaml)
+
 - Nodes are connected to a [Wireguard](https://www.wireguard.com/) VPN (we are using [Netmaker](https://www.netmaker.io/)).
   
-- Each node has a virtual `wg0` ethernet device which Cilium is configured to attach to.
+- Each node has a virtual `wg0` ethernet device which Cilium may be configured to attach to.
 
 - MetalLB can then advertise IP's on both the internal `192.168.X.X` and/or Wireguard `10.1.X.X` network ranges by configuring `L2Advertisement` resources as described [here](https://metallb.io/configuration/_advanced_l2_configuration/).
 
