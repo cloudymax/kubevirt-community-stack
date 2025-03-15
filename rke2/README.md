@@ -17,7 +17,7 @@ This is my installation process.
 
 ## Networking
 
-- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enabled via RKE2 configuration and allows attaching additional network interfaces to pod using a `NetworkAttachmentDefinition`.
+- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enabled via RKE2 configuration and allows attaching additional network interfaces to pod using a [`NetworkAttachmentDefinition`](https://github.com/cloudymax/kubevirt-community-stack/tree/main/rke2/networkAttachmentDefinitions).
 
 - Nodes are connected to a [Wireguard](https://www.wireguard.com/) VPN (we are using [Netmaker](https://www.netmaker.io/)).
   
