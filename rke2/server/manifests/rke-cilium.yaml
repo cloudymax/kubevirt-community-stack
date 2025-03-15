@@ -7,8 +7,6 @@ metadata:
 spec:
   valuesContent: |-
     # Required for multus
-    manifests:
-      dhcpDaemonSet: true
     cni:
       exclusive: false
     # Tells Cilium what the main IP is
