@@ -77,6 +77,9 @@ wget -O /var/lib/rancher/rke2/server/manifests/nginx-hello.yaml \
 
 wget -O /var/lib/rancher/rke2/server/manifests/local-path-provisioner.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/local-path-provisioner.yaml"
+
+wget -O /var/lib/rancher/rke2/server/manifests/multus-config.yaml \
+    "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/multus-config.yaml"
 ```
 
 3. Download RKE2 and start cluster
