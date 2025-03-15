@@ -17,6 +17,8 @@ This is my installation process.
 
 ## Networking
 
+- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enabled via RKE2 configuration and allows attaching additional network interfaces to pod using a `NetworkAttachmentDefinition`.
+
 - Nodes are connected to a [Wireguard](https://www.wireguard.com/) VPN (we are using [Netmaker](https://www.netmaker.io/)).
   
 - Each node has a virtual `wg0` ethernet device which Cilium is configured to attach to.
@@ -28,9 +30,6 @@ This is my installation process.
 - If the primary node needs to be brought down for maintenance, its Wireguard configuration may be moved to another node during that time to avoid long disruptions.
 
 - Supporting real BGP is a future goal.
-
-- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enables via RKE2 configuration and allows attaching additional network interfaces to pod using a `NetworkAttachmentDefinition`.
-
 
 ## Why we don't recommend Longhorn (yet)
 
