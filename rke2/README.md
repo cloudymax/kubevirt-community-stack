@@ -29,6 +29,8 @@ This is my installation process.
 
 - Supporting real BGP is a future goal.
 
+- [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is enables via RKE2 configuration and allows attaching additional network interfaces to pod using a `NetworkAttachmentDefinition`.
+
 
 ## Why we don't recommend Longhorn (yet)
 
