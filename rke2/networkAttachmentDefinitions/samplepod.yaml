@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: samplepod
+  namespace: kubevirt
+  annotations:
+    k8s.v1.cni.cncf.io/networks: "bridge-dhcp"
+spec:
+  dnsPolicy: "Default"
+  containers:
+  - name: samplepod
+    command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: debian
+    volumeMounts:
+      - name: podinfo
+        mountPath: /etc/podinfo
+  volumes:
+    - name: podinfo
+      downwardAPI:
+        items:
+          - path: "labels"
+            fieldRef:
+              fieldPath: metadata.labels
+          - path: "annotations"
+            fieldRef:
+              fieldPath: metadata.annotations
