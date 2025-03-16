@@ -13,8 +13,7 @@ spec:
         "type": "dhcp",
          "request": [
            {
-             "skipDefault": true,
-              "option": "subnet-mask"
+             "skipDefault": true
            }
          ]
       }
