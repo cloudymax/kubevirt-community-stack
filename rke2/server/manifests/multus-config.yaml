@@ -14,20 +14,8 @@ spec:
       cni_conf:
         confDir: /etc/cni/net.d
         binDir: /opt/cni/bin
-        namespaceIsolation: true
-        globalNamespaces: default
-        #skipMultusBinaryCopy: false
-        #readinessIndicatorFile: ""
-        multusConfFile: auto #or specify a file to be copied on each node
-        #The following options can be used only when multusConfFile=auto
-        #multusAutoconfigDir: /host/etc/cni/net.d
+        multusConfFile: auto 
         kubeconfig: /etc/cni/net.d/multus.d/multus.kubeconfig
-        #masterCniFilename:
-        #logFile: /var/log/multus.log
-        #logLevel: panic
-        #cniVersion: 1.0.0
-        #cleanupConfigOnExit: true
-        #additionalBinDir: /opt/multus/bin
 
     manifests:
       serviceAccount: true
