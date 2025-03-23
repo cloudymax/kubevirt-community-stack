@@ -1,4 +1,6 @@
 # Weird packet loss in ping times of up to 13%
+# No DNS inside a VM
+# Works for a container
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
