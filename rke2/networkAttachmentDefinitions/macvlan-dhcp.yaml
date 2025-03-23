@@ -1,5 +1,5 @@
 # Weird packet loss in ping times of up to 20%
-# Works ins a container, no DNS in a VM
+# Works ins a container, no DNS in a VM when only iface
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
@@ -23,6 +23,7 @@ spec:
     }'
 ---
 # Less but still 10% packet loss...
+# Works ins a container, no DNS in a VM when only iface
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
