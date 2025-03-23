@@ -1,3 +1,4 @@
+# Weird packet loss in ping times of up to 13%
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
