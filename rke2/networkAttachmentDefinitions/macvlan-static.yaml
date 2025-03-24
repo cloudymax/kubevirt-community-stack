@@ -1,6 +1,8 @@
-# Weird packet loss in ping times of up to 13%
-# No DNS inside a VM
-# Works for a container
+# Weird packet loss in ping times of ~4 packets evert 40 sec
+# In Container:
+# - DNS lookups work on 192.168.2.1 
+# - DNS lookups don't work on 10.43.0.10
+# - External traffic works on net1 device
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
