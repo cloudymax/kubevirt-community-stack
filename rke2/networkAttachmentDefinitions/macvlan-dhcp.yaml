@@ -26,7 +26,11 @@ spec:
     }'
 ---
 # Less but still 10% packet loss...
-# Works ins a container, no DNS in a VM when only iface
+# In Containers:
+# - DNS lookups work on 192.168.2.1 
+# - DNS lookups don't work on 10.43.0.10
+# - External traffic works on net1 device
+# - no DNS in a VM when only iface
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
