@@ -1,3 +1,6 @@
+# In Container:
+# - creates bridge and network iface w/ IP but cannot reach anything in
+# either 192.168.2.0 or 10.43.0.0.
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
