@@ -25,7 +25,6 @@ spec:
       }
     }'
 ---
-# Less but still 10% packet loss...
 # In Containers:
 # - DNS lookups work on 192.168.2.1 
 # - DNS lookups don't work on 10.43.0.10
@@ -48,8 +47,12 @@ spec:
         "rangeStart": "192.168.2.200",
         "rangeEnd": "192.168.2.216",
         "routes": [
-          { "dst": "0.0.0.0/0" }
+          { "dst": "0.0.0.0/0" },
+          { "dst": "192.168.0.0/16", "gw": "192.168.2.1" }
         ],
+        "dns": {
+         "nameservers" : ["192.168.2.1"]
+        },
         "gateway": "192.168.2.1"
       }
     }'
