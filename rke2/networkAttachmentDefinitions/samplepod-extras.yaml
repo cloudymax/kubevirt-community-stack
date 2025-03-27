@@ -4,10 +4,7 @@ metadata:
   name: samplepod
   namespace: default
   annotations:
-    k8s.v1.cni.cncf.io/networks: '[{
-      "name": "macvlan-dhcp",
-      "default-route": ["192.168.2.1"]
-    }]'
+    k8s.v1.cni.cncf.io/networks: macvlan-dhcp
 spec:
   dnsPolicy: "None"
   dnsConfig:
