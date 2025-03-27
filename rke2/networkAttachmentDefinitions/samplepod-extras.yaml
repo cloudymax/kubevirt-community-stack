@@ -29,6 +29,21 @@ spec:
     volumeMounts:
       - name: podinfo
         mountPath: /etc/podinfo
+  initContainers:
+    - name: fixroutes
+      image: jrecord/nettools
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: DEV
+          value: eth0
+      command:
+        - '/bin/bash'
+        - '-c'
+        - ip route add 10.43.0.0/16 via $( ip route | grep -P $DEV\\s | grep default | tr -s ' ' | cut -d ' ' -f 3 ) dev $DEV
+      securityContext:
+        capabilities:
+          add:
+          - NET_ADMIN
   volumes:
     - name: podinfo
       downwardAPI:
