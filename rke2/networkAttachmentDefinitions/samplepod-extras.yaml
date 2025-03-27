@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: samplepod
-  namespace: kubevirt
+  namespace: default
   annotations:
     k8s.v1.cni.cncf.io/networks: '[{
       "name": "macvlan-dhcp",
@@ -15,7 +15,7 @@ spec:
       - 192.168.2.1
       - 10.43.0.10
     searches:
-      - kubevirt.svc.cluster.local
+      - default.svc.cluster.local
       - svc.cluster.local
       - cluster.local
       - localdomain
