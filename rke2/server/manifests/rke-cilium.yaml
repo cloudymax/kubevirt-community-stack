@@ -6,6 +6,8 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+    bandwidthManager:
+      enabled: true
     # Required for multus
     cni:
       exclusive: false
