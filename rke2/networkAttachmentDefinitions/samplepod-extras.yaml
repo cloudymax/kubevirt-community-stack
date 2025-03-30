@@ -9,7 +9,6 @@ spec:
   dnsPolicy: "None"
   dnsConfig:
     nameservers:
-      - 192.168.2.1
       - 10.43.0.10
     searches:
       - default.svc.cluster.local
