@@ -2,9 +2,10 @@
 
 Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables attaching multiple network interfaces to pods. It is a "Meta" plugin that does not function on its own - rather it orchestrates the behavior of multiple other CNI plugins. This allows the creation of multiple network interfaces in a single pod. 
 
-In this guide will limit the scope to the configuration of Multus with the [macvlan](https://www.cni.dev/plugins/current/main/macvlan/), [bridge](https://www.cni.dev/plugins/current/main/bridge/), and [IPAM](https://www.cni.dev/plugins/current/ipam/) CNI plugins. For Additional information please consult the following resources:
-- [Multus Docs](https://github.com/k8snetworkplumbingwg/multus-cni/tree/master/docs)
-- [CNI Plugins Docs](https://www.cni.dev/plugins/current/)
+In this guide will limit the scope to the configuration of Multus with the [macvlan](https://www.cni.dev/plugins/current/main/macvlan/), [bridge](https://www.cni.dev/plugins/current/main/bridge/), and [IPAM](https://www.cni.dev/plugins/current/ipam/) CNI plugins. For Additional information please consult the [Multus Docs](https://github.com/k8snetworkplumbingwg/multus-cni/tree/master/docs) and [CNI Plugins References](https://www.cni.dev/plugins/current/).
+
+
+![multus-pod-image](https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/docs/images/multus-pod-image.svg)
 
 ## Installation
 
