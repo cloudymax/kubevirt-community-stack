@@ -71,11 +71,17 @@ data:
       {{- if $props.url }}
         url: {{ $props.url | quote }}
       {{- end}}
+      {{- if $props.encoding }}
+        encoding: {{ $props.encoding | quote }}
+      {{- end}}
       {{- if $props.content }}
         content: |-
         {{- with $props.content }}
           {{- . | nindent 10 }}
         {{- end }}
+      {{- if $props.append }}
+        append: {{ $props.append }}
+      {{- end}}
       {{- end }}
       {{- end }}
     {{- end }}
