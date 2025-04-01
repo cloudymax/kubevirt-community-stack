@@ -37,5 +37,17 @@ spec:
 
 ## Usage
 
-Multus uses a `NetworkAttachmentDefinition` CRD to define how to attach networks to pods.  
+Multus uses a `NetworkAttachmentDefinition` CRD to define how to attach networks to pods.
+These allow you to configure CNI plugins and IPAM settings that will apply to any pod which consumes the NetworkAttachmentDefinition.
+
+The plugins which I reccommend are: 
+  1. [macvlan](https://www.cni.dev/plugins/current/main/macvlan/), which functions like a switch that is already connected to the host interface. This plugin works for regular pods and takes less efort to setup, but is not supported by Kubevirt 
+  2. [bridge](https://www.cni.dev/plugins/current/main/bridge/) which uses and actual existing linux bridge. This plugin can be used with both regular pods and Kubevirt, but requires setting up a linx bridge on your own prior to use.
+
+
+
+
+
+
+
 
