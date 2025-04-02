@@ -19,9 +19,28 @@ Official downloads page: https://clonezilla.org/downloads.php
 
 ## Usage
 
-Clonzilla is perfect for capturing windows system images for re-deployment after they have been pre-loaded with drivers and tools, but not yet provisioned. (Think virtio drivers and cloud-base-init etc..). While Clonezilla supports saving data to S3, I prefer to use it with SeaweedFS and therefor have a customized image containing the seaweedFS cli for mounting remote-storage as FUSE.
+Clonzilla is perfect for capturing windows system images for re-deployment after they have been pre-loaded with drivers and tools, but not yet provisioned. (Think virtio drivers and cloud-base-init etc..).
 
+- Create a non-uefi vm with a clonezilla ISO as the 1st boot device, and the disk you want to backup/clone as the 2nd or later boot device.
 
+- Use virtctl or KubevirtManager to access the VNC interface of the VM
 
+- Make a selection from the GRUB menu and boot the live-image
 
+- Choose `Start Clonezilla`
 
+- Choose `device-image work with disk or partitions using images`
+
+- Choose a destination for you image, I find using the `s3_server` option easiest. Once this has been selected the networking will be enabled and you will be dropped into a root shell.
+
+- run `systemctl enable ssh` and `systemctl restart ssh`
+
+- run `passwd user` and create a password for the user account
+
+- you can now ssh into them VM (if you enabled a load-balancer or port-forwarded the ssh port)
+
+- create the `/root/.passwd-s3fs` credential file
+
+- run `chmod 600 /root/.passwd-s3fs`
+
+- back in the VNC session, run `exit` to return to the application
