@@ -252,3 +252,12 @@ kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl g
 # If namespace is stuck
 kubectl get namespace "kubevirt" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
 ```
+
+> [!NOTE]
+> If by mistake you deleted the operator first, the KV custom resource will get stuck in the Terminating state, to fix it, delete manually finalizer from the resource.
+>
+> Note: The apiservice and the webhookconfigurations need to be deleted manually due to a bug.
+>
+> ```bash
+> $ kubectl -n kubevirt patch kv kubevirt --type=json -p '[{ "op": "remove", "path": "/metadata/finalizers" }]'
+> ```
