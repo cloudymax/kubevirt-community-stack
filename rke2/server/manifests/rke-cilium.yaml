@@ -8,6 +8,10 @@ spec:
   valuesContent: |-
     bandwidthManager:
       enabled: true
+    socketLB:
+      enabled: true
+      # -- Disable socket lb for non-root ns. This is used to enable Istio routing rules.
+      hostNamespaceOnly: true
     # Required for multus
     cni:
       exclusive: false
