@@ -1,0 +1,18 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  components:
+    cni:
+      enabled: true
+      k8s:
+        overlays:
+        - apiVersion: "apps/v1"
+          kind: "DaemonSet"
+          name: "istio-cni-node"
+          patches:
+          - path: spec.template.spec.containers.[name:install-cni].securityContext.privileged
+            value: true
+  values:
+    cni:
+      cniBinDir: /opt/cni/bin
+      cniConfDir: /etc/cni/net.d
