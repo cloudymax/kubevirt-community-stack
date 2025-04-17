@@ -1,0 +1,250 @@
+{
+  "virtualMachine": {
+    "name": "test",
+    "namespace": "kubevirt",
+    "capiMachineTemplate": false,
+    "runStrategy": "Always",
+    "features": {
+      "kvm": {
+        "enabled": true,
+        "hidden": false
+      },
+      "hyperv": false,
+      "acpiEnabled": true,
+      "autoattachPodInterface": true,
+      "autoattachSerialConsole": true,
+      "autoattachGraphicsDevice": true,
+      "networkInterfaceMultiqueue": true
+    },
+    "clock": {
+      "enabled": true,
+      "timezone": "utc",
+      "hpet": {
+        "enabled": true,
+        "present": false
+      },
+      "pit": {
+        "enabled": true,
+        "tickPolicy": "delay"
+      },
+      "rtc": {
+        "enabled": true,
+        "tickPolicy": "catchup"
+      },
+      "kvm": true,
+      "hyperv": false
+    },
+    "firmware": {
+      "smmEnabled": false,
+      "efi": {
+        "enabled": true,
+        "secureBoot": false
+      },
+      "uuid": "5d307ca9-b3ef-428c-8861-06e72d69f223"
+    },
+    "machine": {
+      "priorityClassName": "vm-standard",
+      "instancetype": {
+        "enabled": false,
+        "name": "standard-small",
+        "kind": "virtualMachineClusterInstancetype"
+      },
+      "architecture": "amd64",
+      "machineType": "q35",
+      "cpuModel": "host-passthrough",
+      "sockets": 1,
+      "vCores": 2,
+      "threads": 1,
+      "pinCores": true,
+      "emulatorThread": false,
+      "memory": {
+        "base": "2Gi",
+        "overcommit": {
+          "enabled": false,
+          "limit": "4Gi",
+          "overhead": false
+        }
+      }
+    },
+    "gpus": [],
+    "interfaces": [
+      {
+        "masquerade": {},
+        "name": "default",
+        "model": "virtio"
+      }
+    ],
+    "networks": [
+      {
+        "name": "default",
+        "pod": {}
+      }
+    ]
+  },
+  "virtualMachinePool": {
+    "enabled": false,
+    "replicas": 2,
+    "hpa": {
+      "enabled": true,
+      "maxReplicas": 5,
+      "minReplicas": 1
+    }
+  },
+  "diskErrorPolicy": "report",
+  "disks": [
+    {
+      "name": "harddrive",
+      "type": "disk",
+      "bus": "virtio",
+      "bootorder": 2,
+      "readonly": false,
+      "pvsize": "16Gi",
+      "pvstorageClassName": "fast-raid",
+      "pvaccessMode": "ReadWriteOnce",
+      "source": "url",
+      "url": "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+    }
+  ],
+  "userDataSecret": {
+    "enabled": false,
+    "name": ""
+  },
+  "cloudinit": {
+    "enabled": true,
+    "secret_name": "test-scrapmetal-user-data",
+    "image": "deserializeme/kv-cloud-init:v0.0.1",
+    "serviceAccount": {
+      "create": true,
+      "name": "cloud-init-sa",
+      "existingServiceAccountName": "cloud-init-sa"
+    },
+    "mounts": [],
+    "swap": {
+      "enabled": false,
+      "filename": "/swapfile",
+      "size": "1G",
+      "maxsize": "1G"
+    },
+    "disk_setup": {},
+    "fs_setup": [],
+    "existingConfigMap": false,
+    "envsubst": false,
+    "extraEnvVars": [],
+    "hostname": "test",
+    "namespace": "kubevirt",
+    "disable_root": false,
+    "debug": false,
+    "salt": "saltsaltlettuce",
+    "network": {
+      "config": "disabled"
+    },
+    "wireguard": [],
+    "users": [
+      {
+        "name": "test",
+        "groups": "users, admin, docker, sudo, kvm",
+        "sudo": "ALL=(ALL) NOPASSWD:ALL",
+        "shell": "/bin/bash",
+        "lock_passwd": false,
+        "password": {
+          "random": true
+        },
+        "ssh_import_id": [],
+        "ssh_authorized_keys": []
+      }
+    ],
+    "ca_certs": [],
+    "boot_cmd": [],
+    "write_files": [],
+    "package_reboot_if_required": false,
+    "package_update": true,
+    "package_upgrade": false,
+    "packages": [],
+    "runcmd": []
+  },
+  "service": [
+    {
+      "name": "test-service",
+      "type": "NodePort",
+      "externalTrafficPolicy": "Cluster",
+      "ports": [
+        {
+          "name": "nginx",
+          "port": 8080,
+          "targetPort": 8080,
+          "protocol": "TCP"
+        }
+      ]
+    }
+  ],
+  "ingress": {
+    "enabled": false,
+    "className": "nginx",
+    "hostname": "novnc.buildstar.online",
+    "annotations": {},
+    "tls": []
+  },
+  "networkPolicy": {
+    "enabled": false,
+    "egress": [
+      {
+        "to": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "kube-system"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "k8s-app": "kube-dns"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "UDP",
+            "port": 53
+          }
+        ]
+      },
+      {
+        "to": [
+          {
+            "ipBlock": {
+              "cidr": "0.0.0.0/0",
+              "except": [
+                "10.0.0.0/8",
+                "172.16.0.0/12",
+                "192.168.0.0/16"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "ingress-nginx"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app.kubernetes.io/name": "ingress-nginx"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
