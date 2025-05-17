@@ -39,6 +39,15 @@ The v2 engine seems to be much more performant, however is not stable on kernel 
 
 ## Install
 
+If using multus with a bridged device, make sure forwarding is configured:
+
+```bash
+# Enable forwarding 
+sudo iptables -F FORWARD && \
+sudo iptables -I FORWARD -m physdev --physdev-is-bridged -j ACCEPT && \
+sudo sysctl -w net.ipv4.ip_forward=1
+```
+
 1. Download RKE2 and kubelet config files
 
 ```bash
