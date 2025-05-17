@@ -42,8 +42,7 @@ The v2 engine seems to be much more performant, however is not stable on kernel 
 1. Download RKE2 and kubelet config files
 
 ```bash
-# create custom data-dir
-mkdir -p /mnt/raid1/rancher/rke2
+export DATA_DIR="/mnt/raid1/rancher/rke2"
 
 mkdir -p /etc/rancher/rke2
 wget -O /etc/rancher/rke2/config.yaml \
@@ -57,32 +56,34 @@ wget -O /etc/kubernetes/kubelet.yaml \
 2. Download Add-on helm-charts and manifests
 
 ```bash
-mkdir -p /var/lib/rancher/rke2/server/manifests
-wget -O /var/lib/rancher/rke2/server/manifests/rke-cilium.yaml \
+export DATA_DIR="/mnt/raid1/rancher/rke2"
+
+mkdir -p ${DATA_DIR}/server/manifests
+wget -O ${DATA_DIR}/server/manifests/rke-cilium.yaml \
 	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/rke-cilium.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/ingress-nginx.yaml \
+wget -O ${DATA_DIR}/server/manifests/ingress-nginx.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/ingress-nginx.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/metallb.yaml \
+wget -O ${DATA_DIR}/server/manifests/metallb.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/metlallb.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/ip-address-pool.yaml \
+wget -O ${DATA_DIR}/server/manifests/ip-address-pool.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/ip-address-pool.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/cert-manager.yaml \
+wget -O ${DATA_DIR}/server/manifests/cert-manager.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/cert-manager.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/hubble-ingress.yaml \
+wget -O ${DATA_DIR}/server/manifests/hubble-ingress.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/hubble-ingress.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/nginx-hello.yaml \
+wget -O ${DATA_DIR}/server/manifests/nginx-hello.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/nginx-hello.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/local-path-provisioner.yaml \
+wget -O ${DATA_DIR}/server/manifests/local-path-provisioner.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/local-path-provisioner.yaml"
 
-wget -O /var/lib/rancher/rke2/server/manifests/multus-config.yaml \
+wget -O ${DATA_DIR}/server/manifests/multus-config.yaml \
     "https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/server/manifests/multus-config.yaml"
 ```
 
