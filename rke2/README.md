@@ -115,13 +115,16 @@ kubecl apply -f https://raw.githubusercontent.com/NVIDIA/kubevirt-gpu-device-plu
 1. Get the node token from the control-plane
 
 ```bash
-sudo cat /var/lib/rancher/rke2/server/node-token
+export DATA_DIR="/mnt/raid1/rancher/rke2"
+sudo cat ${DATA_DIR}/server/node-token
 ```
 
 2. Create the RKE2 config for the agent
 
 ```bash
 export DATA_DIR="/mnt/raid1/rancher/rke2"
+export NODE_IP="192.168.2.218"
+export TOKEN=""
 mkdir -p /etc/rancher/rke2/
 mkdir -p ${DATA_DIR}
 
@@ -130,11 +133,11 @@ cat <<EOF > /etc/rancher/rke2/config.yaml
 # /etc/rancher/rke2/config.yaml
 ---
 write-kubeconfig-mode: "0600"
-server: https://192.168.2.70:9345
-token: K1053e95ddccfd6f2cfab02bba29e8a419db70d44f96d1092b3ced37b31fab9271c::server:47f5d2e07a3a22e54b76f7c33140543c
-node-ip: 192.168.2.71
-bind-address: 192.168.2.71
-node-external-ip: 192.168.2.71
+server: https://${NODE_IP}:9345
+token: ${TOKEN}
+node-ip: ${NODE_IP}
+bind-address: ${NODE_IP}
+node-external-ip: ${NODE_IP}
 kubelet-arg:
 - config=/etc/kubernetes/kubelet.yaml
 data-dir: ${DATA_DIR}
@@ -192,7 +195,9 @@ journalctl -u rke2-agent -f
 - Delete RKE2 on workers and the control-plane
 
 ```bash
+export DATA_DIR="/mnt/raid1/rancher/rke2"
 sudo rke2-uninstall.sh
+sudo rm -rf ${DATA_DIR}
 ```
 
 - If only deleting a worker, remove its node secret from the control-plane
