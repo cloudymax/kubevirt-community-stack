@@ -124,6 +124,7 @@ sudo cat ${DATA_DIR}/server/node-token
 ```bash
 export DATA_DIR="/mnt/raid1/rancher/rke2"
 export NODE_IP="192.168.2.218"
+export SERVER_IP:"192.168.2.70"
 export TOKEN=""
 mkdir -p /etc/rancher/rke2/
 mkdir -p ${DATA_DIR}
@@ -133,7 +134,7 @@ cat <<EOF > /etc/rancher/rke2/config.yaml
 # /etc/rancher/rke2/config.yaml
 ---
 write-kubeconfig-mode: "0600"
-server: https://${NODE_IP}:9345
+server: https://${SERVER_IP}:9345
 token: ${TOKEN}
 node-ip: ${NODE_IP}
 bind-address: ${NODE_IP}
