@@ -42,8 +42,6 @@ The v2 engine seems to be much more performant, however is not stable on kernel 
 1. Download RKE2 and kubelet config files
 
 ```bash
-export DATA_DIR="/mnt/raid1/rancher/rke2"
-
 mkdir -p /etc/rancher/rke2
 wget -O /etc/rancher/rke2/config.yaml \
 	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/rke2/config.yaml"
@@ -57,6 +55,7 @@ wget -O /etc/kubernetes/kubelet.yaml \
 
 ```bash
 export DATA_DIR="/mnt/raid1/rancher/rke2"
+mkdir -p ${DATA_DIR}
 
 mkdir -p ${DATA_DIR}/server/manifests
 wget -O ${DATA_DIR}/server/manifests/rke-cilium.yaml \
