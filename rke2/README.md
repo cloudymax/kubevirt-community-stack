@@ -121,7 +121,9 @@ sudo cat /var/lib/rancher/rke2/server/node-token
 2. Create the RKE2 config for the agent
 
 ```bash
+export DATA_DIR="/mnt/raid1/rancher/rke2"
 mkdir -p /etc/rancher/rke2/
+mkdir -p ${DATA_DIR}
 
 cat <<EOF > /etc/rancher/rke2/config.yaml
 # /etc/rancher/k3s/config.yaml
@@ -135,6 +137,7 @@ bind-address: 192.168.2.71
 node-external-ip: 192.168.2.71
 kubelet-arg:
 - config=/etc/kubernetes/kubelet.yaml
+data-dir: ${DATA_DIR}
 EOF
 ```
 
