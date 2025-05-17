@@ -42,6 +42,9 @@ The v2 engine seems to be much more performant, however is not stable on kernel 
 1. Download RKE2 and kubelet config files
 
 ```bash
+# create custom data-dir
+mkdir -p /mnt/raid1/rancher/rke2
+
 mkdir -p /etc/rancher/rke2
 wget -O /etc/rancher/rke2/config.yaml \
 	"https://raw.githubusercontent.com/cloudymax/kubevirt-community-stack/refs/heads/main/rke2/rke2/config.yaml"
