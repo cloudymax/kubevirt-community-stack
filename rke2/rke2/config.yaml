@@ -19,3 +19,4 @@ tls-san:
 # disable-kube-proxy: true
 kubelet-arg:
 - config=/etc/kubernetes/kubelet.yaml
+data-dir: /mnt/raid1/rancher/rke2
