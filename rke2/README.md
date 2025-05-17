@@ -124,7 +124,7 @@ sudo cat ${DATA_DIR}/server/node-token
 ```bash
 export DATA_DIR="/mnt/raid1/rancher/rke2"
 export NODE_IP="192.168.2.218"
-export SERVER_IP:"192.168.2.70"
+export SERVER_IP="192.168.2.70"
 export TOKEN=""
 mkdir -p /etc/rancher/rke2/
 mkdir -p ${DATA_DIR}
