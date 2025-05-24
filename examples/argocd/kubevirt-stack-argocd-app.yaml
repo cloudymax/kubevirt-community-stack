@@ -20,65 +20,66 @@ spec:
     path: charts/kubevirt-stack/
     helm:
       valuesObject:
-        ################################################################################
-        #   ___  _ __   ___ _ __ __ _| |_ ___  _ __
-        #  / _ \| '_ \ / _ \ '__/ _` | __/ _ \| '__|
-        # | (_) | |_) |  __/ | | (_| | || (_) | |
-        #  \___/| .__/ \___|_|  \__,_|\__\___/|_|
-        #       |_|
-        ################################################################################
-        replicaCount: 1
+        operator:
+          ################################################################################
+          #   ___  _ __   ___ _ __ __ _| |_ ___  _ __
+          #  / _ \| '_ \ / _ \ '__/ _` | __/ _ \| '__|
+          # | (_) | |_) |  __/ | | (_| | || (_) | |
+          #  \___/| .__/ \___|_|  \__,_|\__\___/|_|
+          #       |_|
+          ################################################################################
+          replicaCount: 1
 
-        serviceAccount:
-          create: true
-          annotations: {}
-          name: "kubevirt-operator"
+          serviceAccount:
+            create: true
+            annotations: {}
+            name: "kubevirt-operator"
 
-        securityContext:
-          privileged: true
+          securityContext:
+            privileged: true
 
-        resources: {}
+          resources: {}
 
-        nodeSelector: {}
-        tolerations:
-          - key: CriticalAddonsOnly
-            operator: Exists
+          nodeSelector: {}
+          tolerations:
+            - key: CriticalAddonsOnly
+              operator: Exists
 
-        monitorNamespace: "prometheus"
-        prometheus:
-          enabled: true
-          serviceName: "prom-stack-kube-prometheus-prometheus"
-          serviceNamesapce: "prometheus"
+          monitorNamespace: "prometheus"
+          prometheus:
+            enabled: true
+            serviceName: "prom-stack-kube-prometheus-prometheus"
+            serviceNamesapce: "prometheus"
 
-        permittedHostDevices:
-          pciHostDevices:
-          - pciVendorSelector: "10de:2782"
-            resourceName: "nvidia.com/AD104_GeForce_RTX4070Ti"
-          mediatedDevices:
-          - mdevNameSelector: "GRID M60-2Q"
-            resourceName: "nvidia.com/GRID_M60-2Q"
-          - mdevNameSelector: "GRID RTX6000-4Q"
-            resourceName: "nvidia.com/GRID_RTX6000-4Q"
+          permittedHostDevices:
+            pciHostDevices:
+            - pciVendorSelector: "10de:2782"
+              resourceName: "nvidia.com/AD104_GeForce_RTX4070Ti"
+            mediatedDevices:
+            - mdevNameSelector: "GRID M60-2Q"
+              resourceName: "nvidia.com/GRID_M60-2Q"
+            - mdevNameSelector: "GRID RTX6000-4Q"
+              resourceName: "nvidia.com/GRID_RTX6000-4Q"
 
-        mediatedDevicesTypes:
-          - nvidia-18
+          mediatedDevicesTypes:
+            - nvidia-18
 
-        useEmulation: false
+          useEmulation: false
 
-        featureGates:
-          - ExpandDisks
-          - CPUManager
-          - GPU
-          - HostDevices
-          - VMExport
-          - HotplugVolumes
-          - HostDisk
-          - Macvtap
-          - Passt
-          - HotplugNICs
-          - clientPassthrough
-          - Snapshot
-          - CPUNodeDiscovery
+          featureGates:
+            - ExpandDisks
+            - CPUManager
+            - GPU
+            - HostDevices
+            - VMExport
+            - HotplugVolumes
+            - HostDisk
+            - Macvtap
+            - Passt
+            - HotplugNICs
+            - clientPassthrough
+            - Snapshot
+            - CPUNodeDiscovery
 
         ################################################################################
         #   ____ ____ ___
