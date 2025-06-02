@@ -108,7 +108,8 @@ journalctl -u rke2-server -f
 4. Copy kubeconfig and access cluster
 
 ```bash
-sudo cp /etc/rancher/rke2/rke2.yaml /home/friend/.config/kube/config && \
+export DATA_DIR="/mnt/raid1/rancher/rke2"
+sudo cp ${DATA_DIR}/rke2.yaml /home/friend/.config/kube/config && \
 chown friend:friend /home/friend/.config/kube/config && \
 export KUBECONFIG=/home/friend/.config/kube/config
 ```
