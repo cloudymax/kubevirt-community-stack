@@ -157,14 +157,14 @@ data:
                 {
                         "node": "smallbradley",
                         "paths": [
-                                "/mnt/raid1"
+                                "/mnt/raid1",
                                 "/opt/local-path-provisioner"
                         ]
                 },
                 {
                         "node": "scremlin",
                         "paths": [
-                                "/mnt/raid1"
+                                "/mnt/raid1",
                                 "/opt/local-path-provisioner"
                         ]
                 }
