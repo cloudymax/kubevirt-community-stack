@@ -4,7 +4,7 @@
 Description=Forward traffic for bridged adapter
 
 [Service]
-ExecStart=/usr/local/sbin/br-forawrd.sh
+ExecStart=/usr/local/sbin/br-forward.sh
 
 [Install]
 WantedBy=multi-user.target
