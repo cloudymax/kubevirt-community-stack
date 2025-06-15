@@ -98,7 +98,7 @@ wget -O ${DATA_DIR}/server/manifests/multus-config.yaml \
 3. Download RKE2 and start cluster
 
 ```bash
-export RKE2_VERSION="v1.30.8+rke2r1"
+export RKE2_VERSION="v1.31.8+rke2r1"
 curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=${RKE2_VERSION} sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service &
@@ -193,7 +193,7 @@ EOF
 4. Download and run the installation script
 
 ```bash
-export RKE2_VERSION="v1.30.8+rke2r1"
+export RKE2_VERSION="v1.31.8+rke2r1"
 curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION=${RKE2_VERSION} sh -
 systemctl enable rke2-agent.service
 systemctl start rke2-agent.service &
