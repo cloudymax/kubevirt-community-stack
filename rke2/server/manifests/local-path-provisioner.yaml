@@ -167,6 +167,13 @@ data:
                                 "/mnt/raid1",
                                 "/opt/local-path-provisioner"
                         ]
+                },
+                {
+                        "node": "bambino",
+                        "paths": [
+                                "/mnt/raid1",
+                                "/opt/local-path-provisioner"
+                        ]
                 }
         ]
     }
