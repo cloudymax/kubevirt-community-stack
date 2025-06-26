@@ -10,7 +10,6 @@ roleRef:
   kind: ClusterRole
   name: kubevirt-operator
 subjects:
-- kind: ServiceAccount
-  name: kubevirt-operator
-  namespace: kubevirt
-
+  - kind: ServiceAccount
+    name: kubevirt-operator
+    namespace: kubevirt

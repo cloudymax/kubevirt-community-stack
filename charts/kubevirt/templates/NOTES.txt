@@ -1,3 +1,0 @@
-Use this command to check your pods
------------------------------------
-kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
