@@ -92,6 +92,7 @@ create_secret(){
 
     if [ "${SECRET_EXISTS}" -gt 0 ]; then
         log "Kubernetes secret ${SECRET_NAME} exists and will be replaced"
+        kubectl patch secret ${SECRET_NAME} -p '{"metadata":{"finalizers":null}}' --type=merge
         kubectl delete secret ${SECRET_NAME}
     fi
 
