@@ -4,7 +4,10 @@ kind: Job
 metadata:
   name: {{ .Values.hostname }}-cloud-init-job
   namespace: {{ .Values.namespace }}
-  annotations: {}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "0"
 spec:
   backoffLimit: 3
   template:
