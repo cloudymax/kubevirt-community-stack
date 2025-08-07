@@ -1,6 +1,9 @@
 # Not all cloud-init modules are currently supported
 # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
+# --- ArgoCD App name for optional resource tracking
+argocdAppName: cloud-init-test
+
 # -- name of secret in which to save the user-data file
 secret_name: max-scrapmetal-user-data
 
@@ -25,29 +28,29 @@ swap:
   size: 1G
   maxsize: 1G
 
-disk_setup: {}
+disk_setup:
   # -- The name of the device.
-#  - name: /dev/vdb
-#    # -- This is a list of values, with the percentage of disk that
-#    # the partition will take. When layout is “true”, it instructs cloud-init
-#    # to single-partition the entire device. When layout is “false” it means
-#    # “don’t partition” or “ignore existing partitioning”.
-#    layout: true
-    # -- “false” is the default which means that the device will be checked for
-#    # a partition table and/or filesystem. “true” is cowboy mode, no checks.
-#    overwrite: false
-#    # -- Supported options ate `gpt` and `mbr`
-#    table_type: 'gpt'
+  - name: /dev/vdb
+    # -- This is a list of values, with the percentage of disk that
+    # the partition will take. When layout is “true”, it instructs cloud-init
+    # to single-partition the entire device. When layout is “false” it means
+    # “don’t partition” or “ignore existing partitioning”.
+    layout: true
+   # -- “false” is the default which means that the device will be checked for
+    # a partition table and/or filesystem. “true” is cowboy mode, no checks.
+    overwrite: false
+    # -- Supported options ate `gpt` and `mbr`
+    table_type: 'gpt'
 
-fs_setup: []
+fs_setup:
   # -- The device name.
-#  - device: /dev/vdb
-#    # -- The filesystem type. Supports ext{2,3,4} and vfat
-#    filesystem: ext4
-#    # -- The filesystem label to be used. If set to “None”, no label is used.
-#    label: None
-#    # -- Options are `auto|any`, `auto`, or `any`
-#    partition: 'auto|any'
+  - device: /dev/vdb
+    # -- The filesystem type. Supports ext{2,3,4} and vfat
+    filesystem: ext4
+    # -- The filesystem label to be used. If set to “None”, no label is used.
+    label: None
+    # -- Options are `auto|any`, `auto`, or `any`
+    partition: 'auto|any'
 
 # -- Dont recreate script configmap. Set to true when keeping multiple
 # cloud-init secrets in the same namespace
@@ -57,20 +60,20 @@ existingConfigMap: false
 # Not an official part of cloid-init
 envsubst: true
 
-extraEnvVars: []
-#  - name: USERNAME
-#    value: max
-#  - name: GITHUB_USER
-#    value: cloudymax
-#  - name: REPO_OWNER
-#    value: buildstar-online
-#  - name: REPO_NAME
-#    value: nvidia-desktops
-#  - name: ACCESS_TOKEN
-#    valueFrom:
-#      secretKeyRef:
-#        name: test
-#        key: "test.yaml"
+extraEnvVars:
+  - name: USERNAME
+    value: max
+  - name: GITHUB_USER
+    value: cloudymax
+  - name: REPO_OWNER
+    value: buildstar-online
+  - name: REPO_NAME
+    value: nvidia-desktops
+  - name: ACCESS_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: test
+        key: "test.yaml"
 
 # -- virtual-machine hostname
 hostname: random
@@ -142,65 +145,65 @@ boot_cmd: []
 # -- Write arbitrary files to disk.
 # Files my be provided as plain-text or downloaded from a url
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
-write_files: []
-#  - path: /home/${USERNAME}/runner.sh
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
-#  - path: /etc/apt-sources.list
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-apt-sources.list"
-#  - path: /etc/default/laocalw
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-locale"
-#  - path: /etc/default/keyboard
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-keyboard"
-#  - path: /etc/ssh/sshd_config
-#    permissions: "0644"
-#    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
+write_files:
+  - path: /home/${USERNAME}/runner.sh
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
+  - path: /etc/apt-sources.list
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-apt-sources.list"
+  - path: /etc/default/laocalw
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-locale"
+  - path: /etc/default/keyboard
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/etc-default-keyboard"
+  - path: /etc/ssh/sshd_config
+    permissions: "0644"
+    url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/sshd_config"
 
 # -- Update, upgrade, and install packages
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
 package_reboot_if_required: false
 package_update: true
 package_upgrade: false
-packages: []
-#  - ssh-import-id
-#  - curl
-#  - tmux
-#  - apt-transport-https
-#  - ca-certificates
-#  - software-properties-common
-#  - git-extras
-#  - rsyslog
-#  - vim
-#  - gpg
-#  - open-iscsi
-#  - nfs-common
-#  - bc
-#  - zip
-#  - pkg-config
-#  - pipx
-#  - jq
+packages:
+  - ssh-import-id
+  - curl
+  - tmux
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - git-extras
+  - rsyslog
+  - vim
+  - gpg
+  - open-iscsi
+  - nfs-common
+  - bc
+  - zip
+  - pkg-config
+  - pipx
+  - jq
 
 # -- Run arbitrary commands
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
-runcmd: []
-#  - mkdir -p /home/${USERNAME}/shared
-#  - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
-#  - sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}
-#  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-#  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-#  - sudo apt-get update
-#  - sudo apt-get install -y docker-ce
-#  - wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-#  - chmod +x /install.sh
-#  - chmod 777 /install.sh
-#  - sudo -u ${USERNAME} NONINTERACTIVE=1 /bin/bash /install.sh
-#  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew shellenv >> /home/${USERNAME}/.profile
-#  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/opt/python@3.11/libexec/bin >> /home/${USERNAME}/.profile
-#  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew install python@3.11
-#  - sudo chown -R ${USERNAME}:${USERNAME} /home/linuxbrew
-#  - sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
-#  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-#  - chmod +x /usr/bin/yq
+runcmd:
+  - mkdir -p /home/${USERNAME}/shared
+  - chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
+  - sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install -y docker-ce
+  - wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+  - chmod +x /install.sh
+  - chmod 777 /install.sh
+  - sudo -u ${USERNAME} NONINTERACTIVE=1 /bin/bash /install.sh
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew shellenv >> /home/${USERNAME}/.profile
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/opt/python@3.11/libexec/bin >> /home/${USERNAME}/.profile
+  - sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew install python@3.11
+  - sudo chown -R ${USERNAME}:${USERNAME} /home/linuxbrew
+  - sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+  - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+  - chmod +x /usr/bin/yq

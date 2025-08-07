@@ -98,8 +98,16 @@ create_secret(){
 
     log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
     kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
+
     kubectl annotate --overwrite secret ${SECRET_NAME} \
-        argocd.argoproj.io/tracking-id="cloud-init-test:apps/Secret:kubevirt/${SECRET_NAME}"
+        argocd.argoproj.io/tracking-id="${ARGOCD_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}"
+
+    kubectl annotate --overwrite secret ${SECRET_NAME} \
+        argocd.argoproj.io/sync-options="Prune=false,Delete=false"
+
+    kubectl annotate --overwrite secret ${SECRET_NAME} \
+        argocd.argoproj.io/compare-options="IgnoreExtraneous"
+
 }
 
 # Add wireguard configs from secrets

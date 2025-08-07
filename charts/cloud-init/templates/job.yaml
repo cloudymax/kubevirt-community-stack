@@ -20,6 +20,10 @@ spec:
         - name: cloud-init
           image: {{ .Values.image }}
           env:
+          - name: ARGOCD_APP_NAME
+            value: {{ .Values.argocdAppName }}
+          - name: NAMESPACE
+            value: {{ .Values.namespace }}
           - name: SECRET_NAME
             value: {{ .Values.secret_name }}
           - name: USER_DATA_SECRET_PATH
