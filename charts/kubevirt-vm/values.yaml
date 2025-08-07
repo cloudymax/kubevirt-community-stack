@@ -354,6 +354,9 @@ cloudinit:
   # Not all cloud-init modules are currently supported
   # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
+  # --- ArgoCD App name for optional resource tracking
+  argocdAppName: ""
+
   # -- name of secret in which to save the user-data file
   secret_name: test-scrapmetal-user-data
 
