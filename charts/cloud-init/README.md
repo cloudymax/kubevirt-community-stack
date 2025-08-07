@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.2.13](https://img.shields.io/badge/Version-0.2.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -14,14 +14,16 @@ A Helm chart that generates cloud-init config files
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| argocdAppName | string | `"cloud-init-test"` | - ArgoCD App name for optional resource tracking |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
 | debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
-| disk_setup | object | `{}` |  |
+| disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
 | existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
-| extraEnvVars | list | `[]` |  |
+| extraEnvVars[0].name | string | `"USERNAME"` |  |
+| extraEnvVars[0].value | string | `"friend"` |  |
 | fs_setup | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname |
 | image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |

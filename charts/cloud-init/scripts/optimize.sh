@@ -92,11 +92,22 @@ create_secret(){
 
     if [ "${SECRET_EXISTS}" -gt 0 ]; then
         log "Kubernetes secret ${SECRET_NAME} exists and will be replaced"
+        kubectl patch secret ${SECRET_NAME} -p '{"metadata":{"finalizers":null}}' --type=merge
         kubectl delete secret ${SECRET_NAME}
     fi
 
     log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
     kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
+
+    kubectl annotate --overwrite secret ${SECRET_NAME} \
+        argocd.argoproj.io/tracking-id="${ARGOCD_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}"
+
+    kubectl annotate --overwrite secret ${SECRET_NAME} \
+        argocd.argoproj.io/sync-options="Prune=false,Delete=false"
+
+    kubectl annotate --overwrite secret ${SECRET_NAME} \
+        argocd.argoproj.io/compare-options="IgnoreExtraneous"
+
 }
 
 # Add wireguard configs from secrets
