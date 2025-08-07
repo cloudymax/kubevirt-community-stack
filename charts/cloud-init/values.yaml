@@ -161,24 +161,24 @@ write_files: []
 package_reboot_if_required: false
 package_update: true
 package_upgrade: false
-packages:
-  - ssh-import-id
-  - curl
-  - tmux
-  - apt-transport-https
-  - ca-certificates
-  - software-properties-common
-  - git-extras
-  - rsyslog
-  - vim
-  - gpg
-  - open-iscsi
-  - nfs-common
-  - bc
-  - zip
-  - pkg-config
-  - pipx
-  - jq
+packages: []
+  #- ssh-import-id
+  #- curl
+  #- tmux
+  #- apt-transport-https
+  #- ca-certificates
+  #- software-properties-common
+  #- git-extras
+  #- rsyslog
+  #- vim
+  #- gpg
+  #- open-iscsi
+  #- nfs-common
+  #- bc
+  #- zip
+  #- pkg-config
+  #- pipx
+  #- jq
 
 # -- Run arbitrary commands
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd

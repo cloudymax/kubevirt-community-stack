@@ -34,23 +34,7 @@ A Helm chart that generates cloud-init config files
 | package_reboot_if_required | bool | `false` | Update, upgrade, and install packages See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
 | package_update | bool | `true` |  |
 | package_upgrade | bool | `false` |  |
-| packages[0] | string | `"ssh-import-id"` |  |
-| packages[10] | string | `"open-iscsi"` |  |
-| packages[11] | string | `"nfs-common"` |  |
-| packages[12] | string | `"bc"` |  |
-| packages[13] | string | `"zip"` |  |
-| packages[14] | string | `"pkg-config"` |  |
-| packages[15] | string | `"pipx"` |  |
-| packages[16] | string | `"jq"` |  |
-| packages[1] | string | `"curl"` |  |
-| packages[2] | string | `"tmux"` |  |
-| packages[3] | string | `"apt-transport-https"` |  |
-| packages[4] | string | `"ca-certificates"` |  |
-| packages[5] | string | `"software-properties-common"` |  |
-| packages[6] | string | `"git-extras"` |  |
-| packages[7] | string | `"rsyslog"` |  |
-| packages[8] | string | `"vim"` |  |
-| packages[9] | string | `"gpg"` |  |
+| packages | list | `[]` |  |
 | runcmd | list | `[]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
