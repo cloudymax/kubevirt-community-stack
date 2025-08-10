@@ -23,7 +23,7 @@ This is my installation process.
   
 - Each node has a virtual `wg0` ethernet device which Cilium may be configured to attach to.
 
-- MetalLB can then advertise IP's on both the internal `192.168.X.X` and/or Wireguard `10.1.X.X` network ranges by configuring `L2Advertisement` resources as described [here](https://metallb.io/configuration/_advanced_l2_configuration/).
+- MetalLB can then advertise IP's on both the internal `192.168.X.X` and/or Wireguard `10.1.X.X` network ranges by configuring `L2Advertisement` resources as described [here](https://metallb.io/configuration/_advanced_l2_configuration/). Todo: [Setup in BGP mode w/ opnsense](https://kevingoos.medium.com/k3s-setup-metallb-using-bgp-on-pfsense-f5ff1165f6d4)
 
 - Services of type `LoadBalancer` can be swapped between networks by setting the `metallb.universe.tf/address-pool` annotation.
 
@@ -31,11 +31,13 @@ This is my installation process.
 
 - Supporting real BGP is a future goal.
 
-## Why we don't recommend Longhorn (yet)
+## Longhorn
+
+Update: This has been resolved in the newest version v1.9.0 and we may revisit using Longhorn in the furture.
 
 While [Longhorn](https://longhorn.io/) is the easiest distributed block storage system to get started with and is also feature-rich - its v1 storage engine is too slow for our needs. The Longhorn volume v1 engine (with iscsi-tgt frontend) has a write bandwidth cap of 300-400 MiB/s. The bottleneck lives inside tgtd and there isn't a parameter or deployment method that we can adjust to improve it. See https://github.com/longhorn/longhorn/issues/3037 for full details.
 
-The v2 engine seems to be much more performant, however is not stable on kernel versions below 6.7. Because we are on 6.2 with Debian12 we do not expect to revisit Longhorn until after the release of Debian13 later in 2025. 
+The v2 engine seems to be much more performant, however is not stable on kernel versions below 6.7. Because we are on 6.2 with Debian12 we do not expect to revisit Longhorn until after the release of Debian13 later in 2025.
 
 ## Install
 
