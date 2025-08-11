@@ -13,7 +13,8 @@ RUN apt-get update \
     apt-transport-https \
     ca-certificates \
     gnupg \
-    bc
+    bc \
+    golang-petname
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
