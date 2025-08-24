@@ -22,6 +22,7 @@ Holds your user-data file. Must be the first boot device
   pvsize: 32G
   pvstorageClass: local-path
   pvaccessMode: ReadWriteOnce
+  nodePlacement: node0
   source: url
   url: "https://cloud.debian.org/images/cloud/bookworm/daily/latest/debian-12-generic-amd64-daily.qcow2"
 ```
