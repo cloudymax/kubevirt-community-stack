@@ -217,6 +217,20 @@ entries:
     version: 0.0.0
   cluster-api-operator:
   - apiVersion: v2
+    appVersion: 0.23.0
+    created: "2025-09-05T19:15:29.028583207Z"
+    dependencies:
+    - name: cluster-api-operator
+      repository: https://kubernetes-sigs.github.io/cluster-api-operator
+      version: 0.23.0
+    description: Cluster API Operator
+    digest: fdfc350ea473e84a3ad9fbed0efd270e5756b4136ea77fffc8ecc85fb804b056
+    name: cluster-api-operator
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cluster-api-operator-0.0.3/cluster-api-operator-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 0.0.0
     created: "2025-01-03T22:30:38.476691544Z"
     description: Cluster API Operator
@@ -1685,4 +1699,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-08-24T12:31:19.203958645Z"
+generated: "2025-09-05T19:15:29.028778784Z"
