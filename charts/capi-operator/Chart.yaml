@@ -2,5 +2,10 @@ apiVersion: v2
 name: cluster-api-operator
 description: Cluster API Operator
 type: application
-version: 0.0.2
-appVersion: "0.0.0"
+version: 0.0.3
+appVersion: "0.23.0"
+
+dependencies:
+- name: cluster-api-operator
+  version: 0.23.0
+  repository: https://kubernetes-sigs.github.io/cluster-api-operator
