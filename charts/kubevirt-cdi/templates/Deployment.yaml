@@ -18,6 +18,8 @@ spec:
   strategy: {}
   template:
     metadata:
+      annotations:
+        openshift.io/required-scc: restricted-v2
       labels:
         cdi.kubevirt.io: cdi-operator
         name: cdi-operator
@@ -41,7 +43,7 @@ spec:
             - name: DEPLOY_CLUSTER_RESOURCES
               value: "true"
             - name: OPERATOR_VERSION
-              value: {{ .Chart.AppVersion }}
+              value: v1.63.0
             - name: CONTROLLER_IMAGE
               value: quay.io/kubevirt/cdi-controller:{{ .Chart.AppVersion }}
             - name: IMPORTER_IMAGE
@@ -72,6 +74,8 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: FallbackToLogsOnError
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
