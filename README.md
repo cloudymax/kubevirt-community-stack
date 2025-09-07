@@ -203,7 +203,7 @@ This utility will audit a host machine and report what virtualisation capabiliti
     # Customize your own values.yaml before deploying
     helm repo add kubevirt https://cloudymax.github.io/kubevirt-charts
     helm install kubevirt-manager kubevirt/kubevirt-manager \
-      --fnamespace kubevirt-manager \
+      --namespace kubevirt-manager \
       --create-namespace
     ```
 </details>
