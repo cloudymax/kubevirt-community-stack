@@ -217,6 +217,16 @@ entries:
     version: 0.0.0
   cluster-api-operator:
   - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2025-09-07T18:03:16.770421835Z"
+    description: Cluster API Operator
+    digest: 4cf4682909e041e06ee6de676e053c80131daebb7c45e9916a247189c606b61d
+    name: cluster-api-operator
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cluster-api-operator-1.0.2/cluster-api-operator-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     appVersion: 0.23.0
     created: "2025-09-05T19:18:16.049587416Z"
     dependencies:
@@ -531,6 +541,20 @@ entries:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/kubevirt-0.0.3/kubevirt-0.0.3.tgz
     version: 0.0.3
   kubevirt-cdi:
+  - apiVersion: v2
+    appVersion: v1.63.0
+    created: "2025-09-07T18:03:16.962096241Z"
+    description: Install the Containerized Data Importer
+    digest: b016f838b5e1dfccd84177b6c0a7764fbed2ce6d8fe99320680cf6f2611d8b57
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-cdi
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-cdi-0.2.2/kubevirt-cdi-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v2
     appVersion: v1.61.0
     created: "2024-12-28T21:03:18.432514503Z"
@@ -1747,4 +1771,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-09-05T19:25:00.994452489Z"
+generated: "2025-09-07T18:03:17.171871296Z"
