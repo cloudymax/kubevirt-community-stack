@@ -11,10 +11,10 @@ cluster:
   name: capi
 
   # -- Version of kubernetes to deploy
-  version: v1.30.1
+  version: v1.32.1
 
   # -- Namespace in which to host cluster components
-  namespace: kubevirt
+  namespace: default
 
   # -- Cluster internal DNS domain
   dnsDomain: cluster.local
@@ -45,9 +45,9 @@ cluster:
 #    \_/  |_|  |_| |_|   \___/ \___/|_|___/
 ###############################################################
 MachineTemplates:
-
   # -- Control Plane VM pool spec
   controlPlane:
+    # -- must be an odd number
     size: 1
     cores: 2
     memory: 4Gi
@@ -72,58 +72,69 @@ MachineTemplates:
 helmCharts:
   # Helm Chart for Cilium CNI
   - name: cilium
-    metadata:
-      name: clilum
-      namespace: kubevirt
-    spec:
-      repoURL: https://helm.cilium.io/
-      chartName: cilium
-      namespace: kube-system
-      options:
-        waitForJobs: true
-        wait: true
-        install:
-          createNamespace: true
-      valuesTemplate: |-
-        operator:
-          replicas: 1
-        hubble:
+    namespace: kube-system
+    repoUrl: https://helm.cilium.io/
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      operator:
+        replicas: 1
+      encryption:
+        enabled: false
+        type: wireguard
+      hubble:
+        enabled: true
+        relay:
           enabled: true
-          relay:
-            enabled: true
-          ui:
-            enabled: true
+        ui:
+          enabled: true
 
-  # Helm Chart for Cert-Manager
   - name: cert-manager
-    metadata:
-      name: cert-manager
-      namespace: kubevirt
-    spec:
-      repoURL: https://charts.jetstack.io
-      chartName: cert-manager
-      namespace: cert-manager
-      version: v1.16.2
-      options:
-        install:
-          createNamespace: true
-      valuesTemplate: |-
-        crds:
-          enabled: true
+    repoUrl: https://charts.jetstack.io
+    namespace: certmanager
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      crds:
+        enabled: true
 
-  # Helm Chart for ingress-nginx
+  - name: metrics-server
+    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+    namespace: kube-system
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      defaultArgs:
+        - --cert-dir=/tmp
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+      args: []
+      apiService:
+        create: true
+        insecureSkipTLSVerify: true
+      tls:
+        type: "metrics-server"
+
   - name: ingress-nginx
-    metadata:
-      name: ingress-nginx
-      namespace: kubevirt
-    spec:
-      repoURL: https://kubernetes.github.io/ingress-nginx
-      chartName: ingress-nginx
-      namespace: ingress-nginx
-      options:
-        install:
-          createNamespace: true
-      valuesTemplate: |-
-        install:
-          createNamespace: true
+    repoUrl: https://kubernetes.github.io/ingress-nginx
+    namespace: ingress-nginx
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
 

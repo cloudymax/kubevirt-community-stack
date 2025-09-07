@@ -9,6 +9,7 @@ metadata:
     {{- end }}
 spec:
   clusterNetwork:
+    apiServerPort: 6443
     pods:
       cidrBlocks:
       - {{ .Values.cluster.podCidrBlock }}
