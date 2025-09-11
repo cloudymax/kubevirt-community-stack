@@ -14,7 +14,7 @@ spec:
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-          kind: KubeadmConfigTemplate
+          kind: RKE2ConfigTemplate
           name: {{ .Values.cluster.name }}-md-0
           namespace: {{ .Values.cluster.namespace }}
       clusterName: {{ .Values.cluster.name }}

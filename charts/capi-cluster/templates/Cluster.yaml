@@ -10,6 +10,7 @@ metadata:
 spec:
   clusterNetwork:
     apiServerPort: 6443
+    serviceDomain: cluster.local
     pods:
       cidrBlocks:
       - {{ .Values.cluster.podCidrBlock }}
@@ -18,7 +19,7 @@ spec:
       - {{ .Values.cluster.serviceCidrBlock }}
   controlPlaneRef:
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
-    kind: KubeadmControlPlane
+    kind: RKE2ControlPlane
     name: {{ .Values.cluster.name }}-control-plane
     namespace: {{ .Values.cluster.namespace }}
   infrastructureRef:

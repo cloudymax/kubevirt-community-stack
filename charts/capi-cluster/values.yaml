@@ -11,7 +11,7 @@ cluster:
   name: capi
 
   # -- Version of kubernetes to deploy
-  version: v1.32.1
+  version: v1.32.1+rke2r1
 
   # -- Namespace in which to host cluster components
   namespace: default
@@ -49,8 +49,8 @@ MachineTemplates:
   controlPlane:
     # -- must be an odd number
     size: 1
-    cores: 2
-    memory: 4Gi
+    cores: 4
+    memory: 8Gi
     disk: 32Gi
     cpuModel: host-passthrough
 
@@ -62,6 +62,8 @@ MachineTemplates:
     disk: 32Gi
     cpuModel: host-passthrough
 
+  image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+
 ###############################################################
 # _   _      _              ____ _                _
 #| | | | ___| |_ __ ___    / ___| |__   __ _ _ __| |_ ___
@@ -69,72 +71,72 @@ MachineTemplates:
 #|  _  |  __/ | | | | | | | |___| | | | (_| | |  | |_\__ \
 #|_| |_|\___|_|_| |_| |_|  \____|_| |_|\__,_|_|   \__|___/
 ###############################################################
-helmCharts:
+helmCharts: []
   # Helm Chart for Cilium CNI
-  - name: cilium
-    namespace: kube-system
-    repoUrl: https://helm.cilium.io/
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      operator:
-        replicas: 1
-      encryption:
-        enabled: false
-        type: wireguard
-      hubble:
-        enabled: true
-        relay:
-          enabled: true
-        ui:
-          enabled: true
+  # - name: cilium
+  #   namespace: kube-system
+  #   repoUrl: https://helm.cilium.io/
+  #   options:
+  #     waitForJobs: true
+  #     wait: true
+  #     timeout: 5m
+  #     install:
+  #       createNamespace: true
+  #   values:
+  #     operator:
+  #       replicas: 1
+  #     encryption:
+  #       enabled: false
+  #       type: wireguard
+  #     hubble:
+  #       enabled: true
+  #       relay:
+  #         enabled: true
+  #       ui:
+  #         enabled: true
 
-  - name: cert-manager
-    repoUrl: https://charts.jetstack.io
-    namespace: certmanager
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      crds:
-        enabled: true
+  # - name: cert-manager
+  #   repoUrl: https://charts.jetstack.io
+  #   namespace: certmanager
+  #   options:
+  #     waitForJobs: true
+  #     wait: true
+  #     timeout: 5m
+  #     install:
+  #       createNamespace: true
+  #   values:
+  #     crds:
+  #       enabled: true
 
-  - name: metrics-server
-    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
-    namespace: kube-system
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      defaultArgs:
-        - --cert-dir=/tmp
-        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-        - --kubelet-use-node-status-port
-        - --metric-resolution=15s
-      args: []
-      apiService:
-        create: true
-        insecureSkipTLSVerify: true
-      tls:
-        type: "metrics-server"
+  # - name: metrics-server
+  #   repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+  #   namespace: kube-system
+  #   options:
+  #     waitForJobs: true
+  #     wait: true
+  #     timeout: 5m
+  #     install:
+  #       createNamespace: true
+  #   values:
+  #     defaultArgs:
+  #       - --cert-dir=/tmp
+  #       - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  #       - --kubelet-use-node-status-port
+  #       - --metric-resolution=15s
+  #     args: []
+  #     apiService:
+  #       create: true
+  #       insecureSkipTLSVerify: true
+  #     tls:
+  #       type: "metrics-server"
 
-  - name: ingress-nginx
-    repoUrl: https://kubernetes.github.io/ingress-nginx
-    namespace: ingress-nginx
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
+  # - name: ingress-nginx
+  #   repoUrl: https://kubernetes.github.io/ingress-nginx
+  #   namespace: ingress-nginx
+  #   options:
+  #     waitForJobs: true
+  #     wait: true
+  #     timeout: 5m
+  #     install:
+  #       createNamespace: true
 

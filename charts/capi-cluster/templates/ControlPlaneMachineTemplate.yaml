@@ -37,7 +37,7 @@ spec:
               evictionStrategy: External
               volumes:
                 - containerDisk:
-                    image: quay.io/capk/ubuntu-2404-container-disk:{{ .Values.cluster.version }}
+                    image: {{ .Values.MachineTemplates.image }}
                   name: containervolume
                 - name: emptydisk
                   emptyDisk:

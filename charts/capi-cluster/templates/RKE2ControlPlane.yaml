@@ -1,0 +1,37 @@
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: RKE2ControlPlane
+metadata:
+  name: {{ .Values.cluster.name }}-control-plane
+  namespace: {{ .Values.cluster.namespace }}
+  {{- if eq .Values.cluster.disableKubePorxy true }}
+  annotations:
+    controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"
+  {{- end }}
+spec:
+  agentConfig: {}
+  gzipUserData: false
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: KubevirtMachineTemplate
+      name: {{ .Values.cluster.name }}-control-plane
+    nodeDeletionTimeout: 30s
+    nodeDrainTimeout: 2m
+    nodeVolumeDetachTimeout: 5m
+  registrationMethod: internal-first
+  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
+  rolloutStrategy:
+    rollingUpdate:
+      maxSurge: 1
+    type: RollingUpdate
+  serverConfig:
+    disableComponents:
+      pluginComponents:
+        - "rke2-ingress-nginx"
+      kubernetesComponents:
+        - cloudController
+    kubeAPIServer:
+      extraArgs:
+        - --anonymous-auth=true
+  version: {{ .Values.cluster.version }}
