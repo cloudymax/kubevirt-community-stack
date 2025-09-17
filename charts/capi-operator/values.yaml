@@ -1,55 +1,109 @@
 ---
-core: "cluster-api:v1.11.1"
-bootstrap: "kubeadm:v1.11.1"
-controlPlane: "kubeadm:v1.11.1"
-infrastructure: "kubevirt:v0.1.10"
-addon: "v0.3.2"
+# ---
+# Cluster API provider options
+core:
+  cluster-api:
+    namespace: "capi-system"
+    version: "v1.10.5"
+    createNamespace: true
 
-manager: {}
-#  featureGates:
-#    kubeadm:
-#      MachinePool: true
-#      KubeadmBootstrapFormatIgnition: true
-#    core:
-#      MachinePool: true
-#      KubeadmBootstrapFormatIgnition: true
-#    kubevirt:
-#      MachinePool: true
-#      KubeadmBootstrapFormatIgnition: true
-#    bootstrap:
-#      MachinePool: true
-#      KubeadmBootstrapFormatIgnition: true
+bootstrap:
+  kubeadm:
+    namespace: "default"
+    version: "v1.10.5"
+    createNamespace: false
+  rke2:
+    namespace: "default"
+    version: "v0.20.1"
+    createNamespace: false
+  k3s:
+    namespace: "default"
+    version: "v0.2.1"
+    createNamespace: false
+    fetchConfig:
+      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/bootstrap-components.yaml"
 
+controlPlane:
+  kubeadm:
+    namespace: "default"
+    version: "v1.10.5"
+    createNamespace: false
+  rke2:
+    namespace: "default"
+    version: "v0.20.1"
+    createNamespace: false
+  k3s:
+    namespace: "default"
+    version: "v0.2.1"
+    createNamespace: false
+    fetchConfig:
+      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/bootstrap-components.yaml"
 
+infrastructure:
+  kubevirt:
+    namespace: "default"
+    createNamespace: false
+    version: "v0.1.10"
+
+addon:
+  helm:
+    namespace: "default"
+    createNamespace: false
+    version: "v0.3.2"
+
+ipam:
+  in-cluster:
+    namespace: "default"
+    createNamespace: false
+    version: "v1.0.3"
+
+manager.featureGates: {}
+# Configuration for enabling feature gates in different providers
+# manager:
+#   featureGates:
+#     proxmox: # Name of the provider
+#       ClusterTopology: true
+#     core:
+#       ClusterTopology: true
+#     kubeadm:
+#       ClusterTopology: true
+
+fetchConfig: {}
+
+# ---
+# Common configuration secret options
 configSecret: {}
 
+# ---
+# CAPI operator deployment options
+logLevel: 2
 replicaCount: 1
-
+leaderElection:
+  enabled: true
 image:
   manager:
-    repository: registry.k8s.io/capi-operator/cluster-api-operator
-    tag: v0.15.0
+    repository: gcr.io/k8s-staging-capi-operator/cluster-api-operator
+    tag: v0.23.0
     pullPolicy: IfNotPresent
-
 env:
   manager: []
-
+diagnosticsAddress: ":8443"
+healthAddr: ":9440"
+profilerAddress: ":6060"
+contentionProfiling: false
+insecureDiagnostics: false
+watchConfigSecret: false
+watchConfigMap: false
 imagePullSecrets: {}
-
-args:
-  - --leader-elect
-
 resources:
   manager:
     limits:
       cpu: 100m
-      memory: 150Mi
+      memory: 300Mi
     requests:
       cpu: 100m
       memory: 100Mi
-
 containerSecurityContext: {}
-
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -65,21 +119,19 @@ affinity:
               operator: In
               values:
                 - linux
-
 tolerations:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
   - effect: NoSchedule
     key: node-role.kubernetes.io/control-plane
-
 volumes:
   - name: cert
     secret:
       defaultMode: 420
       secretName: capi-operator-webhook-service-cert
-
 volumeMounts:
   manager:
     - mountPath: /tmp/k8s-webhook-server/serving-certs
       name: cert
       readOnly: true
+enableHelmHook: false
