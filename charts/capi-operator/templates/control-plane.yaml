@@ -64,6 +64,10 @@ spec:
     namespace: {{ $controlPlane.additionalManifests.namespace }}
     {{- end }} {{/* if $controlPlane.additionalManifests.namespace */}}
 {{- end }}
+{{- with $controlPlane.fetchConfig }}
+  fetchConfig:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
 {{- if $controlPlane.additionalManifests }}
 ---
 apiVersion: v1
