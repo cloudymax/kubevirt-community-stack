@@ -10,6 +10,10 @@ cluster:
   # -- Name of the cluster to create
   name: capi
 
+  # -- Choose which provider to use when creating the cluster
+  # One of: kubeadm, k3s, rke2
+  provider: rke2
+
   # -- Version of kubernetes to deploy
   version: v1.32.1+rke2r1
 

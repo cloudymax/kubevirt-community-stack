@@ -5,8 +5,8 @@ metadata:
   labels:
     capk.cluster.x-k8s.io/template-kind: extra-resource
     cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-    k8s-app: kubevirt-cloud-controller-manager
-  name: kubevirt-cloud-controller-manager
+    k8s-app: "kccm-{{ .Values.cluster.name }}"
+  name: "kccm-{{ .Values.cluster.name }}"
   namespace: {{ .Values.cluster.namespace }}
 spec:
   replicas: 1
@@ -20,12 +20,12 @@ spec:
       labels:
         capk.cluster.x-k8s.io/template-kind: extra-resource
         cluster.x-k8s.io/cluster-name: {{.Values.cluster.name}}
-        k8s-app: kubevirt-cloud-controller-manager
+        k8s-app: "kccm-{{ .Values.cluster.name }}"
     spec:
       containers:
         - args:
             - --cloud-provider=kubevirt
-            - --cloud-config=/etc/cloud/cloud-config
+            - --cloud-config=/etc/cloud/cloud-config-{{ .Values.cluster.name }}
             - --kubeconfig=/etc/kubernetes/kubeconfig/value
             - --authentication-skip-lookup=true
             - --cluster-name={{ .Values.cluster.name }}
@@ -44,9 +44,9 @@ spec:
               name: kubeconfig
               readOnly: true
             - mountPath: /etc/cloud
-              name: cloud-config
+              name: "cloud-config-{{ .Values.cluster.name }}"
               readOnly: true
-      serviceAccountName: cloud-controller-manager
+      serviceAccountName: "cloud-controller-manager-{{ .Values.cluster.name }}"
       tolerations:
         - effect: NoSchedule
           key: node.cloudprovider.kubernetes.io/uninitialized
@@ -55,8 +55,8 @@ spec:
           key: node-role.kubernetes.io/master
       volumes:
         - configMap:
-            name: cloud-config
-          name: cloud-config
+            name: "cloud-config-{{ .Values.cluster.name }}"
+          name: "cloud-config-{{ .Values.cluster.name }}"
         - name: kubeconfig
           secret:
             secretName: capi-kubeconfig

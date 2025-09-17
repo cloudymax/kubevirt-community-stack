@@ -1,3 +1,4 @@
+{{- if eq .Values.provider "rke2" }}
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: RKE2ConfigTemplate
@@ -9,3 +10,4 @@ spec:
     spec:
       agentConfig: {}
       gzipUserData: false
+{{- end }}

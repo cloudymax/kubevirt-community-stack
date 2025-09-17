@@ -11,8 +11,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: kccm
+  name: "kccm-{{ .Values.cluster.name }}"
 subjects:
   - kind: ServiceAccount
-    name: cloud-controller-manager
+    name: "cloud-controller-manager-{{ .Values.cluster.name }}"
     namespace: {{ .Values.cluster.namespace }}

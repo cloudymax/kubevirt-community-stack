@@ -19,7 +19,15 @@ spec:
       - {{ .Values.cluster.serviceCidrBlock }}
   controlPlaneRef:
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    {{- if eq .Values.provider "rke2" }}
     kind: RKE2ControlPlane
+    {{- end }}
+    {{- if eq .Values.provider "kubeadm" }}
+    kind: KubeadmControlPlane
+    {{- end }}
+    {{- if eq .Values.provider "k3s" }}
+    kind: KThreesControlPlane
+    {{- end }}
     name: {{ .Values.cluster.name }}-control-plane
     namespace: {{ .Values.cluster.namespace }}
   infrastructureRef:
