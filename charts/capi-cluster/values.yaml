@@ -12,10 +12,12 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: rke2
+  provider: k3s
 
   # -- Version of kubernetes to deploy
-  version: v1.32.1+rke2r1
+  # v1.32.1+rke2r1
+  # v1.32.1+k3s1
+  version: v1.32.1+k3s1
 
   # -- Namespace in which to host cluster components
   namespace: default
