@@ -1,3 +1,4 @@
+{{- if not (eq .Values.cluster.provider "k3s") }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: KubevirtMachineTemplate
@@ -45,4 +46,4 @@ spec:
                 - name: emptydisk
                   emptyDisk:
                     capacity: {{ .Values.MachineTemplates.workers.disk }}
-
+{{- end }}

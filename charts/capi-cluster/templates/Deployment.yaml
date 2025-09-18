@@ -14,7 +14,7 @@ spec:
     matchLabels:
       capk.cluster.x-k8s.io/template-kind: extra-resource
       cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-      k8s-app: kubevirt-cloud-controller-manager
+      k8s-app: "kccm-{{ .Values.cluster.name }}"
   template:
     metadata:
       labels:

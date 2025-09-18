@@ -1,0 +1,14 @@
+{{- if eq .Values.cluster.provider "k3s" }}
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KThreesControlPlane
+metadata:
+  name: {{ .Values.cluster.name }}-control-plane
+  namespace: {{ .Values.cluster.namespace }}
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: KubevirtMachineTemplate
+    name: {{ .Values.cluster.name }}-control-plane
+  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
+  version: {{ .Values.cluster.version }}
+{{- end }}
