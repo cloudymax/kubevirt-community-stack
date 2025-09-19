@@ -2,7 +2,7 @@
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: KubevirtMachineTemplate
 metadata:
-  name: capi-control-plane
+  name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
 spec:
   template:

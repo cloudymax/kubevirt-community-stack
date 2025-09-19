@@ -62,7 +62,7 @@ MachineTemplates:
 
   # -- Worker VM spec
   workers:
-    size: 2
+    size: 0
     cores: 4
     memory: 8Gi
     disk: 32Gi
