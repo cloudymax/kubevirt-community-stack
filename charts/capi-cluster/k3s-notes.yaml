@@ -1,0 +1,304 @@
+---
+# Source: cluster-api-cluster/templates/ServiceAccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "cloud-controller-manager-capi"
+  namespace: default
+---
+# Source: cluster-api-cluster/templates/cloud-config.yaml
+apiVersion: v1
+data:
+  "cloud-config-capi": |
+    loadBalancer:
+      creationPollInterval: 5
+      creationPollTimeout: 60
+    namespace: default
+    instancesV2:
+      enabled: true
+      zoneAndRegionEnabled: false
+kind: ConfigMap
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "cloud-config-capi"
+  namespace: default
+---
+# Source: cluster-api-cluster/templates/Role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "kccm-capi"
+  namespace: default
+rules:
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachines
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachineinstances
+    verbs:
+      - get
+      - watch
+      - list
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - '*'
+---
+# Source: cluster-api-cluster/templates/RoleBinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: kccm-sa
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "kccm-capi"
+subjects:
+  - kind: ServiceAccount
+    name: "cloud-controller-manager-capi"
+    namespace: default
+---
+# Source: cluster-api-cluster/templates/Deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+    k8s-app: "kccm-capi"
+  name: "kccm-capi"
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      capk.cluster.x-k8s.io/template-kind: extra-resource
+      cluster.x-k8s.io/cluster-name: capi
+      k8s-app: "kccm-capi"
+  template:
+    metadata:
+      labels:
+        capk.cluster.x-k8s.io/template-kind: extra-resource
+        cluster.x-k8s.io/cluster-name: capi
+        k8s-app: "kccm-capi"
+    spec:
+      containers:
+        - args:
+            - --cloud-provider=kubevirt
+            - --cloud-config=/etc/cloud/cloud-config-capi
+            - --kubeconfig=/etc/kubernetes/kubeconfig/value
+            - --authentication-skip-lookup=true
+            - --cluster-name=capi
+          command:
+            - /bin/kubevirt-cloud-controller-manager
+          image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.5.1
+          imagePullPolicy: Always
+          name: kubevirt-cloud-controller-manager
+          resources:
+            requests:
+              cpu: 100m
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /etc/kubernetes/kubeconfig
+              name: kubeconfig
+              readOnly: true
+            - mountPath: /etc/cloud
+              name: "cloud-config-capi"
+              readOnly: true
+      serviceAccountName: "cloud-controller-manager-capi"
+      tolerations:
+        - effect: NoSchedule
+          key: node.cloudprovider.kubernetes.io/uninitialized
+          value: "true"
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+      volumes:
+        - configMap:
+            name: "cloud-config-capi"
+          name: "cloud-config-capi"
+        - name: kubeconfig
+          secret:
+            secretName: capi-kubeconfig
+---
+# Source: cluster-api-cluster/templates/Cluster.yaml
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: capi
+  namespace: default
+  labels:
+spec:
+  clusterNetwork:
+    apiServerPort: 6443
+    serviceDomain: cluster.local
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    kind: KThreesControlPlane
+    name: capi-control-plane
+    namespace: default
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: KubevirtCluster
+    name: capi
+    namespace: default
+---
+# Source: cluster-api-cluster/templates/KThreesConfigTemplate.yaml
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+kind: KThreesConfigTemplate
+metadata:
+  name: capi-md-0
+  namespace: default
+spec:
+  template:
+    spec: null
+---
+# Source: cluster-api-cluster/templates/KThreesControlPlane.yaml
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+kind: KThreesControlPlane
+metadata:
+  name: capi-control-plane
+  namespace: default
+spec:
+  kthreesConfigSpec:
+    serverConfig:
+      # Cannot overlap with host machine's CIDRs
+      clusterCidr: 10.10.0.0/16
+      # Cannot overlap with host machine's CIDRs
+      serviceCidr: 10.11.0.0/16
+      cloudProviderName: external
+      disableComponents:
+        - servicelb
+      disableCloudController: false
+    agentConfig: {}
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      kind: KubevirtMachineTemplate
+      name: capi-control-plane
+  replicas: 1
+  version: v1.32.1+k3s1
+---
+# Source: cluster-api-cluster/templates/KubevirtCluster.yaml
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtCluster
+metadata:
+  name: capi
+  namespace: default
+spec:
+  controlPlaneServiceTemplate:
+    spec:
+      type: ClusterIP
+---
+# Source: cluster-api-cluster/templates/ControlPlaneMachineTemplate.yaml
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: capi-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        spec:
+          runStrategy: Always
+          template:
+            spec:
+              architecture: amd64
+              domain:
+                machine:
+                  type: q35
+                clock:
+                  utc: {}
+                  timer:
+                    hpet:
+                      present: false
+                    pit:
+                      tickPolicy: delay
+                    rtc:
+                      tickPolicy: catchup
+                    kvm: {}
+                features:
+                  kvm: {}
+                  acpi: {}
+                cpu:
+                  dedicatedCpuPlacement: true
+                  model: host-passthrough
+                  sockets: 1
+                  cores: 2
+                  threads: 1
+                memory:
+                  guest: 2Gi
+                #firmware:
+                #  uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+                #  bootloader:
+                #    efi:
+                #      secureBoot: false
+                devices:
+                  interfaces:
+                    - masquerade: {}
+                      model: virtio
+                      name: default
+                  autoattachPodInterface: true
+                  autoattachSerialConsole: true
+                  autoattachGraphicsDevice: true
+                  networkInterfaceMultiqueue: true
+                  rng: {}
+                  inputs:
+                    - type: tablet
+                      bus: virtio
+                      name: tablet1
+                  disks:
+                    - name: harddrive
+                      disk:
+                        bus: virtio
+                resources:
+                  requests:
+                    memory: "2Gi"
+                  limits:
+                    memory: "2Gi"
+              networks:
+                - name: default
+                  pod: {}
+              terminationGracePeriodSeconds: 0
+              volumes:
+                - name: harddrive
+                  ephemeral:
+                    persistentVolumeClaim:
+                      claimName: harddrive
+#- containerDisk:
+#     image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+#   name: harddrive
