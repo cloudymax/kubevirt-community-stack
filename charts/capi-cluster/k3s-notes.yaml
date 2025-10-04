@@ -175,6 +175,7 @@ spec:
     namespace: default
 ---
 # Source: cluster-api-cluster/templates/KThreesConfigTemplate.yaml
+# Only used for worker machine deployments
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: KThreesConfigTemplate
 metadata:
@@ -182,7 +183,34 @@ metadata:
   namespace: default
 spec:
   template:
-    spec: null
+    spec:
+      files: []
+      preK3sCommands: []
+      postK3sCommands: []
+      serverConfig: {}
+      #  disableCloudController: false
+      #  kubeAPIServerArg: []
+      #  kubeControllerManagerArgs: []
+      #  kubeSchedulerArgs: []
+      #  tlsSan: []
+      #  advertiseAddress: ""
+      #  advertisePort: ""
+      #  clusterCidr: 10.10.0.0/16
+      #  serviceCidr: 10.11.0.0/16
+      #  clusterDNS: ""
+      #  clusterDomain: "cluster.local"
+      #  cloudProviderName: external
+      #  disableComponents:
+      #    - servicelb
+      #    - traefik
+      #  httpsListenPort: ""
+      agentConfig: {}
+      #  kubeProxyArgs: []
+      #  kubeletArgs: []
+      #  nodeLabels: []
+      #  nodeName: ""
+      #  nodeTaints: []
+      #  privateRegistry: ""
 ---
 # Source: cluster-api-cluster/templates/KThreesControlPlane.yaml
 apiVersion: controlplane.cluster.x-k8s.io/v1beta2
@@ -192,16 +220,59 @@ metadata:
   namespace: default
 spec:
   kthreesConfigSpec:
+    files:
+      - path: /etc/kubernetes/kubelet.yaml
+        permissions: "0640"
+        content: |
+          apiVersion: kubelet.config.k8s.io/v1beta1
+          kind: KubeletConfiguration
+          maxPods: 200
+          kubeReserved:
+            cpu: "1"
+            memory: "2Gi"
+            ephemeral-storage: "1Gi"
+          systemReserved:
+            cpu: "500m"
+            memory: "1Gi"
+            ephemeral-storage: "1Gi"
+          evictionHard:
+            memory.available: "500Mi"
+            nodefs.available: "10%"
+    preK3sCommands:
+      - mkdir -p /etc/kubernetes
+      - mkdir -p /var/lib/rancher/k3s/storage
+      - printf 'o\nn\np\n1\n\n\nw' | fdisk /dev/vdb
+      - sudo mkfs.ext4 /dev/vdb1
+      - sudo mount /dev/vdb1 /var/lib/rancher/k3s/storage
+      - sudo chmod -R 777 /var/lib/rancher/k3s/storage
+      - ls -hal /var/lib/rancher/k3s
+      - printf '/dev/vdb1 /var/lib/rancher/k3s/storage ext4 defaults,nofail,discard 0 0' >> /etc/fstab
+    postK3sCommands: []
     serverConfig:
-      # Cannot overlap with host machine's CIDRs
+      disableCloudController: false
+      kubeAPIServerArg: []
+      kubeControllerManagerArgs: []
+      kubeSchedulerArgs: []
+      tlsSan: []
+      advertiseAddress: ""
+      advertisePort: ""
       clusterCidr: 10.10.0.0/16
-      # Cannot overlap with host machine's CIDRs
       serviceCidr: 10.11.0.0/16
+      clusterDNS: ""
+      clusterDomain: "cluster.local"
       cloudProviderName: external
       disableComponents:
         - servicelb
-      disableCloudController: false
-    agentConfig: {}
+        - traefik
+      httpsListenPort: ""
+    agentConfig:
+      kubeProxyArgs: []
+      kubeletArgs:
+        - --config=/etc/kubernetes/kubelet.yaml
+      nodeLabels: []
+      nodeName: ""
+      nodeTaints: []
+      privateRegistry: ""
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
@@ -258,10 +329,10 @@ spec:
                   dedicatedCpuPlacement: true
                   model: host-passthrough
                   sockets: 1
-                  cores: 2
+                  cores: 4
                   threads: 1
                 memory:
-                  guest: 2Gi
+                  guest: 8Gi
                 #firmware:
                 #  uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
                 #  bootloader:
@@ -285,11 +356,14 @@ spec:
                     - name: harddrive
                       disk:
                         bus: virtio
+                    - name: storage
+                      disk:
+                        bus: virtio
                 resources:
                   requests:
-                    memory: "2Gi"
+                    memory: "8Gi"
                   limits:
-                    memory: "2Gi"
+                    memory: "8Gi"
               networks:
                 - name: default
                   pod: {}
@@ -299,6 +373,26 @@ spec:
                   ephemeral:
                     persistentVolumeClaim:
                       claimName: harddrive
-#- containerDisk:
-#     image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
-#   name: harddrive
+                - name: storage
+                  persistentVolumeClaim:
+                    claimName: storage
+                    #- containerDisk:
+                    #     image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+                    #   name: harddrive
+
+---
+# Source: kubevirt-vm/templates/datavolume.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage
+  namespace: default
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: "true"
+spec:
+  storageClassName: seaweedfs-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 32G
