@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -17,7 +17,7 @@ A Helm chart that generates cloud-init config files
 | argocdAppName | string | `"cloud-init-test"` | - ArgoCD App name for optional resource tracking |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
+| debug | bool | `true` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
@@ -28,7 +28,7 @@ A Helm chart that generates cloud-init config files
 | hostname | string | `"random"` | virtual-machine hostname |
 | image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
 | mounts | list | `[]` | Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line |
-| namespace | string | `"kubevirt"` | namespace in which to create resources |
+| namespace | string | `"default"` | namespace in which to create resources |
 | network | object | `{"config":"disabled"}` | networking options |
 | network.config | string | `"disabled"` | disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations. |
 | package_reboot_if_required | bool | `false` | Update, upgrade, and install packages See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
@@ -39,6 +39,11 @@ A Helm chart that generates cloud-init config files
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
+| staticIPs[0].name | string | `"enp1s0"` |  |
+| staticIPs[0].subnets[0].address | string | `"192.168.1.100/32"` |  |
+| staticIPs[0].subnets[0].gateway | string | `"192.168.1.1"` |  |
+| staticIPs[0].subnets[0].type | string | `"static"` |  |
+| staticIPs[0].type | string | `"physical"` |  |
 | swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
 | users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"pool","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
