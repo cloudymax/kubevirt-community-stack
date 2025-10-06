@@ -4,10 +4,6 @@ kind: Job
 metadata:
   name: {{ .Values.hostname }}-cloud-init-job
   namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": before-hook-creation
-    "helm.sh/hook-weight": "0"
 spec:
   backoffLimit: 3
   template:
@@ -33,6 +29,10 @@ spec:
             value: /secrets/user-data.yaml
           - name: USER_DATA_PATH
             value: /user-data.yaml
+          - name: NETWORK_DATA_SECRET_PATH
+            value: /secrets/network-data.yaml
+          - name: NETWORK_DATA_PATH
+            value: /network-data.yaml
           - name: SALT
             value: {{ .Values.salt }}
  	  {{- range $reg, $props := .Values.users }}
@@ -75,6 +75,11 @@ spec:
             - name: userdata
               mountPath: /secrets/user-data.yaml
               subPath: user-data.yaml
+            {{- if .Values.staticIPs }}
+            - name: networkdata
+              mountPath: /secrets/network-data.yaml
+              subPath: network-data.yaml
+            {{- end }}
             - name: optimizer-script
               mountPath: /optimize.sh
               subPath: optimize.sh
@@ -89,6 +94,18 @@ spec:
         - name: userdata
           configMap:
             name: {{ .Values.hostname }}-userdata
+            items:
+              - key: user-data.yaml
+                path: user-data.yaml
+        {{- if .Values.staticIPs }}
+        - name: networkdata
+          configMap:
+            name: {{ .Values.hostname }}-userdata
+            items:
+              - key: network-data.yaml
+                path: network-data.yaml
+            optional: true
+        {{- end }}
         - name: optimizer-script
           configMap:
             name: optimizer-script

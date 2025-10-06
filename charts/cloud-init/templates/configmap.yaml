@@ -3,10 +3,13 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.hostname}}-userdata
   namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-1"
 data:
+  {{- with .Values.staticIPs }}
+  network-data.yaml: |-
+    version: 1
+    config:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   user-data.yaml: |-
     #cloud-config
     hostname: {{ .Values.hostname }}
@@ -50,13 +53,13 @@ data:
         {{- if $props.password }}
         passwd:
         {{- end }}
-        {{- range $id := $props.ssh_import_id }}
+        {{- with $props.ssh_import_id }}
         ssh_import_id:
-          - {{ $id }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- range $key := $props.ssh_authorized_keys }}
+        {{- with $props.ssh_authorized_keys }}
         ssh_authorized_keys:
-          - {{ $key }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
       {{- end }}
     {{- with .Values.boot_cmd }}
