@@ -3,10 +3,13 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.hostname}}-userdata
   namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-1"
 data:
+  {{- with .Values.staticIPs }}
+  network-data.yaml: |-
+    version: 1
+    config:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   user-data.yaml: |-
     #cloud-config
     hostname: {{ .Values.hostname }}
