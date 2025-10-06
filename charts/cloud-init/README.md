@@ -39,11 +39,7 @@ A Helm chart that generates cloud-init config files
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
-| staticIPs[0].name | string | `"enp1s0"` |  |
-| staticIPs[0].subnets[0].address | string | `"192.168.1.100/32"` |  |
-| staticIPs[0].subnets[0].gateway | string | `"192.168.1.1"` |  |
-| staticIPs[0].subnets[0].type | string | `"static"` |  |
-| staticIPs[0].type | string | `"physical"` |  |
+| staticIPs | list | `[]` |  |
 | swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
 | users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"pool","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
