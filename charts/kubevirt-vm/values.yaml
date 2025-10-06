@@ -87,7 +87,7 @@ virtualMachine:
 
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
-    priorityClassName: vm-standard
+    priorityClassName: system-node-critical
 
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
     # Overrides: vCores, memory, gpus
@@ -200,25 +200,25 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
- - name: harddrive
-   # -- Disk type: disk, cdrom, filesystem, or lun
-   type: disk
-   # -- Bus type: sata or virtio
-   bus: virtio
-   # -- Sets disk position in boot order, lower numbers are checked earlier
-   bootorder: 2
-   # -- Set disk to be Read-only
-   readonly: false
-   # -- Size of disk in GB
-   pvsize: 16Gi
-   # -- Storage class to use for the pvc
-   pvstorageClassName: fast-raid
-   # -- Access mode for the PVC
-   pvaccessMode: ReadWriteOnce
-   # -- source type of the disk image. One of `url`, `pvc`
-   source: url
-   # -- URL of cloud-image
-   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+  - name: harddrive
+    # -- Disk type: disk, cdrom, filesystem, or lun
+    type: disk
+    # -- Bus type: sata or virtio
+    bus: virtio
+    # -- Sets disk position in boot order, lower numbers are checked earlier
+    bootorder: 2
+    # -- Set disk to be Read-only
+    readonly: false
+    # -- Size of disk in GB
+    pvsize: 16Gi
+    # -- Storage class to use for the pvc
+    pvstorageClassName: fast-raid
+    # -- Access mode for the PVC
+    pvaccessMode: ReadWriteOnce
+    # -- source type of the disk image. One of `url`, `pvc`
+    source: url
+    # -- URL of cloud-image
+    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
@@ -382,7 +382,7 @@ cloudinit:
     size: 1G
     maxsize: 1G
 
-  disk_setup: {}
+  disk_setup: []
     # -- The name of the device.
   #  - name: /dev/vdb
   #    # -- This is a list of values, with the percentage of disk that
@@ -509,12 +509,12 @@ cloudinit:
   # -- Add a list staatic IP address assignment via networkData.
   # For use with Multus
   staticIPs: []
-  # - name: enp1s0
-  #   type: physical
-  #   subnets:
-  #   - type: static
-  #     address: 192.168.1.100/32
-  #     gateway: 192.168.1.1
+  #- name: enp1s0
+  #  type: physical
+  #  subnets:
+  #  - type: static
+  #    address: 192.168.2.111/32
+  #    gateway: 192.168.2.1
 
 ################################################################################
 # ____                  _             ___     ___

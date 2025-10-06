@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -20,7 +20,7 @@ Configure a virtual machine for use with Kubevirt
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cloudinit | object | `{"argocdAppName":"","boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"disk_setup":{},"enabled":true,"envsubst":false,"existingConfigMap":false,"extraEnvVars":[],"fs_setup":[],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","mounts":[],"namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"staticIPs":[],"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
+| cloudinit | object | `{"argocdAppName":"","boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"disk_setup":[],"enabled":true,"envsubst":false,"existingConfigMap":false,"extraEnvVars":[],"fs_setup":[],"hostname":"test","image":"deserializeme/kv-cloud-init:v0.0.1","mounts":[],"namespace":"kubevirt","network":{"config":"disabled"},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"staticIPs":[],"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"test","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
 | cloudinit.argocdAppName | string | `""` | - ArgoCD App name for optional resource tracking |
 | cloudinit.boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | cloudinit.ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
@@ -102,7 +102,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.machine.memory.overcommit.enabled | bool | `false` | Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled. |
 | virtualMachine.machine.memory.overcommit.overhead | bool | `false` | Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory. |
 | virtualMachine.machine.pinCores | bool | `true` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
-| virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
+| virtualMachine.machine.priorityClassName | string | `"system-node-critical"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. |
 | virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. |
 | virtualMachine.machine.vCores | int | `2` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
