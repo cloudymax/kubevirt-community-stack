@@ -19,6 +19,7 @@ log() {
 
 #export USER_DATA_SECRET_PATH="/home/friend/repos/kubevirt-community-stack/charts/cloud-init/manifests.yaml"
 #export USER_DATA_PATH="user-data.yaml"
+#export NETWORK_DATA_PATH="network-data.yaml"
 #export SALT="saltsaltlettuce"
 #export ENVSUBST=true
 #export SECRET_NAME="my-secret"
@@ -77,7 +78,28 @@ check_size(){
     export FULL=$(echo "scale=2; 100-(($REMAINDER/16000)*100)" |bc -l)
     log "user-data file is $SIZE bytes - $FULL% of 16Kb limit.\n"
     if [[ $SIZE -gt 16000 ]]; then
-        echo "Warn: user-data file exceeds the 16KB limit"
+        log "Warn: user-data file exceeds the 16KB limit"
+    fi
+}
+
+network_data(){
+    log "Checking if network-data exists..."
+
+    if [ -f "${NETWORK_DATA_SECRET_PATH}" ]; then
+        NETWORK_DATA_LENGTH=$(cat "$NETWORK_DATA_SECRET_PATH" | yq '.config | length')
+        log "${NETWORK_DATA_SECRET_PATH} exists and is a regular file."
+
+        if [ ${NETWORK_DATA_LENGTH} -gt 0 ]; then
+            cp $NETWORK_DATA_SECRET_PATH $NETWORK_DATA_PATH
+            export NETWORK_DATA_PRESENT="true"
+            log "network-data length: $NETWORK_DATA_LENGTH"
+        else
+            export NETWORK_DATA_PRESENT="false"
+            log "network-data is empty."
+        fi
+    else
+        log "${NETWORK_DATA_SECRET_PATH} not found."
+        export NETWORK_DATA_PRESENT="false"
     fi
 }
 
@@ -96,8 +118,16 @@ create_secret(){
         kubectl delete secret ${SECRET_NAME}
     fi
 
-    log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
-    kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
+
+    if [ "$NETWORK_DATA_PRESENT" == "true" ]; then
+        log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH} & ${NETWORK_DATA_PATH}"
+        kubectl create secret generic ${SECRET_NAME} \
+            --from-file=userdata="${USER_DATA_PATH}" \
+            --from-file=networkdata="${NETWORK_DATA_PATH}"
+    else
+        log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH}"
+        kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
+    fi
 
     kubectl annotate --overwrite secret ${SECRET_NAME} \
         argocd.argoproj.io/tracking-id="${ARGOCD_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}"
@@ -133,6 +163,7 @@ main(){
     wireguard
     admin_password
     download_files
+    network_data
     validate
     create_secret
 }
