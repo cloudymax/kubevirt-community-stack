@@ -1,0 +1,403 @@
+# Source: cluster-api-cluster/templates/ServiceAccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "cloud-controller-manager-capi"
+  namespace: default
+---
+# Source: cluster-api-cluster/templates/cloud-config.yaml
+apiVersion: v1
+data:
+  "cloud-config-capi": |
+    loadBalancer:
+      creationPollInterval: 5
+      creationPollTimeout: 60
+    namespace: default
+    instancesV2:
+      enabled: true
+      zoneAndRegionEnabled: false
+kind: ConfigMap
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "cloud-config-capi"
+  namespace: default
+---
+# Source: cluster-api-cluster/templates/Role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: "kccm-capi"
+  namespace: default
+rules:
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachines
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachineinstances
+    verbs:
+      - get
+      - watch
+      - list
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - '*'
+---
+# Source: cluster-api-cluster/templates/RoleBinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+  name: kccm-sa
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "kccm-capi"
+subjects:
+  - kind: ServiceAccount
+    name: "cloud-controller-manager-capi"
+    namespace: default
+---
+# Source: cluster-api-cluster/templates/Deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: capi
+    k8s-app: "kccm-capi"
+  name: "kccm-capi"
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      capk.cluster.x-k8s.io/template-kind: extra-resource
+      cluster.x-k8s.io/cluster-name: capi
+      k8s-app: "kccm-capi"
+  template:
+    metadata:
+      labels:
+        capk.cluster.x-k8s.io/template-kind: extra-resource
+        cluster.x-k8s.io/cluster-name: capi
+        k8s-app: "kccm-capi"
+    spec:
+      containers:
+        - args:
+            - --cloud-provider=kubevirt
+            - --cloud-config=/etc/cloud/cloud-config-capi
+            - --kubeconfig=/etc/kubernetes/kubeconfig/value
+            - --authentication-skip-lookup=true
+            - --cluster-name=capi
+          command:
+            - /bin/kubevirt-cloud-controller-manager
+          image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.5.1
+          imagePullPolicy: Always
+          name: kubevirt-cloud-controller-manager
+          resources:
+            requests:
+              cpu: 100m
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /etc/kubernetes/kubeconfig
+              name: kubeconfig
+              readOnly: true
+            - mountPath: /etc/cloud
+              name: "cloud-config-capi"
+              readOnly: true
+      serviceAccountName: "cloud-controller-manager-capi"
+      tolerations:
+        - effect: NoSchedule
+          key: node.cloudprovider.kubernetes.io/uninitialized
+          value: "true"
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+      volumes:
+        - configMap:
+            name: "cloud-config-capi"
+          name: "cloud-config-capi"
+        - name: kubeconfig
+          secret:
+            secretName: capi-kubeconfig
+---
+# Source: cluster-api-cluster/templates/Cluster.yaml
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: capi
+  namespace: default
+  labels:
+spec:
+  clusterNetwork:
+    apiServerPort: 6443
+    serviceDomain: cluster.local
+    pods:
+      cidrBlocks:
+        - 192.168.0.0/16
+    services:
+      cidrBlocks:
+        - 192.167.0.0/16
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    kind: RKE2ControlPlane
+    name: capi-control-plane
+    namespace: default
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: KubevirtCluster
+    name: capi
+    namespace: default
+---
+# Source: cluster-api-cluster/templates/KubevirtCluster.yaml
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtCluster
+metadata:
+  name: capi
+  namespace: default
+spec:
+  controlPlaneServiceTemplate:
+    spec:
+      type: ClusterIP
+---
+# Source: cluster-api-cluster/templates/ControlPlaneMachineTemplate.yaml
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: capi-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        metadata:
+          namespace: default
+        spec:
+          runStrategy: Always
+          template:
+            spec:
+              domain:
+                resources:
+                  requests:
+                    ephemeral-storage: 32Gi
+                cpu:
+                  model: host-passthrough
+                  cores: 4
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: containervolume
+                    - name: emptydisk
+                      disk:
+                        bus: virtio
+                  networkInterfaceMultiqueue: true
+                memory:
+                  guest: 8Gi
+              evictionStrategy: External
+              volumes:
+                - containerDisk:
+                    image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+                  name: containervolume
+                - name: emptydisk
+                  emptyDisk:
+                    capacity: 8Gi
+---
+# Source: cluster-api-cluster/templates/WorkerMachineTemplate.yaml
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: capi-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        metadata:
+          namespace: default
+          labels:
+          cluster.x-k8s.io/cluster-name: capi
+          cluster.x-k8s.io/role: worker
+        spec:
+          runStrategy: Always
+          template:
+            spec:
+              domain:
+                resources:
+                  requests:
+                    ephemeral-storage: 32Gi
+                cpu:
+                  model: host-passthrough
+                  cores: 4
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: containervolume
+                    - name: emptydisk
+                      disk:
+                        bus: virtio
+                  networkInterfaceMultiqueue: true
+                memory:
+                  guest: 8Gi
+              evictionStrategy: External
+              volumes:
+                - containerDisk:
+                    image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+                  name: containervolume
+                - name: emptydisk
+                  emptyDisk:
+                    capacity: 32Gi
+---
+# Source: cluster-api-cluster/templates/WorkerMachineDeployment.yaml
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: capi-md-0
+  namespace: default
+spec:
+  clusterName: capi
+  replicas: 2
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: RKE2ConfigTemplate
+          name: capi-md-0
+          namespace: default
+      clusterName: capi
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        kind: KubevirtMachineTemplate
+        name: capi-md-0
+        namespace: default
+      version: v1.32.1+rke2r1
+---
+# Source: cluster-api-cluster/templates/RKE2ConfigTemplate.yaml
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: RKE2ConfigTemplate
+metadata:
+  name: capi-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      agentConfig:
+        kubelet:
+          extraArgs:
+            - --config=/etc/kubernetes/kubelet.yaml
+      files:
+        - path: /etc/kubernetes/kubelet.yaml
+          permissions: "0640"
+          content: |
+            apiVersion: kubelet.config.k8s.io/v1beta1
+            kind: KubeletConfiguration
+            maxPods: 200
+            kubeReserved:
+              cpu: "1"
+              memory: "2Gi"
+              ephemeral-storage: "1Gi"
+            systemReserved:
+              cpu: "500m"
+              memory: "1Gi"
+              ephemeral-storage: "1Gi"
+            evictionHard:
+              memory.available: "500Mi"
+              nodefs.available: "10%"
+
+---
+# Source: cluster-api-cluster/templates/RKE2ControlPlane.yaml
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: RKE2ControlPlane
+metadata:
+  name: capi-control-plane
+  namespace: default
+spec:
+  agentConfig:
+    kubelet:
+      extraArgs:
+        - --config=/etc/kubernetes/kubelet.yaml
+  files:
+    - path: /etc/kubernetes/kubelet.yaml
+      permissions: "0640"
+      content: |
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        kind: KubeletConfiguration
+        maxPods: 200
+        kubeReserved:
+          cpu: "1"
+          memory: "2Gi"
+          ephemeral-storage: "1Gi"
+        systemReserved:
+          cpu: "500m"
+          memory: "1Gi"
+          ephemeral-storage: "1Gi"
+        evictionHard:
+          memory.available: "500Mi"
+          nodefs.available: "10%"
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: KubevirtMachineTemplate
+      name: capi-control-plane
+    nodeDeletionTimeout: 30s
+    nodeDrainTimeout: 2m
+    nodeVolumeDetachTimeout: 5m
+  manifestsConfigMapReference: {}
+  postRKE2Commands: []
+  preRKE2Commands: []
+  privateRegistriesConfig: {}
+  registrationMethod: internal-first
+  replicas: 1
+  rolloutStrategy:
+    rollingUpdate:
+      maxSurge: 1
+    type: RollingUpdate
+  serverConfig:
+    cni: canal
+    disableComponents:
+      pluginComponents:
+        - "rke2-ingress-nginx"
+      kubernetesComponents:
+        - cloudController
+    kubeAPIServer:
+      extraArgs:
+        - --anonymous-auth=true
+  version: v1.32.1+rke2r1
