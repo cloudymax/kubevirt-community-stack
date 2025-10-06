@@ -102,7 +102,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.machine.memory.overcommit.enabled | bool | `false` | Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled. |
 | virtualMachine.machine.memory.overcommit.overhead | bool | `false` | Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory. |
 | virtualMachine.machine.pinCores | bool | `true` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
-| virtualMachine.machine.priorityClassName | string | `"system-node-critical"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
+| virtualMachine.machine.priorityClassName | string | `"vm-standard"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
 | virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. |
 | virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. |
 | virtualMachine.machine.vCores | int | `2` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
