@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -70,7 +70,7 @@ Configure a virtual machine for use with Kubevirt
 | networkPolicy.enabled | bool | `false` | Enable the creation of network policies |
 | networkPolicy.ingress[0].from[0].namespaceSelector.matchLabels."kubernetes.io/metadata.name" | string | `"ingress-nginx"` |  |
 | networkPolicy.ingress[0].from[1].podSelector.matchLabels."app.kubernetes.io/name" | string | `"ingress-nginx"` |  |
-| service | list | `[{"externalTrafficPolicy":"Cluster","name":"test-service","ports":[{"name":"nginx","port":8080,"protocol":"TCP","targetPort":8080}],"type":"NodePort"}]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
+| service | list | `[]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
 | virtualMachine.capiMachineTemplate | bool | `false` | Create the VM as a KubevirtMachineTemplate for use with Cluster API Does not support VM Pools |
 | virtualMachine.clock | object | `{"enabled":true,"hpet":{"enabled":true,"present":false},"hyperv":false,"kvm":true,"pit":{"enabled":true,"tickPolicy":"delay"},"rtc":{"enabled":true,"tickPolicy":"catchup"},"timezone":"utc"}` | Options for machine clock |

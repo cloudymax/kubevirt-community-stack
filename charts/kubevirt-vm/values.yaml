@@ -526,15 +526,15 @@ cloudinit:
 ################################################################################
 # -- Service cinfiguration. Used to expose VM to the outside world.
 # Accepts a list of ports to open.
-service:
-- name: test-service
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  ports:
-    - name: nginx
-      port: 8080
-      targetPort: 8080
-      protocol: TCP
+service: []
+# - name: test-service
+#   type: NodePort
+#   externalTrafficPolicy: Cluster
+#   ports:
+#     - name: nginx
+#       port: 8080
+#       targetPort: 8080
+#       protocol: TCP
 
 # -- Ingress configuration
 ingress:
