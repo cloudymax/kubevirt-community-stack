@@ -506,15 +506,20 @@ cloudinit:
   runcmd: []
   #  - docker run -d -p 8080:80 nginx
 
-  # -- Add a list staatic IP address assignment via networkData.
-  # For use with Multus
-  staticIPs: []
-  #- name: enp1s0
-  #  type: physical
-  #  subnets:
-  #  - type: static
-  #    address: 192.168.2.111/32
-  #    gateway: 192.168.2.1
+  # -- Provide instance networkData via the NoCloud networkData configuration source.
+  # When envSubst is enabled this file will also be templated.
+  # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
+  # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
+  networkData:
+    enabled: false
+    content: |-
+      renderer: networkd
+      network:
+        version: 2
+        ethernets:
+          primary:
+            dhcp4: true
+            dhcp6: false
 
 ################################################################################
 # ____                  _             ___     ___
