@@ -4,11 +4,10 @@ metadata:
   name: {{ .Values.hostname}}-userdata
   namespace: {{ .Values.namespace }}
 data:
-  {{- with .Values.staticIPs }}
+  {{- if .Values.networkData.enabled }}
+  {{- $content := .Values.networkData.content }}
   network-data.yaml: |-
-    version: 1
-    config:
-      {{- toYaml . | nindent 6 }}
+    {{- $content | nindent 4 }}
   {{- end }}
   user-data.yaml: |-
     #cloud-config

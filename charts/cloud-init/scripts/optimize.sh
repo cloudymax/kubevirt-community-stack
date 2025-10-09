@@ -32,6 +32,12 @@ run_envsubst(){
         log "running envsubst against $USER_DATA_PATH... \n"
         envsubst < "${USER_DATA_PATH}" > tmp.yaml
         mv tmp.yaml "${USER_DATA_PATH}"
+
+        if [ "${NETWORK_DATA_PRESENT}" == "true" ]; then
+            log "running envsubst against $NETWORK_DATA_PATH... \n"
+            envsubst < "${NETWORK_DATA_PATH}" > tmp.yaml
+            mv tmp.yaml "${NETWORK_DATA_PATH}"
+        fi
     fi
 }
 
@@ -86,17 +92,9 @@ network_data(){
     log "Checking if network-data exists..."
 
     if [ -f "${NETWORK_DATA_SECRET_PATH}" ]; then
-        NETWORK_DATA_LENGTH=$(cat "$NETWORK_DATA_SECRET_PATH" | yq '.config | length')
         log "${NETWORK_DATA_SECRET_PATH} exists and is a regular file."
-
-        if [ ${NETWORK_DATA_LENGTH} -gt 0 ]; then
-            cp $NETWORK_DATA_SECRET_PATH $NETWORK_DATA_PATH
-            export NETWORK_DATA_PRESENT="true"
-            log "network-data length: $NETWORK_DATA_LENGTH"
-        else
-            export NETWORK_DATA_PRESENT="false"
-            log "network-data is empty."
-        fi
+        cp $NETWORK_DATA_SECRET_PATH $NETWORK_DATA_PATH
+        export NETWORK_DATA_PRESENT="true"
     else
         log "${NETWORK_DATA_SECRET_PATH} not found."
         export NETWORK_DATA_PRESENT="false"
@@ -158,12 +156,12 @@ wireguard(){
 main(){
     log "Starting Cloud-Init Optomizer"
     cp $USER_DATA_SECRET_PATH $USER_DATA_PATH
+    network_data
     check_size
     run_envsubst
     wireguard
     admin_password
     download_files
-    network_data
     validate
     create_secret
 }

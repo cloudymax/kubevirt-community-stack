@@ -63,6 +63,8 @@ envsubst: true
 extraEnvVars:
   - name: USERNAME
     value: friend
+  - name: macaddress
+    value: 'b8:a3:86:70:cc:e6'
   # - name: ACCESS_TOKEN
   #   valueFrom:
   #     secretKeyRef:
@@ -79,7 +81,7 @@ namespace: default
 disable_root: false
 
 # -- when enabled job sleeps to allow user to exec into the container
-debug: true
+debug: false
 
 # -- salt used for password generation
 salt: "saltsaltlettuce"
@@ -202,12 +204,28 @@ runcmd: []
   #- wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
   #- chmod +x /usr/bin/yq
 
-# Add a list staatic IP address assignment via networkData.
-# For use with Multus
-staticIPs: []
-# - name: enp1s0
-#   type: physical
-#   subnets:
-#   - type: static
-#     address: 192.168.1.100/32
-#     gateway: 192.168.1.1
+# Provide instance networkData via the NoCloud networkData configuration source.
+# When envSubst is enabled this file will also be templated.
+# https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
+# https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
+networkData:
+  enabled: false
+  content: |-
+    renderer: networkd
+    network:
+      version: 2
+      ethernets:
+        multus:
+          match:
+            macaddress: ${macaddress}
+          dhcp4: false
+          dhcp6: false
+          addresses:
+            - 192.168.100.100/24
+          routes:
+            - to: default
+              via: 192.168.100.1
+          mtu: 1500
+          nameservers:
+            addresses:
+              - 192.168.100.1

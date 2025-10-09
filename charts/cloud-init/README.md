@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -17,13 +17,15 @@ A Helm chart that generates cloud-init config files
 | argocdAppName | string | `"cloud-init-test"` | - ArgoCD App name for optional resource tracking |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `true` | when enabled job sleeps to allow user to exec into the container |
+| debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
 | existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
 | extraEnvVars[0].name | string | `"USERNAME"` |  |
 | extraEnvVars[0].value | string | `"friend"` |  |
+| extraEnvVars[1].name | string | `"macaddress"` |  |
+| extraEnvVars[1].value | string | `"b8:a3:86:70:cc:e6"` |  |
 | fs_setup | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname |
 | image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
@@ -31,6 +33,8 @@ A Helm chart that generates cloud-init config files
 | namespace | string | `"default"` | namespace in which to create resources |
 | network | object | `{"config":"disabled"}` | networking options |
 | network.config | string | `"disabled"` | disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations. |
+| networkData.content | string | `"renderer: networkd\nnetwork:\n  version: 2\n  ethernets:\n    multus:\n      match:\n        macaddress: ${macaddress}\n      dhcp4: false\n      dhcp6: false\n      addresses:\n        - 192.168.100.100/24\n      routes:\n        - to: default\n          via: 192.168.100.1\n      mtu: 1500\n      nameservers:\n        addresses:\n          - 192.168.100.1"` |  |
+| networkData.enabled | bool | `false` |  |
 | package_reboot_if_required | bool | `false` | Update, upgrade, and install packages See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
 | package_update | bool | `true` |  |
 | package_upgrade | bool | `false` |  |
@@ -39,7 +43,6 @@ A Helm chart that generates cloud-init config files
 | salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
-| staticIPs | list | `[]` |  |
 | swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
 | users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"pool","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
