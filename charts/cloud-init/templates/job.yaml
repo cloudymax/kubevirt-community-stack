@@ -75,7 +75,7 @@ spec:
             - name: userdata
               mountPath: /secrets/user-data.yaml
               subPath: user-data.yaml
-            {{- if .Values.staticIPs }}
+            {{- if .Values.networkData.enabled }}
             - name: networkdata
               mountPath: /secrets/network-data.yaml
               subPath: network-data.yaml
@@ -97,14 +97,13 @@ spec:
             items:
               - key: user-data.yaml
                 path: user-data.yaml
-        {{- if .Values.staticIPs }}
+        {{- if .Values.networkData.enabled }}
         - name: networkdata
           configMap:
             name: {{ .Values.hostname }}-userdata
             items:
               - key: network-data.yaml
                 path: network-data.yaml
-            optional: true
         {{- end }}
         - name: optimizer-script
           configMap:
