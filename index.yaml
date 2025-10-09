@@ -1109,6 +1109,26 @@ entries:
   kubevirt-vm:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2025-10-09T21:23:35.418433218Z"
+    dependencies:
+    - alias: cloudinit
+      condition: cloudinit.enabled
+      name: cloud-init
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.5.0
+    description: Configure a virtual machine for use with Kubevirt
+    digest: 5b713a74f30c6b0de64f260628a3e60907454d1a11913c8b386e0b1aa5bffa41
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-vm
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-vm-0.7.0/kubevirt-vm-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2025-10-08T09:24:07.061216328Z"
     dependencies:
     - alias: cloudinit
@@ -1864,4 +1884,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-10-09T21:16:16.827409825Z"
+generated: "2025-10-09T21:23:35.41882146Z"
