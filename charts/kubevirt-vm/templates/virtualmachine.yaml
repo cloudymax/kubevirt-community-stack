@@ -263,7 +263,7 @@ spec:
               name: {{ .Values.cloudinit.secret_name }}
               {{- end }}
             {{- if eq .Values.cloudinit.enabled true }}
-            {{- if .Values.cloudinit.staticIPs }}
+            {{- if .Values.cloudinit.networkData.enabled }}
             networkDataSecretRef:
               {{- if eq .Values.userDataSecret.enabled true }}
               name: {{ .Values.userDataSecret.name }}
@@ -272,7 +272,6 @@ spec:
               {{- end }}
             {{- end }}
             {{- end }}
-
         {{- end }}
 {{- end }}
 {{- end }}
