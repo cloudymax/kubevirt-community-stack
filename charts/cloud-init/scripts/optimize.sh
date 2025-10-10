@@ -41,6 +41,38 @@ run_envsubst(){
     fi
 }
 
+# Create a random password and save it as a kubernetes secret. Must be run after
+# envsubst to avoid issues where no username is present
+random_password(){
+    log "Generating a random password for ${USERNAME}."
+    INPUT=$(golang-petname --words 2)
+    OUTPUT=""
+    LENGTH=${#INPUT}
+
+    for (( i=0; i<LENGTH; i++ )); do
+      char="${INPUT:$i:1}"
+      if (( RANDOM % 2 == 0 )); then
+        # Convert to uppercase
+        OUTPUT+="$(echo "$char" | tr '[:lower:]' '[:upper:]')"
+      else
+        # Convert to lowercase
+        OUTPUT+="$(echo "$char" | tr '[:upper:]' '[:lower:]')"
+      fi
+    done
+
+    export GENERATED_PASSWORD="$OUTPUT-$RANDOM"
+
+    export SECRET_EXISTS=$(kubectl get secret ${USERNAME}-password -o yaml |grep -o ${USERNAME}-password |wc -l)
+
+    if [ "${SECRET_EXISTS}" -gt 0 ]; then
+        log "Kubernetes secret ${USERNAME}-password exists and will be replaced"
+        kubectl patch secret ${USERNAME}-password -p '{"metadata":{"finalizers":null}}' --type=merge
+        kubectl delete secret ${USERNAME}-password
+        kubectl create secret generic ${USERNAME}-password --from-literal=password="$GENERATED_PASSWORD"
+    fi
+
+}
+
 # Hash and insert passwd field for each specified user
 admin_password(){
     read -ra users <<< $(yq '.users[].name' $USER_DATA_PATH |xargs)
@@ -50,8 +82,16 @@ admin_password(){
         CHECK=$(yq '.users[env(COUNT)].passwd' $USER_DATA_PATH)
         if [ "${CHECK}" != "null" ]; then
             log "Setting hashed password for user: $user\n"
+
             CAP_USER=$(echo "${user}" | tr '[:lower:]' '[:upper:]')
-            PASSWORD=$(env |grep "${CAP_USER}_PASSWORD" |cut -d '=' -f2)
+
+            if [ ${RANDOM_PASSWORD} == "true" ]; then
+                random_password
+                export PASSWORD=$GENERATED_PASSWORD
+            else
+                export PASSWORD=$(env |grep "${CAP_USER}_PASSWORD" |cut -d '=' -f2)
+            fi
+
             export HASHED_PASSWORD=$(mkpasswd --method=SHA-512 --rounds=4096 "${PASSWORD}" -s "${SALT}")
             yq -i '.users[env(COUNT)].passwd = env(HASHED_PASSWORD)' $USER_DATA_PATH
         fi
@@ -116,7 +156,6 @@ create_secret(){
         kubectl delete secret ${SECRET_NAME}
     fi
 
-
     if [ "$NETWORK_DATA_PRESENT" == "true" ]; then
         log "Creating kubernetes secret ${SECRET_NAME} from ${USER_DATA_PATH} & ${NETWORK_DATA_PATH}"
         kubectl create secret generic ${SECRET_NAME} \
@@ -127,12 +166,15 @@ create_secret(){
         kubectl create secret generic ${SECRET_NAME} --from-file=userdata="${USER_DATA_PATH}"
     fi
 
+    log "Adding argocd tracking annotation."
     kubectl annotate --overwrite secret ${SECRET_NAME} \
         argocd.argoproj.io/tracking-id="${ARGOCD_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}"
 
+    log "Adding argocd sync options."
     kubectl annotate --overwrite secret ${SECRET_NAME} \
         argocd.argoproj.io/sync-options="Prune=false,Delete=false"
 
+    log "Adding argocd comparison options."
     kubectl annotate --overwrite secret ${SECRET_NAME} \
         argocd.argoproj.io/compare-options="IgnoreExtraneous"
 

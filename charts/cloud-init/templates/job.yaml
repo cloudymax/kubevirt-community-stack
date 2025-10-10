@@ -44,11 +44,8 @@ spec:
                 key: {{ $props.password.existingSecret.key }}
 	  {{- end }}
           {{- if $props.password.random }}
-          - name: {{ upper $props.name }}_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $props.name }}-password
-                key: password
+          - name: RANDOM_PASSWORD
+            value: "true"
 	  {{- end }}
 	  {{- end }}
           {{- with .Values.extraEnvVars }}
