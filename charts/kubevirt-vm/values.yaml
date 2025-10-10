@@ -180,7 +180,7 @@ virtualMachinePool:
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 2
   hpa:
-    enabled: true
+    enabled: false
     maxReplicas: 5
     minReplicas: 1
 
@@ -200,25 +200,25 @@ disks:
 #################################################
 # DataVolume disk with URL source example
 #################################################
-  - name: harddrive
-    # -- Disk type: disk, cdrom, filesystem, or lun
-    type: disk
-    # -- Bus type: sata or virtio
-    bus: virtio
-    # -- Sets disk position in boot order, lower numbers are checked earlier
-    bootorder: 2
-    # -- Set disk to be Read-only
-    readonly: false
-    # -- Size of disk in GB
-    pvsize: 16Gi
-    # -- Storage class to use for the pvc
-    pvstorageClassName: fast-raid
-    # -- Access mode for the PVC
-    pvaccessMode: ReadWriteOnce
-    # -- source type of the disk image. One of `url`, `pvc`
-    source: url
-    # -- URL of cloud-image
-    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+#  - name: harddrive
+#    # -- Disk type: disk, cdrom, filesystem, or lun
+#    type: disk
+#    # -- Bus type: sata or virtio
+#    bus: virtio
+#    # -- Sets disk position in boot order, lower numbers are checked earlier
+#    bootorder: 2
+#    # -- Set disk to be Read-only
+#    readonly: false
+#    # -- Size of disk in GB
+#    pvsize: 16Gi
+#    # -- Storage class to use for the pvc
+#    pvstorageClassName: fast-raid
+#    # -- Access mode for the PVC
+#    pvaccessMode: ReadWriteOnce
+#    # -- source type of the disk image. One of `url`, `pvc`
+#    source: url
+#    # -- URL of cloud-image
+#    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
 
 #########################################################
 # Ephemeral disk example
@@ -279,13 +279,21 @@ disks:
 
 ##########################################################
 # Container Disk Example
+# see: https://github.com/kubevirt/containerdisks
 ##########################################################
-# - name: virtio-drivers
-#   type: cdrom
-#   bus: sata
-#   bootorder: 3
-#   readonly: true
-#   image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
+  - name: harddrive
+    type: disk
+    bus: virtio
+    bootorder: 1
+    readonly: false
+    image: "quay.io/containerdisks/debian:13"
+
+#  - name: virtio-drivers
+#    type: cdrom
+#    bus: sata
+#    bootorder: 3
+#    readonly: true
+#    image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
 
 ###########################################################
 # Local Disk example
@@ -570,38 +578,38 @@ ingress:
 networkPolicy:
   # -- Enable the creation of network policies
   enabled: false
-  egress:
+  egress: []
     # Allow communication to Kubernetes DNS service
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-      - podSelector:
-          matchLabels:
-            k8s-app: kube-dns
-      ports:
-      - protocol: UDP
-        port: 53
+    #- to:
+    #  - namespaceSelector:
+    #      matchLabels:
+    #        kubernetes.io/metadata.name: kube-system
+    #  - podSelector:
+    #      matchLabels:
+    #        k8s-app: kube-dns
+    #  ports:
+    #  - protocol: UDP
+    #    port: 53
 
     # Allow internet access
-    - to:
-      - ipBlock:
-          cidr: 0.0.0.0/0
-          # Exclude traffic to Kubernetes service IPs and pods
-          except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+    #- to:
+    #  - ipBlock:
+    #      cidr: 0.0.0.0/0
+    #      # Exclude traffic to Kubernetes service IPs and pods
+    #      except:
+    #        - 10.0.0.0/8
+    #        - 172.16.0.0/12
+    #        - 192.168.0.0/16
 
-  ingress:
+  ingress: []
     # Allow internet access from the ingress controller
-    - from:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: "ingress-nginx"
-      - podSelector:
-          matchLabels:
-            app.kubernetes.io/name: "ingress-nginx"
+    #- from:
+    #  - namespaceSelector:
+    #      matchLabels:
+    #        kubernetes.io/metadata.name: "ingress-nginx"
+    #  - podSelector:
+    #      matchLabels:
+    #        app.kubernetes.io/name: "ingress-nginx"
 
 ################################################################################
 #  ____            _

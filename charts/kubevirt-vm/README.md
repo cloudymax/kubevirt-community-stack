@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -48,28 +48,11 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.wireguard | list | `[]` | add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard |
 | cloudinit.write_files | list | `[]` | Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when I/O errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
-| disks | list | `[{"bootorder":2,"bus":"virtio","name":"harddrive","pvaccessMode":"ReadWriteOnce","pvsize":"16Gi","pvstorageClassName":"fast-raid","readonly":false,"source":"url","type":"disk","url":"https://buildstars.online/debian-12-generic-amd64-daily.qcow2"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
-| disks[0].bootorder | int | `2` | Sets disk position in boot order, lower numbers are checked earlier |
-| disks[0].bus | string | `"virtio"` | Bus type: sata or virtio |
-| disks[0].pvaccessMode | string | `"ReadWriteOnce"` | Access mode for the PVC |
-| disks[0].pvsize | string | `"16Gi"` | Size of disk in GB |
-| disks[0].pvstorageClassName | string | `"fast-raid"` | Storage class to use for the pvc |
-| disks[0].readonly | bool | `false` | Set disk to be Read-only |
-| disks[0].source | string | `"url"` | source type of the disk image. One of `url`, `pvc` |
-| disks[0].type | string | `"disk"` | Disk type: disk, cdrom, filesystem, or lun |
-| disks[0].url | string | `"https://buildstars.online/debian-12-generic-amd64-daily.qcow2"` | URL of cloud-image |
+| disks | list | `[{"bootorder":1,"bus":"virtio","image":"quay.io/containerdisks/debian:13","name":"harddrive","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
 | ingress | object | `{"annotations":{},"className":"nginx","enabled":false,"hostname":"novnc.buildstar.online","tls":[]}` | Ingress configuration |
-| networkPolicy.egress[0].ports[0].port | int | `53` |  |
-| networkPolicy.egress[0].ports[0].protocol | string | `"UDP"` |  |
-| networkPolicy.egress[0].to[0].namespaceSelector.matchLabels."kubernetes.io/metadata.name" | string | `"kube-system"` |  |
-| networkPolicy.egress[0].to[1].podSelector.matchLabels.k8s-app | string | `"kube-dns"` |  |
-| networkPolicy.egress[1].to[0].ipBlock.cidr | string | `"0.0.0.0/0"` |  |
-| networkPolicy.egress[1].to[0].ipBlock.except[0] | string | `"10.0.0.0/8"` |  |
-| networkPolicy.egress[1].to[0].ipBlock.except[1] | string | `"172.16.0.0/12"` |  |
-| networkPolicy.egress[1].to[0].ipBlock.except[2] | string | `"192.168.0.0/16"` |  |
+| networkPolicy.egress | list | `[]` |  |
 | networkPolicy.enabled | bool | `false` | Enable the creation of network policies |
-| networkPolicy.ingress[0].from[0].namespaceSelector.matchLabels."kubernetes.io/metadata.name" | string | `"ingress-nginx"` |  |
-| networkPolicy.ingress[0].from[1].podSelector.matchLabels."app.kubernetes.io/name" | string | `"ingress-nginx"` |  |
+| networkPolicy.ingress | list | `[]` |  |
 | service | list | `[]` | Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open. |
 | userDataSecret | object | `{"enabled":false,"name":""}` | Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled. |
 | virtualMachine.capiMachineTemplate | bool | `false` | Create the VM as a KubevirtMachineTemplate for use with Cluster API Does not support VM Pools |
@@ -112,7 +95,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.networks[0].pod | object | `{}` |  |
 | virtualMachine.runStrategy | string | `"Always"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once` See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy |
 | virtualMachinePool.enabled | bool | `false` |  |
-| virtualMachinePool.hpa.enabled | bool | `true` |  |
+| virtualMachinePool.hpa.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.maxReplicas | int | `5` |  |
 | virtualMachinePool.hpa.minReplicas | int | `1` |  |
 | virtualMachinePool.replicas | int | `2` | number of replicas to create. Ignored when hpa is set to 'true' |
