@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -17,7 +17,7 @@ A Helm chart that generates cloud-init config files
 | argocdAppName | string | `"cloud-init-test"` | - ArgoCD App name for optional resource tracking |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
+| debug | bool | `true` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
@@ -28,7 +28,7 @@ A Helm chart that generates cloud-init config files
 | extraEnvVars[1].value | string | `"b8:a3:86:70:cc:e6"` |  |
 | fs_setup | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname |
-| image | string | `"deserializeme/kv-cloud-init:v0.0.1"` | image version |
+| image | string | `"deserializeme/kv-cloud-init:v0.0.2"` | image version |
 | mounts | list | `[]` | Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line |
 | namespace | string | `"default"` | namespace in which to create resources |
 | network | object | `{"config":"disabled"}` | networking options |
@@ -44,7 +44,7 @@ A Helm chart that generates cloud-init config files
 | secret_name | string | `"max-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
 | swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
-| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"pool","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
+| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USERNAME","password":{"random":true},"shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
 | users[0].password | object | `{"random":true}` | set user password from existing secret or generate random |
 | users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |
 | users[0].ssh_import_id | list | `[]` | import user ssh public keys from github, gitlab, or launchpad See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh |
