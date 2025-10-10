@@ -1,3 +1,4 @@
+{{ if not .Values.virtualMachine.capiMachineTemplate.enabled }}
 {{ if .Values.virtualMachinePool.hpa.enabled }}
 {{ if .Values.virtualMachinePool.enabled }}
 apiVersion: autoscaling/v2
@@ -38,5 +39,6 @@ spec:
       - type: Pods
         value: 4
         periodSeconds: 15
+{{- end }}
 {{- end }}
 {{- end }}

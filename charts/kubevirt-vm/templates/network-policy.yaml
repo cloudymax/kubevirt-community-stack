@@ -1,4 +1,5 @@
-{{- if eq .Values.networkPolicy.enabled true }}
+{{- if not .Values.virtualMachine.capiMachineTemplate.enabled }}
+{{- if .Values.networkPolicy.enabled }}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -31,4 +32,4 @@ spec:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
-
+{{- end }}

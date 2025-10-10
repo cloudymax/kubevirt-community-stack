@@ -12,8 +12,12 @@ virtualMachine:
   namespace: kubevirt
 
   # -- Create the VM as a KubevirtMachineTemplate for use with Cluster API
-  # Does not support VM Pools
-  capiMachineTemplate: false
+  # disables all other templates and only create the VM and DataVolume
+  # DataVolume
+  capiMachineTemplate:
+    enabled: false
+    bootstrapCheck: ssh
+    role: worker
 
   # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
   # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
@@ -83,7 +87,6 @@ virtualMachine:
       enabled: true
       secureBoot: false
     uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
-
 
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
@@ -342,6 +345,13 @@ disks:
 #    secretName: test
 #    serialNumber: CVLY623300HK240D
 
+################################################################################
+#  _   _      _                      _    ____        _
+# | \ | | ___| |___      _____  _ __| | _|  _ \  __ _| |_ __ _
+# |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ / | | |/ _` | __/ _` |
+# | |\  |  __/ |_ \ V  V / (_) | |  |   <| |_| | (_| | || (_| |
+# |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\____/ \__,_|\__\__,_|
+################################################################################
 # -- Use an existing cloud-init userdata secret
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
@@ -357,7 +367,7 @@ userDataSecret:
 ################################################################################
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
-  enabled: true
+  enabled: false
 
   # Not all cloud-init modules are currently supported
   # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
@@ -540,14 +550,14 @@ cloudinit:
 # -- Service cinfiguration. Used to expose VM to the outside world.
 # Accepts a list of ports to open.
 service: []
-# - name: test-service
-#   type: NodePort
-#   externalTrafficPolicy: Cluster
-#   ports:
-#     - name: nginx
-#       port: 8080
-#       targetPort: 8080
-#       protocol: TCP
+#  - name: test-service
+#    type: NodePort
+#    externalTrafficPolicy: Cluster
+#    ports:
+#      - name: nginx
+#        port: 8080
+#        targetPort: 8080
+#        protocol: TCP
 
 # -- Ingress configuration
 ingress:

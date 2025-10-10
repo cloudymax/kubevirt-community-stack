@@ -1,5 +1,5 @@
-{{ if not .Values.virtualMachinePool.enabled }}
-{{ if eq .Values.virtualMachine.capiMachineTemplate false }}
+{{- if not .Values.virtualMachine.capiMachineTemplate.enabled }}
+{{- if not .Values.virtualMachinePool.enabled }}
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
