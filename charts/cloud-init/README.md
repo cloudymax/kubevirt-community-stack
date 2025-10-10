@@ -17,7 +17,7 @@ A Helm chart that generates cloud-init config files
 | argocdAppName | string | `"cloud-init-test"` | - ArgoCD App name for optional resource tracking |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
-| debug | bool | `true` | when enabled job sleeps to allow user to exec into the container |
+| debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | disable_root | bool | `false` | Disable root login over ssh |
 | disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |

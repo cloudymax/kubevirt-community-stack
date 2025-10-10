@@ -81,7 +81,7 @@ namespace: default
 disable_root: false
 
 # -- when enabled job sleeps to allow user to exec into the container
-debug: true
+debug: false
 
 # -- salt used for password generation
 salt: "saltsaltlettuce"
