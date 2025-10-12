@@ -50,25 +50,74 @@ cluster:
 #   \ V / | |  | | |  __/ (_) | (_) | \__ \
 #    \_/  |_|  |_| |_|   \___/ \___/|_|___/
 ###############################################################
-MachineTemplates:
-  # -- Control Plane VM pool spec
-  controlPlane:
-    # -- must be an odd number
-    size: 1
-    cores: 4
-    memory: 8Gi
-    disk: 32Gi
-    cpuModel: host-passthrough
+# -- Control Plane VM pool spec
+control:
+  enabled: true
+  # -- must be an odd number
+  size: 1
+  virtualMachine:
+    name: capi
+    capiMachineTemplate:
+      enabled: true
+      bootstrapCheck: ssh
+      role: control-plane
+    features:
+      kvm:
+        enabled: true
+    machine:
+      priorityClassName: vm-standard
+      architecture: amd64
+      cpuModel: host-passthrough
+      vCores: 4
+      pinCores: true
+      memory:
+        base: 8Gi
+    disks:
+    - name: harddrive
+      type: disk
+      bus: virtio
+      bootorder: 1
+      readonly: false
+      image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+    cloudinit:
+      enabled: false
+    networkData:
+      enabled: false
 
-  # -- Worker VM spec
-  workers:
-    size: 0
-    cores: 4
-    memory: 8Gi
-    disk: 32Gi
-    cpuModel: host-passthrough
+#-- Worker VM spec
+workers:
+  enabled: true
+  size: 1
+  virtualMachine:
+    name: capi
+    capiMachineTemplate:
+      enabled: true
+      bootstrapCheck: ssh
+      role: worker
+    features:
+      kvm:
+        enabled: true
+    machine:
+      priorityClassName: vm-standard
+      architecture: amd64
+      cpuModel: host-passthrough
+      vCores: 4
+      pinCores: true
+      memory:
+        base: 8Gi
+    disks:
+    - name: harddrive
+      type: disk
+      bus: virtio
+      bootorder: 1
+      readonly: false
+      image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+    cloudinit:
+      enabled: false
+    networkData:
+      enabled: false
 
-  image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+
 
 ###############################################################
 # _   _      _              ____ _                _
