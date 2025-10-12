@@ -39,7 +39,7 @@ virtualMachine:
       secureBoot: false
     uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
   machine:
-    priorityClassName: vm-standard
+    priorityClassName: system-node-critical
     instancetype:
       enabled: false
       name: standard-small
@@ -47,13 +47,13 @@ virtualMachine:
     architecture: amd64
     machineType: q35
     cpuModel: host-passthrough
-    sockets: 2
-    vCores: 1
+    sockets: 1
+    vCores: 2
     threads: 1
     pinCores: true
     emulatorThread: false
     memory:
-      base: 2Gi
+      base: 4Gi
       overcommit:
         enabled: false
         limit: 4Gi
@@ -68,7 +68,7 @@ virtualMachine:
       pod: {}
 virtualMachinePool:
   enabled: false
-  replicas: 2
+  replicas: 3
   hpa:
     enabled: false
     maxReplicas: 5
@@ -91,8 +91,9 @@ disks:
     pvsize: 16Gi
     pvstorageClassName: fast-raid
     pvaccessMode: ReadWriteOnce
+    nodePlacement: scremlin
     source: url
-    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+    url: "https://cloud.debian.org/images/cloud/trixie/20251006-2257/debian-13-generic-amd64-20251006-2257.qcow2"
 
 ################################################################################
 #  _   _      _                      _    ____        _
@@ -115,7 +116,7 @@ userDataSecret:
 cloudinit:
   enabled: true
   secret_name: "friend-desktop-user-data"
-  image: deserializeme/kv-cloud-init:v0.0.1
+  image: deserializeme/kv-cloud-init:v0.0.2
   serviceAccount:
     create: true
     name: "friend-desktop-sa"
@@ -125,15 +126,17 @@ cloudinit:
   extraEnvVars:
     - name: USERNAME
       value: friend
+    # Create a password to use with VNC
+    # kubectl create secret generic vnc-password --from-literal=password=$(petname --words 3)
     - name: VNC_PASS
       valueFrom:
         secretKeyRef:
-          name: "friend-password"
+          name: "vnc-password"
           key: "password"
   hostname: desktop
   namespace: default
   disable_root: false
-  debug: true
+  debug: false
   salt: "saltsaltlettuce"
   network:
     config: disabled
@@ -166,7 +169,8 @@ cloudinit:
     - sudo apt-get install -y docker-ce
     #####################
     # Run desktop
-    - docker run -d --restart always --tmpfs /dev/shm:rw -p 8080:8080 -e PASSWD="$VNC_PASS" deserializeme/ubuntu-xfce
+    - docker run -d --restart always --tmpfs /dev/shm:rw -p 8888:8888 -e PASSWD="$VNC_PASS" deserializeme/debian-xfce
+    - echo "done"
 
 ################################################################################
 # ____                  _             ___     ___
@@ -186,26 +190,30 @@ service:
         targetPort: 22
         protocol: TCP
       - name: novnc
-        port: 8080
-        targetPort: 8080
+        port: 8888
+        targetPort: 8888
         protocol: TCP
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
-  hostname: "friend-desktop.smallhack.org"
+  hostname: "friend-desktop.example.com"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "http-cookie"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   tls:
     enabled: true
     secretName: "tls-friend-desktop"
-  paths:
-    - path: /
-      pathType: Prefix
-      backend:
-        service:
-          name: "desktop-service"
-          port:
-            number: 8080
+    paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: "desktop-service"
+            port:
+              number: 8888
 
 ################################################################################
 #  _   _      _                      _      ____       _ _      _
@@ -218,31 +226,31 @@ networkPolicy:
   enabled: true
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-        - podSelector:
-            matchLabels:
-              k8s-app: kube-dns
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+      - podSelector:
+          matchLabels:
+            k8s-app: kube-dns
       ports:
         - protocol: UDP
           port: 53
     - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            # Exclude traffic to Kubernetes service IPs and pods
-            except:
-              - 10.0.0.0/8
-              - 172.16.0.0/12
-              - 192.168.0.0/16
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          # Exclude traffic to Kubernetes service IPs and pods
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: "ingress-nginx"
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: "ingress-nginx"
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: "ingress-nginx"
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: "ingress-nginx"
 
 ################################################################################
 #  ____            _
@@ -255,14 +263,14 @@ livenessProbe:
   initialDelaySeconds: 60
   periodSeconds: 10
   tcpSocket:
-    port: 8080
+    port: 8888
   timeoutSeconds: 10
 
 readinessProbe:
   initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 10
-  failureThreshold: 6
+  failureThreshold: 30
   successThreshold: 1
   httpGet:
-    port: 8080
+    port: 8888

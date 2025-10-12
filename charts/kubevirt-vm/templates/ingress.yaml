@@ -22,7 +22,7 @@ spec:
   rules:
   - host: {{ .Values.ingress.hostname }}
     http:
-      {{- with .Values.ingress.paths }}
+      {{- with .Values.ingress.tls.paths }}
       paths:
       {{- toYaml . | nindent 8 }}
       {{- end }}

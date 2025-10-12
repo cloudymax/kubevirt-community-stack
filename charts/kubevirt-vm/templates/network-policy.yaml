@@ -4,11 +4,13 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: egress-policy
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "5"
+  namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      kubevirt-service: {{ .Values.virtualMachine.name }}
+      kubevirt.io: virt-launcher
+      kubevirt.io/domain: {{ .Values.virtualMachine.name }}
   policyTypes:
   - Egress
   {{- with .Values.networkPolicy.egress }}
@@ -20,11 +22,13 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: ingress-policy
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "5"
+  namespace: {{ .Values.virtualMachine.namespace }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      kubevirt-service: {{ .Values.virtualMachine.name }}
+      kubevirt.io: virt-launcher
+      kubevirt.io/domain: {{ .Values.virtualMachine.name }}
   policyTypes:
     - Ingress
   {{- with .Values.networkPolicy.ingress }}
