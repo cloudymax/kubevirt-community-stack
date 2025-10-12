@@ -4,15 +4,3 @@ description: Cluster API Cluster using Kubevirt and Kubeadm
 type: application
 version: 0.0.1
 appVersion: "0.0.0"
-
-dependencies:
-- name: kubevirt-vm
-  alias: workers
-  version: 0.7.2
-  repository: https://cloudymax.github.io/kubevirt-community-stack
-  condition: workers.enabled
-- name: kubevirt-vm
-  alias: control
-  version: 0.7.2
-  repository: https://cloudymax.github.io/kubevirt-community-stack
-  condition: control.enabled

@@ -9,6 +9,6 @@ spec:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
     kind: KubevirtMachineTemplate
     name: {{ .Values.cluster.name }}-control-plane
-  replicas: {{ .Values.control.size }}
+  replicas: {{ .Values.controlPlane.size }}
   version: {{ .Values.cluster.version }}
 {{- end }}
