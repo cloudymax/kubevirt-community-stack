@@ -10,9 +10,9 @@ dependencies:
   alias: workers
   version: 0.7.2
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  condition: MachineTemplates.controlPlane.enabled
+  condition: workers.enabled
 - name: kubevirt-vm
   alias: control
   version: 0.7.2
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  condition: MachineTemplates.workers.enabled
+  condition: control.enabled

@@ -5,5 +5,5 @@ dependencies:
 - name: kubevirt-vm
   repository: https://cloudymax.github.io/kubevirt-community-stack
   version: 0.7.2
-digest: sha256:2e55db22a21e5859421efb26f77794754a12949dbb07dfd016e7c85316cf4096
-generated: "2025-10-12T15:07:50.159077+02:00"
+digest: sha256:e331ab1480a10e1271cbae098d1a07759b43d5cec66926efad9a94f46d6ea0dd
+generated: "2025-10-12T16:46:04.257059+02:00"

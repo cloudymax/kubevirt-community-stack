@@ -55,8 +55,9 @@ control:
   enabled: true
   # -- must be an odd number
   size: 1
+
   virtualMachine:
-    name: capi
+    name: capi-control-plane
     capiMachineTemplate:
       enabled: true
       bootstrapCheck: ssh
@@ -79,17 +80,18 @@ control:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
-    cloudinit:
-      enabled: false
-    networkData:
-      enabled: false
+  #cloudinit:
+  #  enabled: false
+  #  networkData:
+  #    enabled: false
 
 #-- Worker VM spec
 workers:
   enabled: true
   size: 1
+
   virtualMachine:
-    name: capi
+    name: capi-worker
     capiMachineTemplate:
       enabled: true
       bootstrapCheck: ssh
@@ -112,10 +114,10 @@ workers:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
-    cloudinit:
-      enabled: false
-    networkData:
-      enabled: false
+  #cloudinit:
+  #  enabled: false
+  #  networkData:
+  #    enabled: false
 
 
 
