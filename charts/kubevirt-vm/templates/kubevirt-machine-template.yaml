@@ -1,21 +1,21 @@
-{{- if eq .Values.virtualMachine.capiMachineTemplate true }}
+{{- if .Values.virtualMachine.capiMachineTemplate.enabled }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: KubevirtMachineTemplate
 metadata:
-  name: {{ .Values.cluster.name }}-md-0
-  namespace: {{ .Values.cluster.namespace }}
+  name: {{ .Values.virtualMachine.name }}
+  namespace: {{ .Values.virtualMachine.namespace }}
 spec:
   template:
     spec:
       virtualMachineBootstrapCheck:
-        checkStrategy: ssh
+        checkStrategy: {{ .Values.virtualMachine.capiMachineTemplate.bootstrapCheck }}
       virtualMachineTemplate:
         metadata:
-          namespace: {{ .Values.cluster.namespace }}
+          namespace: {{ .Values.virtualMachine.namespace }}
           labels:
-          cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-          cluster.x-k8s.io/role: worker
+          cluster.x-k8s.io/cluster-name: {{ .Values.virtualMachine.name }}
+          cluster.x-k8s.io/role: {{ .Values.virtualMachine.capiMachineTemplate.role }}
         spec:
           {{- if eq .Values.virtualMachine.machine.instancetype.enabled true }}
           instancetype:
@@ -270,5 +270,15 @@ spec:
                       {{- if eq .Values.cloudinit.enabled true }}
                       name: {{ .Values.cloudinit.secret_name }}
                       {{- end }}
+                    {{- if eq .Values.cloudinit.enabled true }}
+                    {{- if .Values.cloudinit.networkData.enabled }}
+                    networkDataSecretRef:
+                      {{- if eq .Values.userDataSecret.enabled true }}
+                      name: {{ .Values.userDataSecret.name }}
+                      {{- else }}
+                      name: {{ .Values.cloudinit.secret_name }}
+                      {{- end }}
+                    {{- end }}
+                    {{- end }}
                 {{- end }}
 {{- end }}

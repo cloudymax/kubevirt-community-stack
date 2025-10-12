@@ -1,4 +1,4 @@
-{{ if eq .Values.virtualMachine.capiMachineTemplate false }}
+{{- if not .Values.virtualMachine.capiMachineTemplate.enabled }}
 {{- range $reg, $props := .Values.service }}
 ---
 apiVersion: v1
