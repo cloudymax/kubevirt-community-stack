@@ -37,11 +37,33 @@ cluster:
   # -- Type of service to use when exposing control plane endpoint on Host
   controlPlaneServiceType: ClusterIP
 
-  # -- Extra args to pass to kubelet
-  kubeletExtraArgs:
-    kube-reserved: cpu=1,memory=2Gi,ephemeral-storage=1Gi
-    system-reserved: cpu=500m,memory=1Gi,ephemeral-storage=1Gi
-    eviction-hard: memory.available<500Mi,nodefs.available<10%
+  # -- Kubelet config in yaml file format
+  # https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
+  kubeletConfigFile:
+    enabled: true
+    content: |
+      apiVersion: kubelet.config.k8s.io/v1beta1
+      kind: KubeletConfiguration
+      maxPods: 200
+      kubeReserved:
+        cpu: "1"
+        memory: "2Gi"
+        ephemeral-storage: "1Gi"
+      systemReserved:
+        cpu: "500m"
+        memory: "1Gi"
+        ephemeral-storage: "1Gi"
+      evictionHard:
+        memory.available: "500Mi"
+        nodefs.available: "10%"
+
+  # -- Commands to run befores starting the kubernetes service
+  preCommands: []
+
+  # -- Commands to run after starting the kubernetes service
+  postCommands: []
+
+
 
 ###############################################################
 # __     ____  __   ____             _
@@ -50,7 +72,7 @@ cluster:
 #   \ V / | |  | | |  __/ (_) | (_) | \__ \
 #    \_/  |_|  |_| |_|   \___/ \___/|_|___/
 ###############################################################
-# -- Control Plane VM pool spec
+# -- Control Plane VM pool
 controlPlane:
   size: 1
   bootstrapCheck: ssh
@@ -178,7 +200,9 @@ controlPlane:
         # Use the default pod network
         - name: default
           pod: {}
+
   diskErrorPolicy: "report"
+
   disks:
     - name: harddrive
       type: disk
@@ -186,6 +210,11 @@ controlPlane:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+
+  cloudinit:
+    enabled: false
+    networkData:
+      enabled: false
 
 
 #-- Worker VM spec
@@ -357,6 +386,11 @@ workers:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+
+  cloudinit:
+    enabled: false
+    networkData:
+      enabled: false
 
 
 
