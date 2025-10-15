@@ -1,53 +1,54 @@
 {{- if eq .Values.cluster.provider "k3s" }}
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: KThreesControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
 spec:
-  infrastructureTemplate:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
-    kind: KubevirtMachineTemplate
-    name: {{ .Values.cluster.name }}-control-plane
-  replicas: {{ .Values.controlPlane.size }}
-  version: {{ .Values.cluster.version }}
-
-spec:
   kthreesConfigSpec:
     files:
-     {{- if .Values.cluster.kubeletConfigFile.enabled }}
-     {{- $content := .Values.cluster.kubeletConfigFile.content }}
+    {{- if .Values.cluster.kubeletConfigFile.enabled }}
+    {{- $content := .Values.cluster.kubeletConfigFile.content }}
       - path: /etc/kubernetes/kubelet.yaml
         permissions: "0640"
-        content: |-
+        content: |
           {{- $content | nindent 10 }}
     {{- end }}
     {{- with .Values.cluster.preCommands }}
     preK3sCommands:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    postK3sCommands: []
+    {{- with .Values.cluster.postCommands }}
+    postK3sCommands:
+      {{- toYaml . | nindent 6 }}
+    {{- end}}
     serverConfig:
       disableCloudController: false
       kubeAPIServerArg: []
       kubeControllerManagerArgs: []
       kubeSchedulerArgs: []
-      tlsSan: []
-      advertiseAddress: ""
-      advertisePort: ""
-      clusterCidr: 10.10.0.0/16
-      serviceCidr: 10.11.0.0/16
+      {{- with .Values.cluster.tlsSan }}
+      tlsSan:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      #advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+      #advertisePort: {{ .Values.cluster.advertisePort }}
+      clusterCidr: {{ .Values.cluster.podCidrBlock }}
+      serviceCidr: {{ .Values.cluster.serviceCidrBlock }}
       clusterDNS: ""
-      clusterDomain: "cluster.local"
+      clusterDomain: {{ .Values.cluster.dnsDomain }}
       cloudProviderName: external
+      {{- with .Values.cluster.disableComponents }}
       disableComponents:
-        - servicelb
-        - traefik
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       httpsListenPort: ""
     agentConfig:
       kubeProxyArgs: []
+      {{- if .Values.cluster.kubeletConfigFile.enabled }}
       kubeletArgs:
         - --config=/etc/kubernetes/kubelet.yaml
+      {{- end }}
       nodeLabels: []
       nodeName: ""
       nodeTaints: []
@@ -57,6 +58,6 @@ spec:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: KubevirtMachineTemplate
       name: capi-control-plane
-  replicas: 1
-  version: v1.32.1+k3s1
+  replicas: {{ .Values.controlPlane.size }}
+  version: {{ .Values.cluster.version }}
 {{- end }}

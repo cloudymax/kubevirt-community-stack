@@ -369,16 +369,12 @@ spec:
                   pod: {}
               terminationGracePeriodSeconds: 0
               volumes:
-                - name: harddrive
-                  ephemeral:
-                    persistentVolumeClaim:
-                      claimName: harddrive
                 - name: storage
                   persistentVolumeClaim:
                     claimName: storage
-                    #- containerDisk:
-                    #     image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
-                    #   name: harddrive
+                - name: harddrive
+                  containerDisk:
+                    image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
 
 ---
 # Source: kubevirt-vm/templates/datavolume.yaml

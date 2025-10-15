@@ -29,41 +29,59 @@ cluster:
   disableKubeProxy: false
 
   # -- CIDR block for pod network
-  podCidrBlock: "10.243.0.0/16"
+  podCidrBlock: "10.10.0.0/16"
 
   # -- CIDR block for services
-  serviceCidrBlock: "10.95.0.0/16"
+  serviceCidrBlock: "10.11.0.0/16"
 
   # -- Type of service to use when exposing control plane endpoint on Host
   controlPlaneServiceType: ClusterIP
+
+  tlsSan: []
+
+  advertiseAddress: ""
+
+  advertisePort: ""
 
   # -- Kubelet config in yaml file format
   # https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
   kubeletConfigFile:
     enabled: true
-    content: |
+    content: |-
       apiVersion: kubelet.config.k8s.io/v1beta1
       kind: KubeletConfiguration
       maxPods: 200
       kubeReserved:
-        cpu: "1"
-        memory: "2Gi"
-        ephemeral-storage: "1Gi"
+        cpu: "500m"
+        memory: "1G"
+        ephemeral-storage: "1G"
       systemReserved:
         cpu: "500m"
-        memory: "1Gi"
-        ephemeral-storage: "1Gi"
+        memory: "1G"
+        ephemeral-storage: "1G"
       evictionHard:
-        memory.available: "500Mi"
+        memory.available: "500M"
         nodefs.available: "10%"
 
   # -- Commands to run befores starting the kubernetes service
-  preCommands: []
+  preCommands:
+    - useradd -m friend
+    - echo 'friend:password' | chpasswd
+    - usermod -aG sudo friend
+    - echo 'friend ALL=(ALL) NOPASSWD:ALL' | EDITOR='tee -a' visudo
+    - mkdir -p /home/friend/.ssh
+    - chown friend:friend /home/friend/.ssh
+    - chmod 700 /home/friend/.ssh
+    - 'echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC3xEankn5zUklqZ5XVRbjP9XrXmK49VZ4OJqkzRF5JJpolBAwmJIUoww6G51g9IlYWzzijtfRSsQxoZHmHp+sSz/qP5zbjoFVCJ08N0ulqb8okM5C7+uET3dZKxwMT6DLFKSLebYnFlCtbp6VnDvp6gP+ZIesL6cxVWC/fSjTbyesEaNWkigI+2zF3sSDOvrSGvRmQSOfOvdjAY8xvcKkwj4uSXa5qsVM7OX+j+2vARredbvya6YyAkumB9SXVHqnFdOOo1jgMtdNGFPi703dgAnfQp7yafR9Ext46pkO8zcyroysogKjI0HqLqUtV6tAG7NZo4+u8k9uYkZmQa26u2rmkx6kUP1jaDfrSp/33dcCLRVKd/FOiv5Ztwvl71fKh3az9khf/ZxFO2thDy8M0TY46TWs87eow8McNmOJWvsyuvVsI7ZyRhGWQkx7V0vpsd8ClDf91enKt4tBDlTu8PYvI2i2UMCeFb+uSt4c2D/kjTCM/+XPrljLupIfs7pM= max" > /home/friend/.ssh/authorized_keys'
+    - chown friend:friend /home/friend/.ssh/authorized_keys
+    - chmod 600 /home/friend/.ssh/authorized_keys
 
   # -- Commands to run after starting the kubernetes service
   postCommands: []
 
-
+  disableComponents:
+    - servicelb
+    - traefik
 
 ###############################################################
 # __     ____  __   ____             _
@@ -127,12 +145,12 @@ controlPlane:
       smmEnabled: false
       # -- Enable EFI bios and secureboot
       efi:
-        enabled: true
+        enabled: false
         secureBoot: false
       uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
     machine:
       # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
-      priorityClassName: vm-standard
+      priorityClassName: system-cluster-critical
       # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
       # Overrides: vCores, memory, gpus
       instancetype:
@@ -153,7 +171,7 @@ controlPlane:
       sockets: 1
       # -- Number of Virtual cores to pass to the Guest
       # ignored when instancetype is defined
-      vCores: 2
+      vCores: 4
       # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
       threads: 1
       # -- Pin QEMU process threads to specific physical cores
@@ -166,13 +184,13 @@ controlPlane:
       emulatorThread: false
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 2Gi
+        base: 4G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4Gi
+          limit: 4G
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
           overhead: false
@@ -201,8 +219,11 @@ controlPlane:
         - name: default
           pod: {}
 
+  # -- controls hypervisor behavior when I/O errors occur on disk read or write.
+  # Possible values are: 'report', 'ignore', 'enospace'
   diskErrorPolicy: "report"
 
+  # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
   disks:
     - name: harddrive
       type: disk
@@ -211,11 +232,11 @@ controlPlane:
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
 
+  # -- not implimentded
   cloudinit:
     enabled: false
     networkData:
       enabled: false
-
 
 #-- Worker VM spec
 workers:
@@ -289,13 +310,13 @@ workers:
 
       # -- Enable EFI bios and secureboot
       efi:
-        enabled: true
+        enabled: false
         secureBoot: false
       uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
 
     machine:
       # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
-      priorityClassName: vm-standard
+      priorityClassName: system-cluster-critical
 
       # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
       # Overrides: vCores, memory, gpus
@@ -322,7 +343,7 @@ workers:
 
       # -- Number of Virtual cores to pass to the Guest
       # ignored when instancetype is defined
-      vCores: 2
+      vCores: 4
 
       # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
       threads: 1
@@ -339,13 +360,13 @@ workers:
 
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 2Gi
+        base: 4G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4Gi
+          limit: 4G
 
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
@@ -377,8 +398,11 @@ workers:
       - name: default
         pod: {}
 
+  # -- controls hypervisor behavior when I/O errors occur on disk read or write.
+  # Possible values are: 'report', 'ignore', 'enospace'
   diskErrorPolicy: "report"
 
+  # -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
   disks:
     - name: harddrive
       type: disk
@@ -387,6 +411,7 @@ workers:
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
 
+  # -- not implimentded
   cloudinit:
     enabled: false
     networkData:

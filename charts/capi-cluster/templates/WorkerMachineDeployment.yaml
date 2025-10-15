@@ -1,4 +1,3 @@
-{{- if not (eq .Values.cluster.provider "k3s") }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -7,7 +6,7 @@ metadata:
   namespace: {{ .Values.cluster.namespace }}
 spec:
   clusterName: {{ .Values.cluster.name }}
-  replicas: {{ .Values.MachineTemplates.workers.size }}
+  replicas: {{ .Values.workers.size }}
   selector:
     matchLabels: null
   template:
@@ -15,7 +14,12 @@ spec:
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          {{- if eq .Values.cluster.provider "rke2" }}
           kind: RKE2ConfigTemplate
+          {{- end }}
+          {{- if eq .Values.cluster.provider "k3s" }}
+          kind: KThreesConfigTemplate
+          {{- end }}
           name: {{ .Values.cluster.name }}-md-0
           namespace: {{ .Values.cluster.namespace }}
       clusterName: {{ .Values.cluster.name }}
@@ -25,4 +29,3 @@ spec:
         name: {{ .Values.cluster.name }}-md-0
         namespace: {{ .Values.cluster.namespace }}
       version: {{ .Values.cluster.version }}
-{{- end }}
