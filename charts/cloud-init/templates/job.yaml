@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Values.hostname }}-cloud-init-job
+  name: {{ .Values.secret_name }}-cloud-init-job
   namespace: {{ .Values.namespace }}
 spec:
   backoffLimit: 3
@@ -90,7 +90,7 @@ spec:
       volumes:
         - name: userdata
           configMap:
-            name: {{ .Values.hostname }}-userdata
+            name: {{ .Values.secret_name }}-userdata
             items:
               - key: user-data.yaml
                 path: user-data.yaml
@@ -104,7 +104,7 @@ spec:
         {{- end }}
         - name: optimizer-script
           configMap:
-            name: optimizer-script
+            name: {{ .Values.secret_name }}-optimizer-script
         {{- if .Values.wireguard }}
         {{- range $reg, $props := .Values.wireguard.interfaces }}
         - name: {{ $props.name }}
