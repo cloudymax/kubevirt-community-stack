@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.hostname}}-userdata
+  name: {{ .Values.secret_name }}-userdata
   namespace: {{ .Values.namespace }}
 data:
   {{- if .Values.networkData.enabled }}
