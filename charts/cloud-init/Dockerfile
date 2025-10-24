@@ -34,10 +34,10 @@ RUN useradd -ms /bin/bash $USER \
     && mkdir -p /home/$USER/.local/bin \
     && mkdir -p /home/$USER/.local/lib
 
-RUN chmod +x /home/$USER/cigen.sh \
-    && chmod +x /home/$USER/secretgen.sh \
-    && sudo chown -R $USER:$USER /home/$USER \
-    && sudo chmod -R u+rw /home/$USER
+#RUN chmod +x /home/$USER/cigen.sh \
+#    && chmod +x /home/$USER/secretgen.sh \
+#    && sudo chown -R $USER:$USER /home/$USER \
+#    && sudo chmod -R u+rw /home/$USER
 
 WORKDIR /home/$USER
 
