@@ -15,6 +15,8 @@ spec:
       {{- if eq .Values.serviceAccount.create false }}
       serviceAccountName: {{ .Values.serviceAccount.existingServiceAccountName }}
       {{- end }}
+      securityContext:
+        runAsUser: 1000
       containers:
         - name: cloud-init
           image: {{ .Values.image }}
@@ -78,8 +80,11 @@ spec:
               subPath: network-data.yaml
             {{- end }}
             - name: optimizer-script
-              mountPath: /optimize.sh
-              subPath: optimize.sh
+              mountPath: /home/appuser/cigen.sh
+              subPath: cigen.sh
+            - name: secret-script
+              mountPath: /home/appuser/secretgen.sh
+              subPath: secretgen.sh
             {{- if .Values.wireguard }}
             {{- range $reg, $props := .Values.wireguard.interfaces }}
             - name: {{ $props.name }}
@@ -105,6 +110,9 @@ spec:
         - name: optimizer-script
           configMap:
             name: {{ .Values.secret_name }}-optimizer-script
+        - name: secret-script
+          configmap:
+            name: {{ .Values.secret_name }}-secret-script
         {{- if .Values.wireguard }}
         {{- range $reg, $props := .Values.wireguard.interfaces }}
         - name: {{ $props.name }}
