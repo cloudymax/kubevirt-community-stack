@@ -1,17 +1,16 @@
 apiVersion: v2
 name: kubevirt-vm
 description: Configure a virtual machine for use with Kubevirt
-
 type: application
-version: 0.7.2
+version: 0.8.0
 appVersion: "0.1.0"
-
 maintainers:
   - name: "cloudymax"
     email: "emax@cloudydev.net"
     url: "https://github.com/cloudymax/"
-
 dependencies:
-- name: cloud-init
-  alias: cloudinit
-  version: 1.0.2
+  - name: cloud-init
+    alias: cloudinit
+    version: 1.0.2
+    repository: https://cloudymax.github.io/kubevirt-community-stack
+    condition: cloudinit.enabled
