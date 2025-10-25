@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -16,7 +16,7 @@ A Helm chart that generates cloud-init config files
 |-----|------|---------|-------------|
 | argocd.appName | string | `"none"` | ArgoCD App name for optional resource tracking |
 | argocd.compare | string | `"IgnoreExtraneous"` | String containing ArgoCD comparison options |
-| argocd.enabled | bool | `true` |  |
+| argocd.enabled | bool | `false` |  |
 | argocd.syncString | string | `"Prune=false,Delete=false"` | String containing ArgoCD resource sync options |
 | boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
