@@ -27,7 +27,7 @@ secret_name: my-userdata
 force: true
 
 # -- image version
-image: deserializeme/kv-cloud-init:test
+image: deserializeme/kv-cloud-init:1.0.0
 
 # -- virtual-machine hostname.
 # When set to 'random' a hostname will be generated using golang-petname.

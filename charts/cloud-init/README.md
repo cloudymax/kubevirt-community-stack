@@ -29,7 +29,7 @@ A Helm chart that generates cloud-init config files
 | force | bool | `true` | overwrite any existing secrets matching `secret_name` |
 | fs_setup | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname. When set to 'random' a hostname will be generated using golang-petname. |
-| image | string | `"deserializeme/kv-cloud-init:test"` | image version |
+| image | string | `"deserializeme/kv-cloud-init:1.0.0"` | image version |
 | mounts | list | `[]` | Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line |
 | namespace | string | `"default"` | namespace in which to create resources |
 | network | object | `{"config":"disabled"}` | networking options |
