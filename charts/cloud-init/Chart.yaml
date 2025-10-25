@@ -2,6 +2,6 @@ apiVersion: v2
 name: cloud-init
 description: A Helm chart that generates cloud-init config files
 type: application
-version: 1.0.0
+version: 1.0.1
 maintainers:
   - name: cloudymax

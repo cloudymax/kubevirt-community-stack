@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -35,7 +35,7 @@ A Helm chart that generates cloud-init config files
 | network | object | `{"config":"disabled"}` | networking options |
 | network.config | string | `"disabled"` | disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations. |
 | networkData.content | string | `"renderer: networkd\nnetwork:\n  version: 2\n  ethernets:\n    multus:\n      match:\n        macaddress: ${macaddress}\n      dhcp4: false\n      dhcp6: false\n      addresses:\n        - 192.168.100.100/24\n      routes:\n        - to: default\n          via: 192.168.100.1\n      mtu: 1500\n      nameservers:\n        addresses:\n          - 192.168.100.1"` |  |
-| networkData.enabled | bool | `true` |  |
+| networkData.enabled | bool | `false` |  |
 | package_reboot_if_required | bool | `false` | Update, upgrade, and install package See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
 | package_update | bool | `true` |  |
 | package_upgrade | bool | `false` |  |
