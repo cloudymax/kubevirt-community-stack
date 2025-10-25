@@ -14,6 +14,6 @@ maintainers:
 dependencies:
 - name: cloud-init
   alias: cloudinit
-  version: 1.0.1
+  version: 1.0.2
   repository: https://cloudymax.github.io/kubevirt-community-stack
   condition: cloudinit.enabled
