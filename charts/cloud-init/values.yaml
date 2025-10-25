@@ -243,7 +243,7 @@ runcmd: []
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
 networkData:
-  enabled: true
+  enabled: false
   content: |-
     renderer: networkd
     network:
