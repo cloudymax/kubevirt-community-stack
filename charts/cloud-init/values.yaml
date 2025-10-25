@@ -51,11 +51,11 @@ envsubst: true
 extraEnvVars:
   - name: USERNAME
     value: friend
-  - name: FRIEND_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: admin-password
-        key: password
+  #- name: FRIEND_PASSWORD
+  #  valueFrom:
+  #    secretKeyRef:
+  #      name: admin-password
+  #      key: password
   - name: macaddress
     value: 'b8:a3:86:70:cc:e6'
 ################################################################################
@@ -155,7 +155,7 @@ users:
     lock_passwd: false
 
     # -- When set to 'random' a password will be generated for the user.
-    password: ""
+    password: "random"
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
