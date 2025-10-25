@@ -47,18 +47,17 @@ serviceAccount:
 # Not an official part of cloid-init
 envsubst: true
 
-# -- Set extra environment variables for the job container
+# -- Set extra environment variables for the job container.
 extraEnvVars:
   - name: USERNAME
     value: friend
+  - name: FRIEND_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: admin-password
+        key: password
   - name: macaddress
     value: 'b8:a3:86:70:cc:e6'
-  # - name: ACCESS_TOKEN
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: test
-  #       key: "test.yaml"
-
 ################################################################################
 #   ____ _                 _ ___       _ _    __     __    _
 #  / ___| | ___  _   _  __| |_ _|_ __ (_) |_  \ \   / /_ _| |_   _  ___  ___
@@ -155,12 +154,8 @@ users:
     shell: /bin/bash
     lock_passwd: false
 
-    # -- set user password from existing secret or generate random
-    # When set to 'random' a password will be generated for the user.
-    password: random
-    #  existingSecret:
-    #    name: admin-password
-    #    key: password
+    # -- When set to 'random' a password will be generated for the user.
+    password: ""
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
@@ -248,7 +243,7 @@ runcmd: []
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
 networkData:
-  enabled: false
+  enabled: true
   content: |-
     renderer: networkd
     network:

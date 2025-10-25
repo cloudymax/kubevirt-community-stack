@@ -29,4 +29,4 @@ spec:
           command:
             - "bin/bash"
             - "-c"
-            - "kubectl delete secret $SECRET_NAME --namespace $NAMESPACE"
+            - "kubectl delete secret --ignore-not-found=true $SECRET_NAME --namespace $NAMESPACE"

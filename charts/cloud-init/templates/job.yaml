@@ -29,17 +29,6 @@ spec:
             value: {{ .Values.namespace }}
           - name: SECRET_NAME
             value: {{ .Values.secret_name }}
- 	  {{- range $reg, $props := .Values.users }}
-          {{- if ne $props.password "random" }}
-          {{- if $props.password.existingSecret }}
-          - name: {{ upper $props.name }}_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $props.password.existingSecret.name }}
-                key: {{ $props.password.existingSecret.key }}
-	  {{- end }}
-          {{- end }}
-	  {{- end }}
           {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -117,7 +106,7 @@ spec:
         {{- if .Values.networkData.enabled }}
         - name: networkdata
           configMap:
-            name: {{ .Values.hostname }}-userdata
+            name: {{ .Values.secret_name }}-userdata
             items:
               - key: network-data.yaml
                 path: network-data.yaml
