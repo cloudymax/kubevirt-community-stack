@@ -12,7 +12,7 @@ debug: false
 
 # Add ArgoCD annotations to generated secrets (optional)
 argocd:
-  enabled: true
+  enabled: false
   # -- ArgoCD App name for optional resource tracking
   appName: "none"
   # -- String containing ArgoCD resource sync options

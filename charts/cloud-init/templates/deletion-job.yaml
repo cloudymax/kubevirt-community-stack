@@ -8,6 +8,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-delete
 spec:
+  ttlSecondsAfterFinished: 30
   backoffLimit: 3
   template:
     spec:

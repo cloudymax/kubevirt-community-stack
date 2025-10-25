@@ -9,7 +9,7 @@ virtualMachine:
   name: test
 
   # -- namespace to deploy to
-  namespace: default
+  namespace: kubevirt
 
   # -- Create the VM as a KubevirtMachineTemplate for use with Cluster API
   # disables all other templates and only create the VM and DataVolume
@@ -90,7 +90,7 @@ virtualMachine:
 
   machine:
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
-    priorityClassName: system-node-critical
+    priorityClassName: vm-standard
 
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
     # Overrides: vCores, memory, gpus
@@ -287,7 +287,7 @@ disks:
   - name: harddrive
     type: disk
     bus: virtio
-    bootorder: 2
+    bootorder: 1
     readonly: false
     image: "quay.io/containerdisks/debian:13"
 
@@ -345,7 +345,13 @@ disks:
 #    secretName: test
 #    serialNumber: CVLY623300HK240D
 
-
+################################################################################
+#  _   _      _                      _    ____        _
+# | \ | | ___| |___      _____  _ __| | _|  _ \  __ _| |_ __ _
+# |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ / | | |/ _` | __/ _` |
+# | |\  |  __/ |_ \ V  V / (_) | |  |   <| |_| | (_| | || (_| |
+# |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\____/ \__,_|\__\__,_|
+################################################################################
 # -- Use an existing cloud-init userdata secret
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
@@ -359,41 +365,21 @@ userDataSecret:
 # | |___| | (_) | |_| | (_| || || | | | | |_
 #  \____|_|\___/ \__,_|\__,_|___|_| |_|_|\__|
 ################################################################################
-# Not all cloud-init modules are currently supported
-# https://cloudinit.readthedocs.io/en/latest/reference/modules.html
-
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
   enabled: false
 
-  # -- when enabled job sleeps to allow user to exec into the container
-  debug: false
+  # Not all cloud-init modules are currently supported
+  # https://cloudinit.readthedocs.io/en/latest/reference/modules.html
 
-  # Add ArgoCD annotations to generated secrets (optional)
-  argocd:
-    enabled: false
-    # -- ArgoCD App name for optional resource tracking
-    appName: "none"
-    # -- String containing ArgoCD resource sync options
-    syncString: "Prune=false,Delete=false"
-    # -- String containing ArgoCD comparison options
-    compare: IgnoreExtraneous
+  # --- ArgoCD App name for optional resource tracking
+  argocdAppName: ""
 
   # -- name of secret in which to save the user-data file
   secret_name: test-scrapmetal-user-data
 
-  # -- overwrite any existing secrets matching `secret_name`
-  force: true
-
   # -- image version
-  image: deserializeme/kv-cloud-init:1.0.0
-
-  # -- virtual-machine hostname.
-  # When set to 'random' a hostname will be generated using golang-petname.
-  hostname: random
-
-  # -- namespace in which to create resources
-  namespace: default
+  image: deserializeme/kv-cloud-init:v0.0.1
 
   # -- Choose weather to create a service-account or not. Once a SA has been created
   # you should set this to false on subsequent runs.
@@ -402,21 +388,6 @@ cloudinit:
     name: cloud-init-sa
     # Ignored is `create` set to true
     existingServiceAccountName: "cloud-init-sa"
-
-  # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
-  # Not an official part of cloid-init
-  envsubst: true
-
-  extraEnvVars:
-    - name: USERNAME
-      value: test
-    - name: macaddress
-      value: 'b8:a3:86:70:cc:e6'
-    # - name: TEST_PASSWORD
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: admin-password
-    #       key: password
 
   # -- Set up mount points. mounts contains a list of lists.
   # The inner list contains entries for an /etc/fstab line
@@ -457,6 +428,23 @@ cloudinit:
   # cloud-init secrets in the same namespace
   existingConfigMap: false
 
+  # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
+  # Not an official part of cloid-init
+  envsubst: false
+
+  extraEnvVars: []
+  #  - name: VNC_PASS
+  #    valueFrom:
+  #      secretKeyRef:
+  #        name: test-password
+  #        key: "password"
+
+  # -- virtual-machine hostname
+  hostname: test
+
+  # -- namespace in which to create resources
+  namespace: kubevirt
+
   # -- Disable root login over ssh
   disable_root: false
 
@@ -486,14 +474,19 @@ cloudinit:
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
   # do NOT use 'admin' as username - it conflicts with multiele cloud-images
   users:
-    - name: $USERNAME
+    - name: test
       groups: users, admin, docker, sudo, kvm
       sudo: ALL=(ALL) NOPASSWD:ALL
       shell: /bin/bash
       lock_passwd: false
 
-      # -- When set to 'random' a password will be generated for the user.
-      password: "random"
+      # -- set user password from existing secret or generate random
+      password:
+        random: true
+      #  random: false
+      #  existingSecret:
+      #    name: admin-password
+      #    key: password
 
       # -- import user ssh public keys from github, gitlab, or launchpad
       # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
@@ -517,17 +510,6 @@ cloudinit:
   # Files my be provided as plain-text or downloaded from a url
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
   write_files: []
-  #####################################
-  # Download a file from a URL
-  #- path: /home/${USERNAME}/runner.sh
-  #  permissions: "0644"
-  #  url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
-
-  #####################################
-  # Download file with $TOKEN from extraEnvVars
-  #- path: /etc/private-file.md
-  #  permissions: "0644"
-  #  url: "https://raw.githubusercontent.com/cloudymax/some-private-repo/refs/heads/main/some-file.md?token=${TOKEN}"
 
   # -- Update, upgrade, and install packages
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
@@ -542,13 +524,6 @@ cloudinit:
   runcmd: []
   #  - docker run -d -p 8080:80 nginx
 
-  ################################################################################
-  #  _   _      _                      _    ____        _
-  # | \ | | ___| |___      _____  _ __| | _|  _ \  __ _| |_ __ _
-  # |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ / | | |/ _` | __/ _` |
-  # | |\  |  __/ |_ \ V  V / (_) | |  |   <| |_| | (_| | || (_| |
-  # |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\____/ \__,_|\__\__,_|
-  ################################################################################
   # -- Provide instance networkData via the NoCloud networkData configuration source.
   # When envSubst is enabled this file will also be templated.
   # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
@@ -560,20 +535,9 @@ cloudinit:
       network:
         version: 2
         ethernets:
-          multus:
-            match:
-              macaddress: ${macaddress}
-            dhcp4: false
+          primary:
+            dhcp4: true
             dhcp6: false
-            addresses:
-              - 192.168.100.100/24
-            routes:
-              - to: default
-                via: 192.168.100.1
-            mtu: 1500
-            nameservers:
-              addresses:
-                - 192.168.100.1
 
 ################################################################################
 # ____                  _             ___     ___

@@ -155,6 +155,19 @@ run_envsubst(){
             mv tmp.yaml "${NETWORK_DATA_PATH}"
         fi
     fi
+
+    random_hostname
+}
+
+random_hostname(){
+      CHECK=$(yq '.hostname' $USER_DATA_PATH | tr '[:lower:]' '[:upper:]')
+
+      if [ ${CHECK} == "RANDOM" ]; then
+        log "Generating a random hostname."
+        export HOSTNAME=$(golang-petname)
+        yq -i '.hostname = env(HOSTNAME)' $USER_DATA_PATH
+        log "Nice to meet you, $HOSTNAME"
+      fi
 }
 
 # Hash and insert passwd field for each specified user
