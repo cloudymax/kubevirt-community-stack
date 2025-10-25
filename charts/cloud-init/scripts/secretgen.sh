@@ -8,6 +8,10 @@ export NETWORK_DATA_PATH=""
 export NETWORK_DATA_PRESENT="false"
 export QUIET="false"
 export FORCE="false"
+export ARGO_ENABLED="false"
+export ARGO_APP_NAME="none"
+export ARGO_SYNC="none"
+export ARGO_COMPARE="none"
 
 # Parse and validate user inputs.
 parse_params() {
@@ -41,6 +45,34 @@ parse_params() {
                         ;;
                 -f | --force)
                         export FORCE="${2-}"
+                        shift
+                        ;;
+                -a | --argo)
+                        export ARGO_ENABLED="${2-}"
+                        shift
+                        ;;
+                -aa | --argo-app)
+                        export ARGO_APP_NAME="${2-}"
+                        shift
+                        ;;
+                -as | --argo-sync)
+                        export ARGO_SYNC="${2-}"
+                        shift
+                        ;;
+                -ac | --argo-compare)
+                        export ARGO_COMPARE="${2-}"
+                        shift
+                        ;;
+                -hc | --helm-chart)
+                        export HELM_CHART="${2-}"
+                        shift
+                        ;;
+                -hn | --helm-name)
+                        export HELM_NAME="${2-}"
+                        shift
+                        ;;
+                -hi | --helm-instance)
+                        export HELM_INSTANCE="${2-}"
                         shift
                         ;;
                -?*) die "Unknown option: $1" ;;
@@ -127,20 +159,29 @@ cretae_credential_secret(){
 }
 
 annotate_secret(){
-    log "Adding argocd tracking annotation."
-    RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
-        argocd.argoproj.io/tracking-id="${ARGOCD_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}")
-    log "$RESULT"
 
-    log "Adding argocd sync options."
-    RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
-        argocd.argoproj.io/sync-options="Prune=false,Delete=false")
-    log "$RESULT"
+    if [ "${ARGO_ENABLED}" == "true" ]; then
 
-    log "Adding argocd comparison options."
-    RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
-        argocd.argoproj.io/compare-options="IgnoreExtraneous")
-    log "$RESULT"
+        log "Adding argocd tracking annotation."
+        RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
+            argocd.argoproj.io/tracking-id="${ARGO_APP_NAME}:v1/Secret:${NAMESPACE}/${SECRET_NAME}")
+        log "$RESULT"
+
+        if [ "${ARGO_SYNC}" != "none" ]; then
+            log "Adding argocd sync options."
+            RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
+                argocd.argoproj.io/sync-options="${ARGO_SYNC}")
+            log "$RESULT"
+        fi
+
+        if [ "${ARGO_COMPARE}" != "none" ]; then
+            log "Adding argocd comparison options."
+            RESULT=$(kubectl annotate --overwrite secret ${SECRET_NAME} \
+                argocd.argoproj.io/compare-options="${ARGO_COMPARE}")
+            log "$RESULT"
+        fi
+
+    fi
 }
 
 # Generic logging method to return a timestamped string

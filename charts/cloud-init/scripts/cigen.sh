@@ -15,6 +15,7 @@ trap - SIGINT SIGTERM ERR EXIT
 [[ ! -x "$(command -v curl)" ]] && echo "💥 curl command not found." && exit 1
 [[ ! -x "$(command -v yq)" ]] && echo "💥 yq command not found." && exit 1
 [[ ! -x "$(command -v golang-petname)" ]] && echo "💥 golang-petname command not found." && exit 1
+[[ ! -x "$(command -v kubectl)" ]] && echo "💥 kubectl command not found." && exit 1
 
 # Default Variable Declarations
 export ENVSUBST="false"
@@ -27,6 +28,10 @@ export NETWORK_DATA_PATH="network-data.yaml"
 export NETWORK_DATA_PRESENT="false"
 export SECRETGEN="false"
 export FORCE="false"
+export ARGO_ENABLED="false"
+export ARGO_APP_NAME="none"
+export ARGO_SYNC="none"
+export ARGO_COMPARE="none"
 
 # Parse and validate user inputs.
 parse_params() {
@@ -35,7 +40,9 @@ parse_params() {
                 -h | --help) usage ;;
                 -v | --verbose) set -x ;;
                 -e | --envsubst)
-                        export ENVSUBST="true" ;;
+                       export ENVSUBST="${2-}"
+                        shift
+                        ;;
                 -q | --quiet)
                         export QUIET="${2-}"
                         shift
@@ -54,9 +61,27 @@ parse_params() {
                         shift
                         ;;
                 -k | --kubernetes)
-                        export SECRETGEN="true" ;;
+                        export SECRETGEN="${2-}"
+                        shift
+                        ;;
                 -f | --force)
                         export FORCE="${2-}"
+                        shift
+                        ;;
+                -a | --argo)
+                        export ARGO_ENABLED="${2-}"
+                        shift
+                        ;;
+                -aa | --argo-app)
+                        export ARGO_APP_NAME="${2-}"
+                        shift
+                        ;;
+                -as | --argo-sync)
+                        export ARGO_SYNC="${2-}"
+                        shift
+                        ;;
+                -ac | --argo-compare)
+                        export ARGO_COMPARE="${2-}"
                         shift
                         ;;
                -?*) die "Unknown option: $1" ;;
@@ -81,15 +106,29 @@ Available options:
 
 -q, --quiet             Only print final userdata [true/false]
 
--u, --userdata          Path to cloud-init user-data file (required)
+-u, --userdata          Path to cloud-init user-data file [string]
 
--n, --networkdata       Path to cloud-init networkdata file (optional)
+-n, --networkdata       Path to cloud-init networkdata file [true/false]
 
--k, --kubernetes        Create kubernetes secrets from user and network data (optional)
+-e, --envsubst          Enable usage of envsubst, disabled by default [true/false]
 
--e, --envsubst          Enable usage of envsubst, disabled by default (optional)
+-s, --salt              Salt to use when encrypting passwords [string]
 
--s, --salt              Salt to use when encrypting password (optional)
+Optional Kubernetes settings:
+
+-k, --kubernetes        Create kubernetes secrets from user and network data [true/false]
+
+-f, --force             Force-replce existing kubernetes secrets [true/false]
+
+Optional ArgoCD settings:
+
+-a, --argo              Enable ArgoCD secret annotations
+
+-aa, --argo-app         Set ArgoCD ownership annotations on generated secrets
+
+-as, --argo-sync        Set ArgoCD sync annotations on generated secrets
+
+-ac, --argo-compare     Set ArgoCD comparison annotations on generated secrets
 
 EOF
         exit
@@ -101,8 +140,8 @@ EOF
 # This function will use all existing env vars to replace matching variable
 # declarations. This can cause issues where a plain-text command uses a variable.
 #
-# Scripts that use a plain-text varibale should be encoded into a write_files entry
-# to avoid this issue.
+# Scripts that use a plain-text varibales that should NOT be templated
+# should be passed to the write_files section from a URL or as base64
 run_envsubst(){
     if [ "${ENVSUBST}" == "true" ]; then
         log "running envsubst against $USER_DATA_PATH"
@@ -153,7 +192,11 @@ admin_password(){
                 --username "${user}" \
                 --password "${PASSWORD}" \
                 --quiet "${QUIET}" \
-                --force "${FORCE}"
+                --force "${FORCE}" \
+                --argo "${ARGO_ENABLED}" \
+                --argo-app "${ARGO_APP_NAME}" \
+                --argo-sync "${ARGO_SYNC}" \
+                --argo-compare "${ARGO_COMPARE}"
         fi
 
         log "Setting hashed password for user: $user"
@@ -170,7 +213,7 @@ random_password(){
 
     for (( i=0; i<LENGTH; i++ )); do
       char="${INPUT:$i:1}"
-      if (( RANDOM % 2 == 0 )); then
+      if (( RANDOM % 8 == 0 )); then
         # Convert to uppercase
         OUTPUT+="$(echo "$char" | tr '[:lower:]' '[:upper:]')"
       else
@@ -323,7 +366,11 @@ main(){
             --userdata "${USER_DATA_PATH}" \
             --networkdata "${NETWORK_DATA_PATH}" \
             --quiet "${QUIET}" \
-            --force "${FORCE}"
+            --force "${FORCE}" \
+            --argo "${ARGO_ENABLED}" \
+            --argo-app "${ARGO_APP_NAME}" \
+            --argo-sync "${ARGO_SYNC}" \
+            --argo-compare "${ARGO_COMPARE}"
     else
         # Move the final file to the output directory
         #log "Optimized file saved to /output/user-data.yaml"

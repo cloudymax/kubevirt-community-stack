@@ -7,20 +7,31 @@
 #                                                 |___/
 ################################################################################
 
-# --- ArgoCD App name for optional resource tracking
-argocdAppName: ""
+# -- when enabled job sleeps to allow user to exec into the container
+debug: false
+
+# Add ArgoCD annotations to generated secrets (optional)
+argocd:
+  enabled: true
+  # -- ArgoCD App name for optional resource tracking
+  appName: "none"
+  # -- String containing ArgoCD resource sync options
+  syncString: "Prune=false,Delete=false"
+  # -- String containing ArgoCD comparison options
+  compare: IgnoreExtraneous
 
 # -- secret in which to save the user-data file, must be unique within namespace
 secret_name: my-userdata
 
+# -- overwrite any existing secrets matching `secret_name`
+force: true
+
 # -- image version
-image: deserializeme/kv-cloud-init:v0.0.2
+image: deserializeme/kv-cloud-init:test
 
-# -- when enabled job sleeps to allow user to exec into the container
-debug: false
-
-# -- virtual-machine hostname
-hostname: localhost
+# -- virtual-machine hostname.
+# When set to 'random' a hostname will be generated using golang-petname.
+hostname: random
 
 # -- namespace in which to create resources
 namespace: default
@@ -117,9 +128,22 @@ wireguard: []
 #  interfaces:
 #    - name: wg0
 #      config_path: /etc/wireguard/wg0.conf
-#      existingSecret:
-#        name: wg0-credentials
-#        key: wg0.conf
+#      source: file
+#      path: /configs/wg-config.yaml
+#    - name: wg1
+#      config_path: /etc/wireguard/wg0.conf
+#      source: content
+#      content: |
+#        [Interface]
+#        PrivateKey = sdasdasdasdasdasdasdasdasd
+#        Address = 10.1.0.253/32
+#        MTU = 1420
+#
+#        [Peer]
+#        PublicKey = asdasdasdasdasdasdasdasdasdasd
+#        AllowedIPs = 10.1.0.0/24, 10.1.0.1/18
+#        Endpoint = 192.168.0.1:51821
+#        PersistentKeepalive = 20
 
 # -- user configuration options
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
@@ -132,9 +156,8 @@ users:
     lock_passwd: false
 
     # -- set user password from existing secret or generate random
-    password:
-      random: true
-    #  random: false
+    # When set to 'random' a password will be generated for the user.
+    password: random
     #  existingSecret:
     #    name: admin-password
     #    key: password
