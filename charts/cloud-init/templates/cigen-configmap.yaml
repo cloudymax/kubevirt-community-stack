@@ -4,7 +4,9 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.secret_name }}-optimizer-script
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
 data:
-  optimize.sh: |
-    {{ .Files.Get "scripts/optimize.sh" | nindent 4}}
+  cigen.sh: |
+    {{ .Files.Get "scripts/cigen.sh" | nindent 4}}
 {{- end }}

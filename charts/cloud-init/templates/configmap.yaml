@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.secret_name }}-userdata
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
 data:
   {{- if .Values.networkData.enabled }}
   {{- $content := .Values.networkData.content }}
@@ -49,9 +51,7 @@ data:
         sudo: {{ $props.sudo }}
         shell: {{ $props.shell }}
         lock_passwd: {{ $props.lock_passwd }}
-        {{- if $props.password }}
-        passwd:
-        {{- end }}
+        passwd: {{ $props.password }}
         {{- with $props.ssh_import_id }}
         ssh_import_id:
           {{- toYaml . | nindent 10 }}

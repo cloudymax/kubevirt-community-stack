@@ -7,20 +7,31 @@
 #                                                 |___/
 ################################################################################
 
-# --- ArgoCD App name for optional resource tracking
-argocdAppName: ""
+# -- when enabled job sleeps to allow user to exec into the container
+debug: false
+
+# Add ArgoCD annotations to generated secrets (optional)
+argocd:
+  enabled: true
+  # -- ArgoCD App name for optional resource tracking
+  appName: "none"
+  # -- String containing ArgoCD resource sync options
+  syncString: "Prune=false,Delete=false"
+  # -- String containing ArgoCD comparison options
+  compare: IgnoreExtraneous
 
 # -- secret in which to save the user-data file, must be unique within namespace
 secret_name: my-userdata
 
+# -- overwrite any existing secrets matching `secret_name`
+force: true
+
 # -- image version
-image: deserializeme/kv-cloud-init:v0.0.2
+image: deserializeme/kv-cloud-init:1.0.0
 
-# -- when enabled job sleeps to allow user to exec into the container
-debug: false
-
-# -- virtual-machine hostname
-hostname: localhost
+# -- virtual-machine hostname.
+# When set to 'random' a hostname will be generated using golang-petname.
+hostname: random
 
 # -- namespace in which to create resources
 namespace: default
@@ -36,18 +47,17 @@ serviceAccount:
 # Not an official part of cloid-init
 envsubst: true
 
-# -- Set extra environment variables for the job container
+# -- Set extra environment variables for the job container.
 extraEnvVars:
   - name: USERNAME
     value: friend
+  #- name: FRIEND_PASSWORD
+  #  valueFrom:
+  #    secretKeyRef:
+  #      name: admin-password
+  #      key: password
   - name: macaddress
     value: 'b8:a3:86:70:cc:e6'
-  # - name: ACCESS_TOKEN
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: test
-  #       key: "test.yaml"
-
 ################################################################################
 #   ____ _                 _ ___       _ _    __     __    _
 #  / ___| | ___  _   _  __| |_ _|_ __ (_) |_  \ \   / /_ _| |_   _  ___  ___
@@ -117,9 +127,22 @@ wireguard: []
 #  interfaces:
 #    - name: wg0
 #      config_path: /etc/wireguard/wg0.conf
-#      existingSecret:
-#        name: wg0-credentials
-#        key: wg0.conf
+#      source: file
+#      path: /configs/wg-config.yaml
+#    - name: wg1
+#      config_path: /etc/wireguard/wg0.conf
+#      source: content
+#      content: |
+#        [Interface]
+#        PrivateKey = sdasdasdasdasdasdasdasdasd
+#        Address = 10.1.0.253/32
+#        MTU = 1420
+#
+#        [Peer]
+#        PublicKey = asdasdasdasdasdasdasdasdasdasd
+#        AllowedIPs = 10.1.0.0/24, 10.1.0.1/18
+#        Endpoint = 192.168.0.1:51821
+#        PersistentKeepalive = 20
 
 # -- user configuration options
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
@@ -131,13 +154,8 @@ users:
     shell: /bin/bash
     lock_passwd: false
 
-    # -- set user password from existing secret or generate random
-    password:
-      random: true
-    #  random: false
-    #  existingSecret:
-    #    name: admin-password
-    #    key: password
+    # -- When set to 'random' a password will be generated for the user.
+    password: "random"
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
@@ -225,7 +243,7 @@ runcmd: []
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
 networkData:
-  enabled: false
+  enabled: true
   content: |-
     renderer: networkd
     network:
