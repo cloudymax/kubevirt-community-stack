@@ -8,7 +8,7 @@ pipx install semver
 export APPVERSION="v1.6.2"
 export REPO=/Users/max/repos/kubevirt-community-stack/charts/kubevirt
 export CHART_VERSION=$(cat $REPO/Chart.yaml |yq '.version')
-export NEW_CHART_VERSION=$(pysemver bump minor $CURRENT_VERSION)
+export NEW_CHART_VERSION=$(pysemver bump minor $CHART_VERSION)
 
 wget https://github.com/kubevirt/kubevirt/releases/download/$VERSION/kubevirt-operator.yaml
 yq -s '$index + "-" + .kind + ".yaml"' kubevirt-operator.yaml
