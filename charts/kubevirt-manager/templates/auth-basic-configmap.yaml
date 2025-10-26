@@ -11,26 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: scheduling.k8s.io/v1
-kind: PriorityClass
-description: Priority class for VMs which should not be preemtited.
+
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: vm-standard
+  name: auth-config
+  namespace: kubevirt-manager
   labels:
     app: kubevirt-manager
     kubevirt-manager.io/version: {{ .Chart.AppVersion }}
     kubevirt-manager.io/managed: "true"
-preemptionPolicy: Never
-value: 999999999
----
-apiVersion: scheduling.k8s.io/v1
-kind: PriorityClass
-description: Priority class for VMs which are allowed to be preemtited.
-metadata:
-  name: vm-preemptible
-  labels:
-    app: kubevirt-manager
-    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
-    kubevirt-manager.io/managed: "true"
-preemptionPolicy: PreemptLowerPriority
-value: 100000
+data:
+  basicauth.conf: |
+    auth_basic "Restricted Content";
+    auth_basic_user_file /etc/nginx/secret.d/.htpasswd;
