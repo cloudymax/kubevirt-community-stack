@@ -3,8 +3,8 @@ name: kubevirt-manager
 description: Install the Kubevirt Manager UI
 
 type: application
-version: 0.2.2
-appVersion: 1.5.0-rc
+version: 0.3.0
+appVersion: v1.5.3
 
 maintainers:
   - name: "cloudymax"
