@@ -5,8 +5,6 @@ The current process is the following steps + manual checking of diffs
 ```bash
 pipx install semver
 
-pysemver bump minor 1.2.3
-
 export APPVERSION="v1.6.2"
 export REPO=/Users/max/repos/kubevirt-community-stack/charts/kubevirt
 export CHART_VERSION=$(cat $REPO/Chart.yaml |yq '.version')
