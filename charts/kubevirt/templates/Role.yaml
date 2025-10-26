@@ -18,6 +18,8 @@ rules:
       - kubevirt-virt-api-certs
       - kubevirt-controller-certs
       - kubevirt-exportproxy-certs
+      - kubevirt-synchronization-controller-certs
+      - kubevirt-synchronization-controller-server-certs
     resources:
       - secrets
     verbs:
@@ -129,3 +131,25 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - ""
+    resourceNames:
+      - kubevirt-ca
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - delete
+      - update
+      - create
+      - patch
