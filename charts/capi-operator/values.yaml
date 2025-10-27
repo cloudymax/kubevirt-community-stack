@@ -4,21 +4,21 @@
 core:
   cluster-api:
     namespace: "capi-system"
-    version: "v1.10.5"
+    version: "v1.11.2"
     createNamespace: true
 
 bootstrap:
   kubeadm:
     namespace: "default"
-    version: "v1.10.5"
+    version: "v1.11.2"
     createNamespace: false
   rke2:
     namespace: "default"
-    version: "v0.20.1"
+    version: "v0.21.0"
     createNamespace: false
   k3s:
     namespace: "default"
-    version: "v0.2.1"
+    version: "v0.3.0"
     createNamespace: false
     fetchConfig:
       url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/bootstrap-components.yaml"
@@ -26,7 +26,7 @@ bootstrap:
 controlPlane:
   kubeadm:
     namespace: "default"
-    version: "v1.10.5"
+    version: "v1.11.2"
     createNamespace: false
   rke2:
     namespace: "default"
@@ -49,7 +49,7 @@ addon:
   helm:
     namespace: "default"
     createNamespace: false
-    version: "v0.3.2"
+    version: "v0.4.1"
 
 ipam:
   in-cluster:
@@ -77,16 +77,22 @@ configSecret: {}
 # ---
 # CAPI operator deployment options
 logLevel: 2
+
 replicaCount: 1
+
 leaderElection:
   enabled: true
+
 image:
   manager:
     repository: gcr.io/k8s-staging-capi-operator/cluster-api-operator
-    tag: v0.23.0
+    # -- defaults to appVersion
+    tag: ""
     pullPolicy: IfNotPresent
+
 env:
   manager: []
+
 diagnosticsAddress: ":8443"
 healthAddr: ":9440"
 profilerAddress: ":6060"
