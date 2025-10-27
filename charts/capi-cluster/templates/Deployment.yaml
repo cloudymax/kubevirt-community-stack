@@ -59,4 +59,4 @@ spec:
           name: "cloud-config-{{ .Values.cluster.name }}"
         - name: kubeconfig
           secret:
-            secretName: capi-kubeconfig
+            secretName: "{{ .Values.cluster.name }}-kubeconfig"
