@@ -15,9 +15,9 @@ cluster:
   provider: k3s
 
   # -- Version of kubernetes to deploy
-  # v1.32.1+rke2r1
-  # v1.32.1+k3s1
-  version: v1.32.1+k3s1
+  # v1.34.1+rke2r1
+  # v1.34.1+k3s1
+  version: v1.34.1+k3s1
 
   # -- Namespace in which to host cluster components
   namespace: default
@@ -81,7 +81,6 @@ cluster:
 
   disableComponents:
     - servicelb
-    - traefik
 
 ###############################################################
 # __     ____  __   ____             _
@@ -94,7 +93,7 @@ cluster:
 controlPlane:
   size: 1
   bootstrapCheck: ssh
-  role: worker
+  role: control-plane
   virtualMachine:
     # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
     # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
@@ -230,7 +229,7 @@ controlPlane:
       bus: virtio
       bootorder: 1
       readonly: false
-      image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+      image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
 
   # -- not implimentded
   cloudinit:
@@ -240,7 +239,7 @@ controlPlane:
 
 #-- Worker VM spec
 workers:
-  size: 1
+  size: 2
   bootstrapCheck: ssh
   role: worker
 

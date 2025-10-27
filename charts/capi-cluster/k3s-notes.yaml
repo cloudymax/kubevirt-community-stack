@@ -153,7 +153,7 @@ spec:
             secretName: capi-kubeconfig
 ---
 # Source: cluster-api-cluster/templates/Cluster.yaml
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: Cluster
 metadata:
   name: capi
@@ -164,15 +164,13 @@ spec:
     apiServerPort: 6443
     serviceDomain: cluster.local
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    apiGroup: controlplane.cluster.x-k8s.io
     kind: KThreesControlPlane
     name: capi-control-plane
-    namespace: default
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiGroup: infrastructure.cluster.x-k8s.io
     kind: KubevirtCluster
     name: capi
-    namespace: default
 ---
 # Source: cluster-api-cluster/templates/KThreesConfigTemplate.yaml
 # Only used for worker machine deployments

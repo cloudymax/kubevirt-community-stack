@@ -1,4 +1,4 @@
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: Cluster
 metadata:
   name: {{ .Values.cluster.name }}
@@ -12,7 +12,7 @@ spec:
     apiServerPort: 6443
     serviceDomain: cluster.local
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    apiGroup: controlplane.cluster.x-k8s.io
     {{- if eq .Values.cluster.provider "rke2" }}
     kind: RKE2ControlPlane
     {{- end }}
@@ -23,9 +23,7 @@ spec:
     kind: KThreesControlPlane
     {{- end }}
     name: {{ .Values.cluster.name }}-control-plane
-    namespace: {{ .Values.cluster.namespace }}
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiGroup: infrastructure.cluster.x-k8s.io
     kind: KubevirtCluster
     name: {{ .Values.cluster.name }}
-    namespace: {{ .Values.cluster.namespace }}

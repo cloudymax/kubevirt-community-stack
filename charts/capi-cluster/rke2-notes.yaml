@@ -152,7 +152,7 @@ spec:
             secretName: capi-kubeconfig
 ---
 # Source: cluster-api-cluster/templates/Cluster.yaml
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: Cluster
 metadata:
   name: capi
@@ -169,15 +169,13 @@ spec:
       cidrBlocks:
         - 192.167.0.0/16
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    apiGroup: controlplane.cluster.x-k8s.io
     kind: RKE2ControlPlane
     name: capi-control-plane
-    namespace: default
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiGroup: infrastructure.cluster.x-k8s.io
     kind: KubevirtCluster
     name: capi
-    namespace: default
 ---
 # Source: cluster-api-cluster/templates/KubevirtCluster.yaml
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
@@ -284,7 +282,7 @@ spec:
                     capacity: 32Gi
 ---
 # Source: cluster-api-cluster/templates/WorkerMachineDeployment.yaml
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineDeployment
 metadata:
   name: capi-md-0
@@ -298,16 +296,14 @@ spec:
     spec:
       bootstrap:
         configRef:
-          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          apiGroup: bootstrap.cluster.x-k8s.io
           kind: RKE2ConfigTemplate
           name: capi-md-0
-          namespace: default
       clusterName: capi
       infrastructureRef:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        apiGroup: infrastructure.cluster.x-k8s.io
         kind: KubevirtMachineTemplate
         name: capi-md-0
-        namespace: default
       version: v1.32.1+rke2r1
 ---
 # Source: cluster-api-cluster/templates/RKE2ConfigTemplate.yaml
