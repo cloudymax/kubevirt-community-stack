@@ -14,7 +14,7 @@ operator:
     # -- image pull policy
     pullPolicy: IfNotPresent
     # -- image tag, use this to set the version of kubevirt
-    tag: "v1.2.0"
+    tag: "v1.6.2"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -202,8 +202,9 @@ manager:
 
   prometheus:
     enabled: false
-    serviceName: "thanos-app-query-frontend"
+    serviceName: "mimir-query-frontend"
     serviceNamesapce: "default"
+    port: 8080
 
   ingress:
     enabled: false
@@ -232,34 +233,59 @@ capi:
   # Cluster API provider options
   core:
     cluster-api:
-      version: "v1.9.1"
+      namespace: "capi-system"
+      version: "v1.11.2"
       createNamespace: true
 
   bootstrap:
     kubeadm:
-      version: "v1.9.1"
-      createNamespace: true
+      namespace: "default"
+      version: "v1.11.2"
+      createNamespace: false
+    rke2:
+      namespace: "default"
+      version: "v0.21.0"
+      createNamespace: false
+    k3s:
+      namespace: "default"
+      version: "v0.3.0"
+      createNamespace: false
+      fetchConfig:
+        url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/bootstrap-components.yaml"
 
   controlPlane:
     kubeadm:
-     version: "v1.9.1"
-     createNamespace: true
+      namespace: "default"
+      version: "v1.11.2"
+      createNamespace: false
+    rke2:
+      namespace: "default"
+      version: "v0.20.1"
+      createNamespace: false
+    k3s:
+      namespace: "default"
+      version: "v0.3.0"
+      createNamespace: false
+      fetchConfig:
+        url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/control-plane-components.yaml"
 
   infrastructure:
     kubevirt:
+      namespace: "default"
+      createNamespace: false
       version: "v0.1.10"
-      createNamespace: true
 
   addon:
     helm:
-     version: "v0.3.2"
-     createNamespace: true
+      namespace: "default"
+      createNamespace: false
+      version: "v0.4.1"
 
-  ipam: {}
-  # in-cluster: {}          # Name, required
-  #   namespace: ""         # Optional
-  #   version: ""           # Optional
-  #   createNamespace: true # Optional
+  ipam:
+    in-cluster:
+      namespace: "default"
+      createNamespace: false
+      version: "v1.0.3"
 
   manager.featureGates: {}
   # Configuration for enabling feature gates in different providers
