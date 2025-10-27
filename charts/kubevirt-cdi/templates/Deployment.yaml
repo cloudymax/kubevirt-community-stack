@@ -43,7 +43,7 @@ spec:
             - name: DEPLOY_CLUSTER_RESOURCES
               value: "true"
             - name: OPERATOR_VERSION
-              value: v1.63.0
+              value: {{ .Chart.AppVersion }}
             - name: CONTROLLER_IMAGE
               value: quay.io/kubevirt/cdi-controller:{{ .Chart.AppVersion }}
             - name: IMPORTER_IMAGE

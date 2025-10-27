@@ -1,3 +1,17 @@
+# Copyright 2025 Marcelo Parisi (github.com/feitnomore)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -5,7 +19,7 @@ metadata:
   namespace: kubevirt-manager
   labels:
     app: kubevirt-manager
-    kubevirt-manager.io/version: 1.4.1
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -18,7 +32,7 @@ rules:
     verbs: ["get", "list"]
   - apiGroups: [""]
     resources: ["pods/log"]
-    verbs: ["get"]
+    verbs: ["get", "list"]
   - apiGroups: [""]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list"]
@@ -85,7 +99,6 @@ rules:
   - apiGroups: ["kubevirt-manager.io"]
     resources: ["images"]
     verbs: ["*"]
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -93,7 +106,7 @@ metadata:
   name: kubevirt-manager
   labels:
     app: kubevirt-manager
-    kubevirt-manager.io/version: 1.4.1
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -129,7 +142,7 @@ metadata:
   name: kubevirt-manager-kccm
   labels:
     app: kubevirt-manager
-    kubevirt-manager.io/version: 1.4.1
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -196,7 +209,7 @@ metadata:
   name: kubevirt-manager-cas-workload
   labels:
     app: kubevirt-manager
-    kubevirt-manager.io/version: 1.4.1
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -213,7 +226,7 @@ metadata:
   name: kubevirt-manager-cas-management
   labels:
     app: kubevirt-manager
-    kubevirt-manager.io/version: 1.4.1
+    kubevirt-manager.io/version: {{ .Chart.AppVersion }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

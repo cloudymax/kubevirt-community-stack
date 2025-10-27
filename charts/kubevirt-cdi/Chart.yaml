@@ -1,11 +1,9 @@
 apiVersion: v2
 name: kubevirt-cdi
 description: Install the Containerized Data Importer
-
 type: application
-version: 0.2.2
-appVersion: "v1.63.0"
-
+version: 0.3.0
+appVersion: "v1.63.1"
 maintainers:
   - name: "cloudymax"
     email: "emax@cloudydev.net"

@@ -2,13 +2,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Values.hostname }}-cloud-init-job
+  name: {{ .Values.secret_name }}-cloud-init-job
   namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": before-hook-creation
-    "helm.sh/hook-weight": "0"
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
 spec:
+  ttlSecondsAfterFinished: 30
   backoffLimit: 3
   template:
     spec:
@@ -19,6 +18,8 @@ spec:
       {{- if eq .Values.serviceAccount.create false }}
       serviceAccountName: {{ .Values.serviceAccount.existingServiceAccountName }}
       {{- end }}
+      securityContext:
+        runAsUser: 1000
       containers:
         - name: cloud-init
           image: {{ .Values.image }}
@@ -29,39 +30,30 @@ spec:
             value: {{ .Values.namespace }}
           - name: SECRET_NAME
             value: {{ .Values.secret_name }}
-          - name: USER_DATA_SECRET_PATH
-            value: /secrets/user-data.yaml
-          - name: USER_DATA_PATH
-            value: /user-data.yaml
-          - name: SALT
-            value: {{ .Values.salt }}
- 	  {{- range $reg, $props := .Values.users }}
-          {{- if $props.password.existingSecret }}
-          - name: {{ upper $props.name }}_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $props.password.existingSecret.name }}
-                key: {{ $props.password.existingSecret.key }}
-	  {{- end }}
-          {{- if $props.password.random }}
-          - name: {{ upper $props.name }}_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $props.name }}-password
-                key: password
-	  {{- end }}
-	  {{- end }}
           {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- if eq .Values.envsubst true }}
-          - name: ENVSUBST
-            value: "true"
-	  {{- end }}
           {{- if .Values.debug }}
           command: ["/bin/sleep", "365d"]
           {{- else }}
-          command: ["/bin/bash", "/optimize.sh"]
+          command:
+            - "/bin/bash"
+            - "/home/appuser/cigen.sh"
+            - "--userdata /secrets/user-data.yaml"
+            {{- if .Values.networkData.enabled }}
+            - "--networkdata /secrets/network-data.yaml"
+            {{- end }}
+            - "--salt {{ .Values.salt }}"
+            - "--envsubst {{ .Values.envsubst }}"
+            - "--kubernetes true"
+            - "--quiet false"
+            - "--force {{ .Values.force }}"
+            {{- if .Values.argocd.enabled }}
+            - "--argo {{ .Values.argocd.enabled }}"
+            - "--argo-app {{ .Values.argocd.appName }}"
+            - "--argo-sync {{ .Values.argocd.syncString }}"
+            - "--argo-compare {{ .Values.argocd.compare }}"
+            {{- end }}
           {{- end }}
           imagePullPolicy: IfNotPresent
           resources:
@@ -75,9 +67,17 @@ spec:
             - name: userdata
               mountPath: /secrets/user-data.yaml
               subPath: user-data.yaml
+            {{- if .Values.networkData.enabled }}
+            - name: networkdata
+              mountPath: /secrets/network-data.yaml
+              subPath: network-data.yaml
+            {{- end }}
             - name: optimizer-script
-              mountPath: /optimize.sh
-              subPath: optimize.sh
+              mountPath: /home/appuser/cigen.sh
+              subPath: cigen.sh
+            - name: secret-script
+              mountPath: /home/appuser/secretgen.sh
+              subPath: secretgen.sh
             {{- if .Values.wireguard }}
             {{- range $reg, $props := .Values.wireguard.interfaces }}
             - name: {{ $props.name }}
@@ -88,17 +88,39 @@ spec:
       volumes:
         - name: userdata
           configMap:
-            name: {{ .Values.hostname }}-userdata
+            name: {{ .Values.secret_name }}-userdata
+            items:
+              - key: user-data.yaml
+                path: user-data.yaml
         - name: optimizer-script
           configMap:
-            name: optimizer-script
+            name: {{ .Values.secret_name }}-optimizer-script
+            items:
+              - key: cigen.sh
+                path: cigen.sh
+        - name: secret-script
+          configMap:
+            name: {{ .Values.secret_name }}-secret-script
+            items:
+              - key: secretgen.sh
+                path: secretgen.sh
+        {{- if .Values.networkData.enabled }}
+        - name: networkdata
+          configMap:
+            name: {{ .Values.secret_name }}-userdata
+            items:
+              - key: network-data.yaml
+                path: network-data.yaml
+        {{- end }}
         {{- if .Values.wireguard }}
         {{- range $reg, $props := .Values.wireguard.interfaces }}
+        {{- if eq .props.source "secret" }}
         - name: {{ $props.name }}
           secret:
             secretName: {{ $props.existingSecret.name }}
             items:
             - key: {{ $props.existingSecret.key }}
               path: {{ $props.name }}.conf
+        {{- end }}
         {{- end }}
         {{- end }}

@@ -1,6 +1,6 @@
 # kubevirt-manager
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.5.3](https://img.shields.io/badge/AppVersion-v1.5.3-informational?style=flat-square)
 
 Install the Kubevirt Manager UI
 
@@ -14,6 +14,7 @@ Install the Kubevirt Manager UI
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| image | string | `"kubevirtmanager/kubevirt-manager:1.5.3"` |  |
 | ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-staging"` |  |
 | ingress.annotations."nginx.org/location-snippets" | string | `"proxy_set_header Upgrade $http_upgrade;\nproxy_set_header Connection $connection_upgrade;\n"` |  |
 | ingress.className | string | `"nginx"` |  |
@@ -21,9 +22,10 @@ Install the Kubevirt Manager UI
 | ingress.hostname | string | `"kubevirt.example.com"` |  |
 | ingress.tls.enabled | bool | `false` |  |
 | ingress.tls.secretName | string | `"tls-kubevirt-manager"` |  |
-| prometheus.enabled | bool | `true` |  |
-| prometheus.serviceName | string | `"thanos-app-query-frontend"` |  |
-| prometheus.serviceNamesapce | string | `"default"` |  |
+| prometheus.enabled | bool | `false` |  |
+| prometheus.port | int | `8080` |  |
+| prometheus.serviceName | string | `"mimir-query-frontend"` |  |
+| prometheus.serviceNamesapce | string | `"monitoring"` |  |
 | replicaCount | int | `1` |  |
 | service.name | string | `"http"` |  |
 | service.port | int | `8080` |  |

@@ -1,0 +1,12 @@
+{{ if eq .Values.existingConfigMap false }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.secret_name }}-optimizer-script
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
+data:
+  cigen.sh: |
+    {{ .Files.Get "scripts/cigen.sh" | nindent 4}}
+{{- end }}

@@ -1,5 +1,5 @@
-{{ if not .Values.virtualMachinePool.enabled }}
-{{ if eq .Values.virtualMachine.capiMachineTemplate false }}
+{{- if not .Values.virtualMachine.capiMachineTemplate.enabled }}
+{{- if not .Values.virtualMachinePool.enabled }}
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
@@ -262,6 +262,16 @@ spec:
               {{- if eq .Values.cloudinit.enabled true }}
               name: {{ .Values.cloudinit.secret_name }}
               {{- end }}
+            {{- if eq .Values.cloudinit.enabled true }}
+            {{- if .Values.cloudinit.networkData.enabled }}
+            networkDataSecretRef:
+              {{- if eq .Values.userDataSecret.enabled true }}
+              name: {{ .Values.userDataSecret.name }}
+              {{- else }}
+              name: {{ .Values.cloudinit.secret_name }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
         {{- end }}
 {{- end }}
 {{- end }}

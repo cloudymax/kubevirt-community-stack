@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.secret_name }}-cleanup-job
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-delete
+spec:
+  ttlSecondsAfterFinished: 30
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      {{- if eq .Values.serviceAccount.create true }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- end }}
+      {{- if eq .Values.serviceAccount.create false }}
+      serviceAccountName: {{ .Values.serviceAccount.existingServiceAccountName }}
+      {{- end }}
+      containers:
+        - name: pre-delete
+          image: "bitnami/kubectl"
+          env:
+            - name: NAMESPACE
+              value: {{ .Values.namespace }}
+            - name: SECRET_NAME
+              value: {{ .Values.secret_name }}
+          command:
+            - "bin/bash"
+            - "-c"
+            - "kubectl delete secret --ignore-not-found=true $SECRET_NAME --namespace $NAMESPACE"

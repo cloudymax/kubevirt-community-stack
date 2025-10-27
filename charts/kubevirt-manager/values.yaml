@@ -1,5 +1,7 @@
 replicaCount: 1
 
+image: kubevirtmanager/kubevirt-manager:1.5.3
+
 service:
   type: ClusterIP
   port: 8080
@@ -7,9 +9,10 @@ service:
   name: http
 
 prometheus:
-  enabled: true
-  serviceName: "thanos-app-query-frontend"
-  serviceNamesapce: "default"
+  enabled: false
+  serviceName: "mimir-query-frontend"
+  serviceNamesapce: "monitoring"
+  port: 8080
 
 ingress:
   enabled: false
