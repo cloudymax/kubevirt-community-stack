@@ -1,7 +1,7 @@
 ## Basic VM Example
 
 This is a qucik walkthrough of how I create VMs using kubevirt-community-stack.
-All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a> chart.
+All the configuration for the VM happens in the `values.yaml` file of the <a href="https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/kubevirt-vm">Kubevirt-VM Chart</a> chart which includes the [Cloud-Init](https://github.com/cloudymax/kubevirt-community-stack/tree/main/charts/cloud-init) subchart
 
 > In this example we will:
 >   1. Create a new VM named `my-first-vm` with with `2` cores and `2Gi` of RAM.
