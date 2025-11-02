@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.8.1](https://img.shields.io/badge/Version-0.8.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -27,7 +27,6 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.boot_cmd | list | `[]` | Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd |
 | cloudinit.ca_certs | list | `[]` | Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates |
 | cloudinit.debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
-| cloudinit.debug | bool | `false` | when enabled job sleeps to allow user to exec into the container |
 | cloudinit.disable_root | bool | `false` | Disable root login over ssh |
 | cloudinit.envsubst | bool | `true` | Run envsubst against bootcmd and runcmd fields at the beginning of templating Not an official part of cloid-init |
 | cloudinit.existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
@@ -53,7 +52,7 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.write_files | list | `[]` | Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when I/O errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
 | disks | list | `[{"bootorder":2,"bus":"virtio","image":"quay.io/containerdisks/debian:13","name":"harddrive","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
-| ingress | object | `{"annotations":{},"className":"nginx","enabled":false,"hostname":"novnc.buildstar.online","tls":[]}` | Ingress configuration |
+| ingress | object | `{"annotations":{},"className":"nginx","enabled":false,"hostname":"novnc.buildstar.online","paths":[{"backend":{"service":{"name":"test-service","port":{"number":8080}}},"path":"/","pathType":"Prefix"}],"tls":{"enabled":false,"secretName":"tls-kubevirt-manager"}}` | Ingress configuration |
 | networkPolicy.egress | list | `[]` |  |
 | networkPolicy.enabled | bool | `false` | Enable the creation of network policies |
 | networkPolicy.ingress | list | `[]` |  |

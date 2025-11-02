@@ -405,8 +405,6 @@ cloudinit:
   existingConfigMap: false
   # -- Disable root login over ssh
   disable_root: false
-  # -- when enabled job sleeps to allow user to exec into the container
-  debug: false
   # -- salt used for password generation
   salt: "saltsaltlettuce"
   # -- networking options
@@ -538,17 +536,17 @@ ingress:
   hostname: "novnc.buildstar.online"
   annotations: {}
   #  cert-manager.io/cluster-issuer: "letsencrypt-staging"
-  tls: []
-  #  enabled: true
-  #  secretName: "tls-kubevirt-manager"
-  # paths:
-  # - path: /
-  #   pathType: Prefix
-  #   backend:
-  #     service:
-  #       name: test-service
-  #       port:
-  #         number: 8080
+  tls:
+    enabled: false
+    secretName: "tls-kubevirt-manager"
+  paths:
+  - path: /
+    pathType: Prefix
+    backend:
+      service:
+        name: test-service
+        port:
+          number: 8080
 ################################################################################
 #  _   _      _                      _      ____       _ _      _
 # | \ | | ___| |___      _____  _ __| | __ |  _ \ ___ | (_) ___(_) ___  ___
