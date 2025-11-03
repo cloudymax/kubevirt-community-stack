@@ -1,0 +1,20 @@
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Values.secret_name }}-secret-deleter-binding
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook-weight: "0"
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.secret_name}}-cleanup-job-sa
+  namespace: {{ .Values.namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Values.secret_name }}-secret-deleter-role
+  apiGroup: rbac.authorization.k8s.io

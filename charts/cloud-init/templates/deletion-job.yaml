@@ -1,3 +1,4 @@
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -6,15 +7,16 @@ metadata:
   labels:
     {{- include "cloud-init.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-delete
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook-weight: "1"
 spec:
-  ttlSecondsAfterFinished: 30
   backoffLimit: 3
   template:
     spec:
       restartPolicy: Never
       {{- if eq .Values.serviceAccount.create true }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.secret_name }}-cleanup-job-sa
       {{- end }}
       {{- if eq .Values.serviceAccount.create false }}
       serviceAccountName: {{ .Values.serviceAccount.existingServiceAccountName }}
