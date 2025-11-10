@@ -1,0 +1,132 @@
+---
+# Source: kubevirt-vm/templates/datavolume.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: windows10-boot-empty-cert
+  namespace: windows10
+data:
+  ca.pem: ""
+---
+# Source: kubevirt-vm/templates/virtualmachine.yaml
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    kubevirt.io/os: linux
+    metallb-service: windows10-boot
+  namespace: windows10
+  name: windows10-boot
+spec:
+  runStrategy: Once
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: windows10-boot
+        kubevirt-service: windows10-boot
+        kubevirt-manager.io/managed: "true"
+    spec:
+      architecture: amd64
+      domain:
+        machine:
+          type: q35
+        clock:
+          utc: {}
+
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
+            kvm: {}
+        features:
+          kvm: {}
+          acpi: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            vpindex: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer:
+              direct: {}
+            tlbflush: {}
+            frequencies: {}
+            reenlightenment: {}
+            ipi: {}
+            runtime: {}
+            reset: {}
+        cpu:
+          dedicatedCpuPlacement: true
+          model: host-passthrough
+          sockets: 1
+          cores: 4
+          threads: 1
+        memory:
+          guest: 8Gi
+
+        firmware:
+          bootloader: {}
+        devices:
+          interfaces:
+          - masquerade: {}
+            model: virtio
+            name: default
+          autoattachPodInterface: true
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: true
+          networkInterfaceMultiqueue: true
+          rng: {}
+          inputs:
+          - type: tablet
+            bus: virtio
+            name: tablet1
+          disks:
+          - name: harddrive
+            disk:
+              bus: virtio
+            bootOrder: 1
+            errorPolicy: report
+        resources:
+          requests:
+            memory: "8Gi"
+          limits:
+            memory: "8Gi"
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 0
+      priorityClassName: system-node-critical
+      volumes:
+        - name: harddrive
+          ephemeral:
+            persistentVolumeClaim:
+              claimName: windows10-sysprep
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              set_hostname: kubevirt-windows
+              groups:
+                - cloud-users
+              users:
+                - name: runner
+                  gecos: 'Runner'
+                  primary_group: Users
+                  groups: cloud-users
+                  passwd: password
+                  inactive: False
+                  expiredate: 2027-10-01
+              write_files:
+                 path: 'C:\Program Files\Cloudbase Solutions\Cloudbase-Init\LocalScripts\install.ps1'
+                 permissions: '0644'
+                 content: |
+                   Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+              runcmd:
+                - 'powershell.exe -executionpolicy bypass -file "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\LocalScripts\install.ps1"'
+

@@ -203,6 +203,7 @@ Once inside audit mode, prepare your base system as you see fit. I recommend:
 4. Install required apps like Steam, VLC, etc.. [Ninite](https://ninite.com/) is super helpful here.
 5. Configure RDP settings
 6. Setup Cloud-Base-Init
+    - metadata service: `metadata_services=cloudbaseinit.metadata.services.nocloudservice.NoCloudConfigDriveService`
 
 
 
