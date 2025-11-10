@@ -1,0 +1,79 @@
+virtualMachine:
+  name: windows10-base
+
+  namespace: windows10
+
+  runStrategy: "Once"
+
+  features:
+    kvm:
+      enabled: true
+      hidden: false
+    hyperv: true
+    acpiEnabled: true
+
+  clock:
+    enabled: true
+    timezone: utc
+    hpet:
+      enabled: true
+      present: false
+    pit:
+      enabled: true
+      tickPolicy: delay
+    rtc:
+      enabled: true
+      tickPolicy: catchup
+    kvm: true
+    hyperv: true
+
+  firmware:
+    # Enable System Management Mode (required for secureboot)
+    smmEnabled: false
+    # -- Enable EFI bios and secureboot
+    efi:
+      enabled: false
+      secureBoot: false
+    uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+
+  machine:
+    vCores: 4
+    memory:
+      base: 8Gi
+
+disks:
+  - name: installer-iso
+    type: cdrom
+    bus: sata
+    bootorder: 1
+    readonly: true
+    pvsize: 8Gi
+    pvstorageClassName: local-path
+    pvaccessMode: ReadWriteOnce
+    source: pvc
+    pvcnamespace: windows10
+    pvcname: windows-installer
+
+  - name: windows-system
+    type: disk
+    bus: virtio
+    bootorder: 2
+    readonly: false
+    pvsize: 24Gi
+    pvstorageClassName: local-path
+    pvaccessMode: ReadWriteOnce
+
+  - name: windows-guest-tools
+    type: cdrom
+    bus: sata
+    bootorder: 3
+    readonly: true
+    image: "quay.io/kubevirt/virtio-container-disk:v1.6.2"
+
+service: []
+
+ingress:
+  enabled: false
+  annotations: {}
+  tls:
+    enabled: false

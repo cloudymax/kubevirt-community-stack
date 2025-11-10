@@ -1,0 +1,64 @@
+virtualMachine:
+  name: windows10-sysprep
+
+  namespace: windows10
+
+  runStrategy: "Once"
+
+  features:
+    kvm:
+      enabled: true
+      hidden: false
+    hyperv: true
+    acpiEnabled: true
+
+  clock:
+    enabled: true
+    timezone: utc
+    hpet:
+      enabled: true
+      present: false
+    pit:
+      enabled: true
+      tickPolicy: delay
+    rtc:
+      enabled: true
+      tickPolicy: catchup
+    kvm: true
+    hyperv: true
+
+  firmware:
+    # Enable System Management Mode (required for secureboot)
+    smmEnabled: false
+    # -- Enable EFI bios and secureboot
+    efi:
+      enabled: false
+      secureBoot: false
+    uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+
+  machine:
+    vCores: 4
+    memory:
+      base: 8Gi
+
+disks:
+  # Copy the sysprepped disk
+  - name: windows10-sysprep
+    type: disk
+    bus: virtio
+    bootorder: 1
+    readonly: false
+    pvsize: 64Gi
+    pvstorageClassName: fast-raid
+    pvaccessMode: ReadWriteOnce
+    source: pvc
+    pvcnamespace: windows10
+    pvcname: windows-system
+
+service: []
+
+ingress:
+  enabled: false
+  annotations: {}
+  tls:
+    enabled: false
