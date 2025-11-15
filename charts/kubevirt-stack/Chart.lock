@@ -10,6 +10,6 @@ dependencies:
   version: 0.3.0
 - name: cluster-api-operator
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  version: 1.1.0
-digest: sha256:ba6a50059cfc9fd8cf4c2f57f761706941df361227b38335240da51df5e7b102
-generated: "2025-10-27T15:42:36.255084+01:00"
+  version: 2.0.0
+digest: sha256:772c69a081488e341634a8fa56f719b331f922a3847d7406b67e04745c0d7a00
+generated: "2025-11-15T19:04:16.979834+01:00"

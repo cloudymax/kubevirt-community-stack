@@ -1,6 +1,6 @@
 # kubevirt-stack
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.0](https://img.shields.io/badge/AppVersion-0.0.0-informational?style=flat-square)
 
 Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
@@ -14,7 +14,7 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | capi(cluster-api-operator) | 1.1.0 |
+| https://cloudymax.github.io/kubevirt-community-stack | capi(cluster-api-operator) | 2.0.0 |
 | https://cloudymax.github.io/kubevirt-community-stack | operator(kubevirt) | 0.4.0 |
 | https://cloudymax.github.io/kubevirt-community-stack | cdi(kubevirt-cdi) | 0.3.0 |
 | https://cloudymax.github.io/kubevirt-community-stack | manager(kubevirt-manager) | 0.3.0 |
