@@ -1,0 +1,245 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: {{ .Values.cluster.name }}-md-0
+  namespace: {{ .Values.cluster.namespace }}
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: {{ .Values.workers.bootstrapCheck }}
+      virtualMachineTemplate:
+        metadata:
+          namespace: {{ .Values.cluster.namespace }}
+          labels:
+            cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
+            cluster.x-k8s.io/role: {{ .Values.workers.role }}
+        spec:
+          {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled true }}
+          instancetype:
+            name: {{ .Values.workers.virtualMachine.machine.instancetype.name }}
+            kind: {{ .Values.workers.virtualMachine.machine.instancetype.kind }}
+          {{- end }}
+          runStrategy: {{ .Values.workers.virtualMachine.runStrategy }}
+          template:
+            metadata:
+              creationTimestamp: null
+              labels:
+                kubevirt.io/domain: {{ .Values.cluster.name }}-md-0
+                kubevirt-service: {{ .Values.cluster.name }}-md-0
+                cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
+                kubevirt-manager.io/managed: "true"
+                cluster.x-k8s.io/role: {{ .Values.workers.role }}
+            spec:
+              architecture: {{ .Values.workers.virtualMachine.machine.architecture }}
+              domain:
+                machine:
+                  type: {{ .Values.workers.virtualMachine.machine.machineType }}
+                {{- if eq .Values.workers.virtualMachine.clock.enabled true }}
+                clock:
+                  {{- if eq .Values.workers.virtualMachine.clock.timezone "utc" }}
+                  utc: {}
+                  {{ else }}
+                  timezone: {{ .Values.workers.virtualMachine.clock.timezone }}
+                  {{- end }}
+                  timer:
+                    {{- if eq .Values.workers.virtualMachine.clock.hpet.enabled true }}
+                    hpet:
+                      present: {{ .Values.workers.virtualMachine.clock.hpet.present }}
+                    {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.clock.pit.enabled true }}
+                    pit:
+                      tickPolicy: {{ .Values.workers.virtualMachine.clock.pit.tickPolicy }}
+                    {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.clock.rtc.enabled true }}
+                    rtc:
+                      tickPolicy: {{ .Values.workers.virtualMachine.clock.rtc.tickPolicy }}
+                    {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.clock.hyperv true }}
+                    hyperv: {}
+                    {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.clock.kvm true }}
+                    kvm: {}
+                    {{- end }}
+                {{- end }}
+                features:
+                  {{- if eq .Values.workers.virtualMachine.features.kvm.enabled true }}
+                  {{- if eq .Values.workers.virtualMachine.features.kvm.hidden false }}
+                  kvm: {}
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.features.kvm.hidden true }}
+                  kvm:
+                    hidden: {{ .Values.workers.virtualMachine.features.hidden }}
+                  {{- end }}
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.features.acpiEnabled true }}
+                  acpi: {}
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.firmware.smmEnabled true }}
+                  smm:
+                    enabled: true
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.features.hyperv true }}
+                  hyperv:
+                    relaxed: {}
+                    vapic: {}
+                    vpindex: {}
+                    spinlocks:
+                      spinlocks: 8191
+                    synic: {}
+                    synictimer:
+                      direct: {}
+                    tlbflush: {}
+                    frequencies: {}
+                    reenlightenment: {}
+                    ipi: {}
+                    runtime: {}
+                    reset: {}
+                  {{- end }}
+                cpu:
+                  {{- if eq .Values.workers.virtualMachine.machine.pinCores true }}
+                  dedicatedCpuPlacement: true
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.machine.emulatorThread true }}
+                  isolateEmulatorThread: true
+                  {{- end }}
+                  model: {{ .Values.workers.virtualMachine.machine.cpuModel }}
+                  {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                  sockets: {{ .Values.workers.virtualMachine.machine.sockets }}
+                  cores: {{ .Values.workers.virtualMachine.machine.vCores }}
+                  threads: {{ .Values.workers.virtualMachine.machine.threads }}
+                  {{- end }}
+                {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                memory:
+                  {{- if eq .Values.workers.virtualMachine.machine.memory.overcommit.enabled false }}
+                  guest: {{ .Values.workers.virtualMachine.machine.memory.base }}
+                  {{ else }}
+                  guest: {{ .Values.workers.virtualMachine.machine.memory.overcommit.limit }}
+                  {{- end }}
+                {{- end }}
+                firmware:
+                {{- if .Values.workers.virtualMachine.firmware.efi.enabled }}
+                  {{- if .Values.workers.virtualMachine.firmware.uuid }}
+                  uuid: {{ .Values.workers.virtualMachine.firmware.uuid }}
+                  {{- end }}
+                  bootloader:
+                    efi:
+                      secureBoot: {{ .Values.workers.virtualMachine.firmware.efi.secureBoot }}
+                {{- else }}
+                  bootloader: {}
+                {{- end }}
+                devices:
+                  {{- with .Values.workers.virtualMachine.interfaces }}
+                  interfaces:
+                  {{- toYaml . | nindent 18 }}
+                  {{- end }}
+                  {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                  {{- with .Values.workers.virtualMachine.gpus }}
+                  gpus:
+                  {{- toYaml . | nindent 18 }}
+                  {{- end }}
+                  {{- end }}
+                  autoattachPodInterface: {{ .Values.workers.virtualMachine.features.autoattachPodInterface }}
+                  autoattachSerialConsole: {{ .Values.workers.virtualMachine.features.autoattachSerialConsole }}
+                  autoattachGraphicsDevice: {{ .Values.workers.virtualMachine.features.autoattachGraphicsDevice }}
+                  networkInterfaceMultiqueue: {{ .Values.workers.virtualMachine.features.networkInterfaceMultiqueue }}
+                  rng: {}
+                  inputs:
+                  - type: tablet
+                    bus: virtio
+                    name: tablet1
+                  disks:
+                    {{- range $reg, $props := .Values.workers.disks }}
+                    {{- if ne "hostDisk" $props.type }}
+                    {{- if ne "configmap" $props.type }}
+                    {{- if ne "secret" $props.type }}
+                  - name: {{ $props.name }}
+                    {{ $props.type }}:
+                      bus: {{ $props.bus }}
+                      {{- if eq $props.readonly true }}
+                      readonly: {{ $props.readonly }}
+                      {{- end }}
+                    bootOrder: {{ $props.bootorder }}
+                    errorPolicy: {{ $.Values.workers.diskErrorPolicy }}
+                    {{- end }}
+                    {{- end }}
+                    {{- end }}
+                    {{- if eq $props.type "configmap" }}
+                  - name: {{ $props.name }}
+                    serial: {{ $props.serialNumber }}
+                    cdrom:
+                      bus: sata
+                    {{- end }}
+                    {{- if eq $props.type "secret" }}
+                  - name: {{ $props.name }}
+                    serial: {{ $props.serialNumber }}
+                    {{- end }}
+                    {{- end }}
+                {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                resources:
+                  {{- if eq .Values.workers.virtualMachine.machine.memory.overcommit.enabled true }}
+                  overcommitGuestOverhead: {{ .Values.workers.virtualMachine.machine.memory.overcommit.overhead }}
+                  {{- end }}
+                  requests:
+                    memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
+                  limits:
+                    {{- if eq .Values.workers.virtualMachine.machine.memory.overcommit.enabled true }}
+                    memory: {{ .Values.workers.virtualMachine.machine.memory.overcommit.limit | quote }}
+                    {{ else }}
+                    memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
+                    {{- end }}
+                {{- end }}
+              {{- with .Values.workers.virtualMachine.networks }}
+              networks:
+              {{- toYaml . | nindent 16 }}
+              {{- end }}
+              terminationGracePeriodSeconds: 0
+              priorityClassName: {{ .Values.workers.virtualMachine.machine.priorityClassName }}
+              volumes:
+                {{- range $reg, $props := .Values.workers.disks }}
+                {{- if ne "cloudinitvolume" $props.name }}
+                {{- if ne "hostDisk" $props.type }}
+                {{- if ne "configmap" $props.type }}
+                {{- if ne "secret" $props.type }}
+                {{- if not $props.ephemeral }}
+                {{- if not $props.image }}
+                - name: {{ $props.name }}
+                  persistentVolumeClaim:
+                    claimName: {{ $props.name }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+                {{- if eq "configmap" $props.type }}
+                - name: {{ $props.name }}
+                  configMap:
+                    volumeLabel: {{ $props.volumeLabel }}
+                    name: {{ $props.configMap }}
+                {{- end }}
+                {{- if eq "secret" $props.type }}
+                - name: {{ $props.name }}
+                  secret:
+                    secretName: {{ $props.secretName }}
+                {{- end }}
+                {{- if eq "hostDisk" $props.type }}
+                - hostDisk:
+                    capacity: {{ $props.capacity }}
+                    path: {{ $props.path }}
+                    type: {{ $props.type }}
+                  name: {{ $props.name }}
+                {{- end}}
+                {{- if $props.image }}
+                - containerDisk:
+                    image: {{ $props.image }}
+                  name: {{ $props.name }}
+                {{- end }}
+                {{- if $props.ephemeral }}
+                - name: {{ $props.name }}
+                  ephemeral:
+                    persistentVolumeClaim:
+                      claimName: {{ $props.pvc }}
+                {{- end }}
+                {{- end }}

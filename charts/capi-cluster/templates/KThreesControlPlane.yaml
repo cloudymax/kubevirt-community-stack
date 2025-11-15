@@ -1,0 +1,63 @@
+{{- if eq .Values.cluster.provider "k3s" }}
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+kind: KThreesControlPlane
+metadata:
+  name: {{ .Values.cluster.name }}-control-plane
+  namespace: {{ .Values.cluster.namespace }}
+spec:
+  kthreesConfigSpec:
+    files:
+    {{- if .Values.cluster.kubeletConfigFile.enabled }}
+    {{- $content := .Values.cluster.kubeletConfigFile.content }}
+      - path: /etc/kubernetes/kubelet.yaml
+        permissions: "0640"
+        content: |
+          {{- $content | nindent 10 }}
+    {{- end }}
+    {{- with .Values.cluster.preCommands }}
+    preK3sCommands:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.cluster.postCommands }}
+    postK3sCommands:
+      {{- toYaml . | nindent 6 }}
+    {{- end}}
+    serverConfig:
+      disableCloudController: false
+      kubeAPIServerArg: []
+      kubeControllerManagerArgs: []
+      kubeSchedulerArgs: []
+      {{- with .Values.cluster.tlsSan }}
+      tlsSan:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      #advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+      #advertisePort: {{ .Values.cluster.advertisePort }}
+      clusterCidr: {{ .Values.cluster.podCidrBlock }}
+      serviceCidr: {{ .Values.cluster.serviceCidrBlock }}
+      clusterDNS: ""
+      clusterDomain: {{ .Values.cluster.dnsDomain }}
+      cloudProviderName: external
+      {{- with .Values.cluster.disableComponents }}
+      disableComponents:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      httpsListenPort: ""
+    agentConfig:
+      kubeProxyArgs: []
+      {{- if .Values.cluster.kubeletConfigFile.enabled }}
+      kubeletArgs:
+        - --config=/etc/kubernetes/kubelet.yaml
+      {{- end }}
+      nodeLabels: []
+      nodeName: ""
+      nodeTaints: []
+      privateRegistry: ""
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      kind: KubevirtMachineTemplate
+      name: "{{ .Values.cluster.name }}-control-plane"
+  replicas: {{ .Values.controlPlane.size }}
+  version: {{ .Values.cluster.version }}
+{{- end }}

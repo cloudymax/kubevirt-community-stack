@@ -1,7 +1,7 @@
 ---
 apiVersion: v1
 data:
-  cloud-config: |
+  "cloud-config-{{.Values.cluster.name }}": |
     loadBalancer:
       creationPollInterval: 5
       creationPollTimeout: 60
@@ -14,5 +14,5 @@ metadata:
   labels:
     capk.cluster.x-k8s.io/template-kind: extra-resource
     cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-  name: cloud-config
+  name: "cloud-config-{{ .Values.cluster.name }}"
   namespace: {{ .Values.cluster.namespace }}

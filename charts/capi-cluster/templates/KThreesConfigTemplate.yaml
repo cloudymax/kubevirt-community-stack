@@ -1,0 +1,50 @@
+{{- if eq .Values.cluster.provider "k3s" }}
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+kind: KThreesConfigTemplate
+metadata:
+  name: {{ .Values.cluster.name }}-md-0
+  namespace: {{ .Values.cluster.namespace }}
+spec:
+  template:
+    spec:
+      files:
+       {{- if .Values.cluster.kubeletConfigFile.enabled }}
+       {{- $content := .Values.cluster.kubeletConfigFile.content }}
+        - path: /etc/kubernetes/kubelet.yaml
+          permissions: "0640"
+          content: |-
+            {{- $content | nindent 12 }}
+        {{- end }}
+      {{- with .Values.cluster.preCommands }}
+      preK3sCommands:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.cluster.postCommands }}
+      postK3sCommands:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      serverConfig: {}
+      #  disableCloudController: false
+      #  kubeAPIServerArg: []
+      #  kubeControllerManagerArgs: []
+      #  kubeSchedulerArgs: []
+      #  tlsSan: []
+      #  advertiseAddress: ""
+      #  advertisePort: ""
+      #  clusterCidr: 10.10.0.0/16
+      #  serviceCidr: 10.11.0.0/16
+      #  clusterDNS: ""
+      #  clusterDomain: "cluster.local"
+      #  cloudProviderName: external
+      #  disableComponents:
+      #    - servicelb
+      #    - traefik
+      #  httpsListenPort: ""
+      agentConfig: {}
+      #  kubeProxyArgs: []
+      #  kubeletArgs: []
+      #  nodeLabels: []
+      #  nodeName: ""
+      #  nodeTaints: []
+      #  privateRegistry: ""
+{{- end }}

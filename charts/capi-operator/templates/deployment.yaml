@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "capi-operator.fullname" . }}
-  namespace: '{{ .Release.Namespace }}'
+  namespace: capi-operator-system
   labels:
     app: {{ template "capi-operator.name" . }}
     app.kubernetes.io/name: {{ template "capi-operator.name" . }}
