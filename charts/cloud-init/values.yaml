@@ -58,6 +58,13 @@ extraEnvVars:
   #      key: password
   - name: macaddress
     value: 'b8:a3:86:70:cc:e6'
+
+# set to 'true' use 'cloudbase-init' syntax for windows machines
+# see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and
+# https://cloudbase-init.readthedocs.io/en/latest/services.html#nocloud-configuration-drive
+# for a list of all supported values.
+cloudbase: false
+
 ################################################################################
 #   ____ _                 _ ___       _ _    __     __    _
 #  / ___| | ___  _   _  __| |_ _|_ __ (_) |_  \ \   / /_ _| |_   _  ___  ___
@@ -109,6 +116,7 @@ fs_setup: []
 # -- Dont recreate script configmap. Set to true when keeping multiple
 # cloud-init secrets in the same namespace
 existingConfigMap: false
+
 # -- Disable root login over ssh
 disable_root: false
 
@@ -119,34 +127,40 @@ salt: "saltsaltlettuce"
 network:
   # --  disable cloud-init’s network configuration capability and rely on
   # other methods such as embedded configuration or other customisations.
-  config: disabled
+  config: enabled
 
 # -- add wireguard configuration from existing secret or as plain-text
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard
-wireguard: []
-#  interfaces:
-#    - name: wg0
-#      config_path: /etc/wireguard/wg0.conf
-#      source: file
-#      path: /configs/wg-config.yaml
-#    - name: wg1
-#      config_path: /etc/wireguard/wg0.conf
-#      source: content
-#      content: |
-#        [Interface]
-#        PrivateKey = sdasdasdasdasdasdasdasdasd
-#        Address = 10.1.0.253/32
-#        MTU = 1420
-#
-#        [Peer]
-#        PublicKey = asdasdasdasdasdasdasdasdasdasd
-#        AllowedIPs = 10.1.0.0/24, 10.1.0.1/18
-#        Endpoint = 192.168.0.1:51821
-#        PersistentKeepalive = 20
+wireguard:
+  interfaces: []
+  # Config from existing secret
+  #  - name: wg0
+  #    config_path: /etc/wireguard/wg0.conf
+  #    source: secret
+  #    existingSecret:
+  #      name: wg0-credentials
+  #      key: wg0.conf
+
+  # Config from in-line content
+  #  - name: wg1
+  #    config_path: /etc/wireguard/wg1.conf
+  #    source: content
+  #    content: |
+  #      [Interface]
+  #      PrivateKey = sdasdasdasdasdasdasdasdasd
+  #      Address = 10.1.0.253/32
+  #      MTU = 1420
+  #      [Peer]
+  #      PublicKey = asdasdasdasdasdasdasdasdasdasd
+  #      AllowedIPs = 10.1.0.0/24, 10.1.0.1/18
+  #      Endpoint = 192.168.0.1:51821
+  #      PersistentKeepalive = 20
 
 # -- user configuration options
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
-# do NOT use 'admin' as username - it conflicts with multiele cloud-images
+# You are advised NOT to use 'admin' as username for linux systems
+# because it conflicts with multiple cloud-images default user configurations
+# When using with cloudbase-init syntax the use of "Admin" as a username is fine.
 users:
   - name: $USERNAME
     groups: users, admin, docker, sudo, kvm
@@ -155,14 +169,16 @@ users:
     lock_passwd: false
 
     # -- When set to 'random' a password will be generated for the user.
-    password: "random"
+    # When empty "" we will look for an env-var named <$USERNAME>_PASSWORD
+    # Passing plain-text passwords is not supported.
+    passwd: "random"
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
-    ssh_import_id: []
+    # ssh_import_id: []
 
     # -- provider user ssh pub key as plaintext
-    ssh_authorized_keys: []
+    # ssh_authorized_keys: []
 
 # -- Add CA certificates
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates
@@ -185,12 +201,11 @@ write_files: []
   #  permissions: "0644"
   #  url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
 
-#####################################
+  #####################################
   # Download file with $TOKEN from extraEnvVars
   #- path: /etc/private-file.md
   #  permissions: "0644"
   #  url: "https://raw.githubusercontent.com/cloudymax/some-private-repo/refs/heads/main/some-file.md?token=${TOKEN}"
-
 
 # -- Update, upgrade, and install package
 # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
@@ -198,22 +213,7 @@ package_reboot_if_required: false
 package_update: true
 package_upgrade: false
 packages: []
-  #- ssh-import-id
   #- curl
-  #- tmux
-  #- apt-transport-https
-  #- ca-certificates
-  #- software-properties-common
-  #- git-extras
-  #- rsyslog
-  #- vim
-  #- gpg
-  #- open-iscsi
-  #- nfs-common
-  #- bc
-  #- zip
-  #- pkg-config
-  #- pipx
   #- jq
 
 # -- Run arbitrary commands
@@ -221,22 +221,6 @@ packages: []
 runcmd: []
   #- mkdir -p /home/${USERNAME}/shared
   #- chown ${USERNAME}:${USERNAME} /home/${USERNAME}/shared
-  #- sudo -u ${USERNAME} -i ssh-import-id-gh ${GITHUB_USER}
-  #- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-  #- echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  #- sudo apt-get update
-  #- sudo apt-get install -y docker-ce
-  #- wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-  #- chmod +x /install.sh
-  #- chmod 777 /install.sh
-  #- sudo -u ${USERNAME} NONINTERACTIVE=1 /bin/bash /install.sh
-  #- sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew shellenv >> /home/${USERNAME}/.profile
-  #- sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/opt/python@3.11/libexec/bin >> /home/${USERNAME}/.profile
-  #- sudo -u ${USERNAME} /home/linuxbrew/.linuxbrew/bin/brew install python@3.11
-  #- sudo chown -R ${USERNAME}:${USERNAME} /home/linuxbrew
-  #- sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
-  #- wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-  #- chmod +x /usr/bin/yq
 
 # Provide instance networkData via the NoCloud networkData configuration source.
 # When envSubst is enabled this file will also be templated.
@@ -244,22 +228,11 @@ runcmd: []
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
 networkData:
   enabled: false
-  content: |-
-    renderer: networkd
+  content: |
     network:
       version: 2
+      renderer: networkd
       ethernets:
-        multus:
-          match:
-            macaddress: ${macaddress}
-          dhcp4: false
+        enp1s0:
+          dhcp4: true
           dhcp6: false
-          addresses:
-            - 192.168.100.100/24
-          routes:
-            - to: default
-              via: 192.168.100.1
-          mtu: 1500
-          nameservers:
-            addresses:
-              - 192.168.100.1

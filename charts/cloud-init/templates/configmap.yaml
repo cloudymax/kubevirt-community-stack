@@ -1,3 +1,4 @@
+{{- if not .Values.cloudbase }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -44,23 +45,10 @@ data:
     groups:
         {{- toYaml . | nindent 4 }}
     {{- end }}
+    {{- with .Values.users }}
     users:
-      {{- range $reg, $props := .Values.users }}
-      - name: {{ $props.name }}
-        groups: {{ $props.groups }}
-        sudo: {{ $props.sudo }}
-        shell: {{ $props.shell }}
-        lock_passwd: {{ $props.lock_passwd }}
-        passwd: {{ $props.password }}
-        {{- with $props.ssh_import_id }}
-        ssh_import_id:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        {{- with $props.ssh_authorized_keys }}
-        ssh_authorized_keys:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-      {{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- with .Values.boot_cmd }}
     bootcmd:
       {{- toYaml . | nindent 6 }}
@@ -98,11 +86,19 @@ data:
     runcmd:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if .Values.wireguard }}
+    {{- if .Values.wireguard.interfaces }}
     wireguard:
       interfaces:
         {{- range $reg, $props := .Values.wireguard.interfaces }}
         - name: {{ $props.name }}
           config_path: {{ $props.config_path }}
+          source: {{ $props.source }}
+          {{- if eq $props.source "content" }}
+          content: |-
+          {{- with $props.content }}
+            {{- . | nindent 12 }}
+          {{- end }}
+          {{- end }}
         {{- end }}
     {{- end }}
+{{- end }}
