@@ -194,6 +194,7 @@ admin_password(){
     # Get the list of users
     for user in "${users[@]}"; do
         CHECK=$(yq '.users[env(COUNT)].passwd' $USER_DATA_PATH | tr '[:lower:]' '[:upper:]')
+        export LOWER_USER=$(echo "$user" | tr '[:upper:]' '[:lower:]')
 
         # Check if we need to generate a random password
         if [ "${CHECK}" == "RANDOM" ]; then
@@ -217,7 +218,7 @@ admin_password(){
         # If user kubernetes
         if [ "$SECRETGEN" == "true" ]; then
             bash ./secretgen.sh \
-                --secretname "${user}-credentials" \
+                --secretname "${LOWER_USER}-credentials" \
                 --username "${user}" \
                 --password "${PASSWORD}" \
                 --quiet "${QUIET}" \
