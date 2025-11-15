@@ -32,6 +32,7 @@ export ARGO_ENABLED="false"
 export ARGO_APP_NAME="none"
 export ARGO_SYNC="none"
 export ARGO_COMPARE="none"
+export CLOUDBASE="false"
 
 # Parse and validate user inputs.
 parse_params() {
@@ -84,6 +85,10 @@ parse_params() {
                         export ARGO_COMPARE="${2-}"
                         shift
                         ;;
+                -cb | --cloudbase)
+                        export CLOUDBASE="${2}"
+                        shift
+                        ;;
                -?*) die "Unknown option: $1" ;;
                 *) echo "${2-}" && break ;;
                 esac
@@ -113,6 +118,8 @@ Available options:
 -e, --envsubst          Enable usage of envsubst, disabled by default [true/false]
 
 -s, --salt              Salt to use when encrypting passwords [string]
+
+-cb, --cloudbase        Use cloudbase-init syntax
 
 Optional Kubernetes settings:
 
@@ -160,14 +167,23 @@ run_envsubst(){
 }
 
 random_hostname(){
-      CHECK=$(yq '.hostname' $USER_DATA_PATH | tr '[:lower:]' '[:upper:]')
+     if [ "${CLOUDBASE}" == "true" ]; then
+        CHECK=$(yq '.set_hostname' $USER_DATA_PATH | tr '[:lower:]' '[:upper:]')
+     else
+        CHECK=$(yq '.hostname' $USER_DATA_PATH | tr '[:lower:]' '[:upper:]')
+     fi
 
-      if [ ${CHECK} == "RANDOM" ]; then
+     if [ ${CHECK} == "RANDOM" ]; then
         log "Generating a random hostname."
         export HOSTNAME=$(golang-petname)
-        yq -i '.hostname = env(HOSTNAME)' $USER_DATA_PATH
+
+        if [ "${CLOUDBASE}" == "true" ]; then
+            yq -i '.set_hostname = env(HOSTNAME)' $USER_DATA_PATH
+        else
+            yq -i '.hostname = env(HOSTNAME)' $USER_DATA_PATH
+        fi
         log "Nice to meet you, $HOSTNAME"
-      fi
+     fi
 }
 
 # Hash and insert passwd field for each specified user
@@ -212,9 +228,16 @@ admin_password(){
                 --argo-compare "${ARGO_COMPARE}"
         fi
 
-        log "Setting hashed password for user: $user"
-        export HASHED_PASSWORD=$(mkpasswd --method=SHA-512 --rounds=4096 "${PASSWORD}" -s "${SALT}")
-        yq -i '.users[env(COUNT)].passwd = env(HASHED_PASSWORD)' $USER_DATA_PATH
+        # If not using cloudbse syntax, add the hashed password to the userdata
+        if [ "${CLOUDBASE}" == "true" ]; then
+            log "Setting password for user: $user"
+            yq -i '.users[env(COUNT)].passwd = env(PASSWORD)' $USER_DATA_PATH
+        else
+            log "Setting hashed password for user: $user"
+            export HASHED_PASSWORD=$(mkpasswd --method=SHA-512 --rounds=4096 "${PASSWORD}" -s "${SALT}")
+            yq -i '.users[env(COUNT)].passwd = env(HASHED_PASSWORD)' $USER_DATA_PATH
+        fi
+
         export COUNT=$(($COUNT + 1))
     done
 }
@@ -289,6 +312,18 @@ wireguard(){
             # if the config is in a file
             if [ "$SOURCE" == "file" ]; then
                 export WG_PATH=$(yq '.wireguard.interfaces[env(COUNT)].path' "${USER_DATA_PATH}")
+                export OUTPUT=$(/bin/cat "${WG_PATH}")
+
+                log "Adding wireguard interface ${interface}"
+                yq -i '.wireguard.interfaces[env(COUNT)].content = strenv(OUTPUT)' $USER_DATA_PATH
+                yq -i '.wireguard.interfaces[env(COUNT)] |= (del(.source))' $USER_DATA_PATH
+                yq -i '.wireguard.interfaces[env(COUNT)] |= (del(.path))' $USER_DATA_PATH
+            fi
+
+            # if the config is from a secret
+            if [ "$SOURCE" == "secret" ]; then
+                export WG_NAME=$(yq '.wireguard.interfaces[env(COUNT)].name' "${USER_DATA_PATH}")
+                export WG_PATH="/secrets/${WG_NAME}.conf"
                 export OUTPUT=$(/bin/cat "${WG_PATH}")
 
                 log "Adding wireguard interface ${interface}"

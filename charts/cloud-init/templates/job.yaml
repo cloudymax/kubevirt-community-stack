@@ -39,6 +39,7 @@ spec:
             - "/bin/bash"
             - "/home/appuser/cigen.sh"
             - "--userdata /secrets/user-data.yaml"
+            - "--cloudbase {{ .Values.cloudbase }}"
             {{- if .Values.networkData.enabled }}
             - "--networkdata /secrets/network-data.yaml"
             {{- end }}
@@ -79,9 +80,12 @@ spec:
               subPath: secretgen.sh
             {{- if .Values.wireguard }}
             {{- range $reg, $props := .Values.wireguard.interfaces }}
+            {{- if $props.existingSecret }}
             - name: {{ $props.name }}
-              mountPath: /secrets
+              mountPath: /secrets/{{ $props.name }}.conf
+              subPath: {{ $props.name }}.conf
               readOnly: true
+            {{- end }}
             {{- end }}
             {{- end }}
       volumes:
@@ -113,7 +117,7 @@ spec:
         {{- end }}
         {{- if .Values.wireguard }}
         {{- range $reg, $props := .Values.wireguard.interfaces }}
-        {{- if eq .props.source "secret" }}
+        {{- if $props.existingSecret }}
         - name: {{ $props.name }}
           secret:
             secretName: {{ $props.existingSecret.name }}

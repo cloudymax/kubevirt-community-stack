@@ -1,0 +1,49 @@
+{{- if .Values.cloudbase }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.secret_name }}-userdata
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "cloud-init.labels" . | nindent 4 }}
+data:
+  {{- if .Values.networkData.enabled }}
+  {{- $content := .Values.networkData.content }}
+  network-data.yaml: |-
+    {{- $content | nindent 4 }}
+  {{- end }}
+  user-data.yaml: |-
+    #cloud-config
+    set_hostname: {{ .Values.hostname }}
+    {{- with .Values.groups }}
+    groups:
+        {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.users }}
+    users:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if gt (len .Values.write_files) 0 }}
+    write_files:
+    {{- range $reg, $props := .Values.write_files }}
+      - path: {{ $props.path }}
+        permissions: {{ $props.permissions | quote }}
+      {{- if $props.url }}
+        url: {{ $props.url | quote }}
+      {{- end}}
+      {{- if $props.encoding }}
+        encoding: {{ $props.encoding | quote }}
+      {{- end}}
+      {{- if $props.content }}
+        content: |-
+        {{- with $props.content }}
+          {{- . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- with .Values.runcmd }}
+    runcmd:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+{{- end }}
