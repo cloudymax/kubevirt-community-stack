@@ -228,4 +228,11 @@ runcmd: []
 # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
 networkData:
   enabled: false
-  content: ""
+  content: |
+    network:
+      version: 2
+      renderer: networkd
+      ethernets:
+        enp1s0:
+          dhcp4: true
+          dhcp6: false
