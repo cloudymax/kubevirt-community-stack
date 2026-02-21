@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   cloud-init:
   - apiVersion: v2
+    created: "2026-02-21T12:32:15.666096683Z"
+    description: A Helm chart that generates cloud-init config files
+    digest: 901478f5518e80f416ae4077e3801cd71741f4fa0c9e74cf4ed9fd42a287bc20
+    maintainers:
+    - name: cloudymax
+    name: cloud-init
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/cloud-init-3.0.0/cloud-init-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v2
     created: "2025-11-15T13:19:57.825095297Z"
     description: A Helm chart that generates cloud-init config files
     digest: a32c5d85bbf659ade5161bff2566f7bde944dc583c5dd0d0f8f5ac8be4749461
@@ -2221,4 +2232,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2025-11-15T18:05:58.258018729Z"
+generated: "2026-02-21T12:32:15.666440822Z"
