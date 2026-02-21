@@ -1,15 +1,15 @@
 dependencies:
 - name: kubevirt-cdi
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  version: 0.3.0
+  version: 0.4.0
 - name: kubevirt
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  version: 0.4.0
+  version: 0.5.0
 - name: kubevirt-manager
   repository: https://cloudymax.github.io/kubevirt-community-stack
   version: 0.3.0
 - name: cluster-api-operator
   repository: https://cloudymax.github.io/kubevirt-community-stack
   version: 2.0.0
-digest: sha256:772c69a081488e341634a8fa56f719b331f922a3847d7406b67e04745c0d7a00
-generated: "2025-11-15T19:04:16.979834+01:00"
+digest: sha256:aa1057cf4246b26d013a8349a7b09a4a1eec36e49bee97c82071fbb9a93bd8d9
+generated: "2026-02-21T15:09:07.222292412+01:00"

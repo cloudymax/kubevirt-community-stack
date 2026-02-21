@@ -14,11 +14,11 @@ maintainers:
 dependencies:
 - name: kubevirt-cdi
   alias: cdi
-  version: 0.3.0
+  version: 0.4.0
   repository: https://cloudymax.github.io/kubevirt-community-stack
 - name: kubevirt
   alias: operator
-  version: 0.4.0
+  version: 0.5.0
   repository: https://cloudymax.github.io/kubevirt-community-stack
 - name: kubevirt-manager
   alias: manager
