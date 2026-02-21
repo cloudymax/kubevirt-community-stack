@@ -1,6 +1,6 @@
 # cloud-init
 
-![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart that generates cloud-init config files
 
@@ -26,7 +26,7 @@ A Helm chart that generates cloud-init config files
 | disk_setup | list | `[]` |  |
 | envsubst | bool | `true` | Run envsubst against user-data in the templated configmap during job run. Not an official part of cloid-init |
 | existingConfigMap | bool | `false` | Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace |
-| extraEnvVars | list | `[{"name":"USERNAME","value":"friend"},{"name":"macaddress","value":"b8:a3:86:70:cc:e6"}]` | Set extra environment variables for the job container. |
+| extraEnvVars | list | `[{"name":"USER0_USERNAME","value":"friend"}]` | Set extra environment variables for the job container. |
 | force | bool | `true` | overwrite any existing secrets matching `secret_name` |
 | fs_setup | list | `[]` |  |
 | hostname | string | `"random"` | virtual-machine hostname. When set to 'random' a hostname will be generated using golang-petname. |
@@ -46,8 +46,8 @@ A Helm chart that generates cloud-init config files
 | secret_name | string | `"my-userdata"` | secret in which to save the user-data file, must be unique within namespace |
 | serviceAccount | object | `{"create":true,"existingServiceAccountName":"some-other-sa","name":"my-service-account"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs, or use a uniqne name per vm. |
 | swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
-| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USERNAME","passwd":"random","shell":"/bin/bash","sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups You are advised NOT to use 'admin' as username for linux systems because it conflicts with multiple cloud-images default user configurations When using with cloudbase-init syntax the use of "Admin" as a username is fine. |
-| users[0].passwd | string | `"random"` | When set to 'random' a password will be generated for the user. When empty "" we will look for an env-var named <$USERNAME>_PASSWORD Passing plain-text passwords is not supported. |
+| users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USER0_USERNAME","passwd":"random","shell":"/bin/bash","sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups You are advised NOT to use 'admin' as username for linux systems because it conflicts with multiple cloud-images default user configurations When using with cloudbase-init syntax the use of "Admin" as a username is fine. |
+| users[0].passwd | string | `"random"` | When set to 'random' a password will be generated for the user. When empty "" we will look for an env-var named USER[int]_PASSWORD eg. USER0_PASSWORD, USER1_PASSWORD Passing plain-text passwords is not supported. |
 | wireguard | object | `{"interfaces":[]}` | add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard |
 | write_files | list | `[]` | Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files |
 
