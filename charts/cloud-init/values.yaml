@@ -34,7 +34,7 @@ image: deserializeme/kv-cloud-init:1.0.0
 hostname: random
 
 # -- namespace in which to create resources
-namespace: gaming
+namespace: default
 
 # -- Choose weather to create a service-account or not. Once a SA has been created
 # you should set this to false on subsequent runs, or use a uniqne name per vm.
@@ -170,7 +170,7 @@ users:
     # When empty "" we will look for an env-var named USER[int]_PASSWORD
     # eg. USER0_PASSWORD, USER1_PASSWORD
     # Passing plain-text passwords is not supported.
-    passwd: ""
+    passwd: "random"
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
