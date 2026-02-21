@@ -15,8 +15,8 @@ Combined meta-chart for installing Kubevirt, its dependencies, and addons
 | Repository | Name | Version |
 |------------|------|---------|
 | https://cloudymax.github.io/kubevirt-community-stack | capi(cluster-api-operator) | 2.0.0 |
-| https://cloudymax.github.io/kubevirt-community-stack | operator(kubevirt) | 0.4.0 |
-| https://cloudymax.github.io/kubevirt-community-stack | cdi(kubevirt-cdi) | 0.3.0 |
+| https://cloudymax.github.io/kubevirt-community-stack | operator(kubevirt) | 0.5.0 |
+| https://cloudymax.github.io/kubevirt-community-stack | cdi(kubevirt-cdi) | 0.4.0 |
 | https://cloudymax.github.io/kubevirt-community-stack | manager(kubevirt-manager) | 0.3.0 |
 
 ## Values
