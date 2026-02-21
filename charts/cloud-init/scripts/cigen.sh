@@ -203,13 +203,12 @@ admin_password(){
         else
             # If passwd is empty, its probably a env var
             if [ -z "${CHECK}" ]; then
-                log "Looking for password of user: $user in env vars"
-                CAP_USER=$(echo "${user}" | tr '[:lower:]' '[:upper:]')
-                export PASSWORD=$(env |grep "${CAP_USER}_PASSWORD" |cut -d '=' -f2)
+                log "Looking for USER${COUNT}_PASSWORD in env vars"
+                export PASSWORD=$(env |grep "USER${COUNT}_PASSWORD" |cut -d '=' -f2)
 
                 # If we still cant find it, throw and error and exit
                 if [ -z $PASSWORD ]; then
-                    log "No password found for user $user in env vars. Exiting."
+                    log "USER${COUNT}_PASSWORD not in env vars! Exiting."
                     exit 1
                 fi
             fi
@@ -430,3 +429,4 @@ main(){
 }
 
 main $@
+

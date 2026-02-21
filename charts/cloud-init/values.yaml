@@ -34,7 +34,7 @@ image: deserializeme/kv-cloud-init:1.0.0
 hostname: random
 
 # -- namespace in which to create resources
-namespace: default
+namespace: gaming
 
 # -- Choose weather to create a service-account or not. Once a SA has been created
 # you should set this to false on subsequent runs, or use a uniqne name per vm.
@@ -49,15 +49,13 @@ envsubst: true
 
 # -- Set extra environment variables for the job container.
 extraEnvVars:
-  - name: USERNAME
+  - name: USER0_USERNAME
     value: friend
-  #- name: FRIEND_PASSWORD
+  #- name: USER0_PASSWORD
   #  valueFrom:
   #    secretKeyRef:
   #      name: admin-password
   #      key: password
-  - name: macaddress
-    value: 'b8:a3:86:70:cc:e6'
 
 # set to 'true' use 'cloudbase-init' syntax for windows machines
 # see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and
@@ -162,16 +160,17 @@ wireguard:
 # because it conflicts with multiple cloud-images default user configurations
 # When using with cloudbase-init syntax the use of "Admin" as a username is fine.
 users:
-  - name: $USERNAME
+  - name: $USER0_USERNAME
     groups: users, admin, docker, sudo, kvm
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     lock_passwd: false
 
     # -- When set to 'random' a password will be generated for the user.
-    # When empty "" we will look for an env-var named <$USERNAME>_PASSWORD
+    # When empty "" we will look for an env-var named USER[int]_PASSWORD
+    # eg. USER0_PASSWORD, USER1_PASSWORD
     # Passing plain-text passwords is not supported.
-    passwd: "random"
+    passwd: ""
 
     # -- import user ssh public keys from github, gitlab, or launchpad
     # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
@@ -236,3 +235,4 @@ networkData:
         enp1s0:
           dhcp4: true
           dhcp6: false
+
