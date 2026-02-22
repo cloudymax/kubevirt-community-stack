@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.8.2](https://img.shields.io/badge/Version-0.8.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -14,13 +14,13 @@ Configure a virtual machine for use with Kubevirt
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 1.0.3 |
+| https://cloudymax.github.io/kubevirt-community-stack | cloudinit(cloud-init) | 3.0.0 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cloudinit | object | `{"argocd":{"appName":"none","compare":"IgnoreExtraneous","enabled":false,"syncString":"Prune=false,Delete=false"},"boot_cmd":[],"ca_certs":[],"debug":false,"disable_root":false,"disk_setup":[],"enabled":false,"envsubst":true,"existingConfigMap":false,"extraEnvVars":[{"name":"USERNAME","value":"test"},{"name":"macaddress","value":"b8:a3:86:70:cc:e6"}],"force":true,"fs_setup":[],"hostname":"random","image":"deserializeme/kv-cloud-init:1.0.0","mounts":[],"namespace":"default","network":{"config":"disabled"},"networkData":{"content":"renderer: networkd\nnetwork:\n  version: 2\n  ethernets:\n    multus:\n      match:\n        macaddress: ${macaddress}\n      dhcp4: false\n      dhcp6: false\n      addresses:\n        - 192.168.100.100/24\n      routes:\n        - to: default\n          via: 192.168.100.1\n      mtu: 1500\n      nameservers:\n        addresses:\n          - 192.168.100.1","enabled":false},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USERNAME","password":"random","shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":[],"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
+| cloudinit | object | `{"argocd":{"appName":"none","compare":"IgnoreExtraneous","enabled":false,"syncString":"Prune=false,Delete=false"},"boot_cmd":[],"ca_certs":[],"cloudbase":false,"debug":false,"disable_root":false,"disk_setup":[],"enabled":false,"envsubst":true,"existingConfigMap":false,"extraEnvVars":[{"name":"USER0_USERNAME","value":"test"},{"name":"macaddress","value":"b8:a3:86:70:cc:e6"}],"force":true,"fs_setup":[],"hostname":"random","image":"deserializeme/kv-cloud-init:1.0.0","mounts":[],"namespace":"default","network":{"config":"enabled"},"networkData":{"content":"network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp1s0:\n      dhcp4: true\n      dhcp6: false","enabled":false},"package_reboot_if_required":false,"package_update":true,"package_upgrade":false,"packages":[],"runcmd":[],"salt":"saltsaltlettuce","secret_name":"test-scrapmetal-user-data","serviceAccount":{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"},"swap":{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"},"users":[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USER0_USERNAME","passwd":"random","shell":"/bin/bash","sudo":"ALL=(ALL) NOPASSWD:ALL"}],"wireguard":{"interfaces":[]},"write_files":[]}` | Enable or disable usage of cloud-init sub-chart |
 | cloudinit.argocd.appName | string | `"none"` | ArgoCD App name for optional resource tracking |
 | cloudinit.argocd.compare | string | `"IgnoreExtraneous"` | String containing ArgoCD comparison options |
 | cloudinit.argocd.syncString | string | `"Prune=false,Delete=false"` | String containing ArgoCD resource sync options |
@@ -35,20 +35,18 @@ Configure a virtual machine for use with Kubevirt
 | cloudinit.image | string | `"deserializeme/kv-cloud-init:1.0.0"` | image version |
 | cloudinit.mounts | list | `[]` | Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line |
 | cloudinit.namespace | string | `"default"` | namespace in which to create resources |
-| cloudinit.network | object | `{"config":"disabled"}` | networking options |
-| cloudinit.network.config | string | `"disabled"` | disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations. |
-| cloudinit.networkData | object | `{"content":"renderer: networkd\nnetwork:\n  version: 2\n  ethernets:\n    multus:\n      match:\n        macaddress: ${macaddress}\n      dhcp4: false\n      dhcp6: false\n      addresses:\n        - 192.168.100.100/24\n      routes:\n        - to: default\n          via: 192.168.100.1\n      mtu: 1500\n      nameservers:\n        addresses:\n          - 192.168.100.1","enabled":false}` | Provide instance networkData via the NoCloud networkData configuration source. When envSubst is enabled this file will also be templated. https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1 https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2 |
+| cloudinit.network | object | `{"config":"enabled"}` | networking options |
+| cloudinit.network.config | string | `"enabled"` | disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations. |
+| cloudinit.networkData | object | `{"content":"network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp1s0:\n      dhcp4: true\n      dhcp6: false","enabled":false}` | Provide instance networkData via the NoCloud networkData configuration source. When envSubst is enabled this file will also be templated. https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1 https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2 |
 | cloudinit.package_reboot_if_required | bool | `false` | Update, upgrade, and install packages See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install |
 | cloudinit.runcmd | list | `[]` | Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd |
 | cloudinit.salt | string | `"saltsaltlettuce"` | salt used for password generation |
 | cloudinit.secret_name | string | `"test-scrapmetal-user-data"` | name of secret in which to save the user-data file |
 | cloudinit.serviceAccount | object | `{"create":true,"existingServiceAccountName":"cloud-init-sa","name":"cloud-init-sa"}` | Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs. |
 | cloudinit.swap | object | `{"enabled":false,"filename":"/swapfile","maxsize":"1G","size":"1G"}` | creates a swap file using human-readable values. |
-| cloudinit.users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USERNAME","password":"random","shell":"/bin/bash","ssh_authorized_keys":[],"ssh_import_id":[],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups do NOT use 'admin' as username - it conflicts with multiele cloud-images |
-| cloudinit.users[0].password | string | `"random"` | When set to 'random' a password will be generated for the user. |
-| cloudinit.users[0].ssh_authorized_keys | list | `[]` | provider user ssh pub key as plaintext |
-| cloudinit.users[0].ssh_import_id | list | `[]` | import user ssh public keys from github, gitlab, or launchpad See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh |
-| cloudinit.wireguard | list | `[]` | add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard |
+| cloudinit.users | list | `[{"groups":"users, admin, docker, sudo, kvm","lock_passwd":false,"name":"$USER0_USERNAME","passwd":"random","shell":"/bin/bash","sudo":"ALL=(ALL) NOPASSWD:ALL"}]` | user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups You are advised NOT to use 'admin' as username for linux systems because it conflicts with multiple cloud-images default user configurations When using with cloudbase-init syntax the use of "Admin" as a username is fine. |
+| cloudinit.users[0].passwd | string | `"random"` | When set to 'random' a password will be generated for the user. When empty "" we will look for an env-var named USER[int]_PASSWORD eg. USER0_PASSWORD, USER1_PASSWORD Passing plain-text passwords is not supported. |
+| cloudinit.wireguard | object | `{"interfaces":[]}` | add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard |
 | cloudinit.write_files | list | `[]` | Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files |
 | diskErrorPolicy | string | `"report"` | controls hypervisor behavior when I/O errors occur on disk read or write. Possible values are: 'report', 'ignore', 'enospace' |
 | disks | list | `[{"bootorder":2,"bus":"virtio","image":"quay.io/containerdisks/debian:13","name":"harddrive","readonly":false,"type":"disk"}]` | List of disks to create for the VM, Will be used to create Datavolumes or PVCs. |
@@ -70,7 +68,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
 | virtualMachine.features.autoattachSerialConsole | bool | `true` | Attach a serial console device |
-| virtualMachine.features.hyperv | bool | `false` |  |
+| virtualMachine.features.hyperv | bool | `false` | Set default hyperv settings for windows guests |
 | virtualMachine.features.kvm | object | `{"enabled":true,"hidden":false}` | Enable KVM acceleration. Setting the 'hidden' flag to `true` will obscure kvm from the host. Set `hidden` to `false` when using vGPU in Windows Guests. |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
 | virtualMachine.firmware.efi | object | `{"enabled":true,"secureBoot":false}` | Enable EFI bios and secureboot |
@@ -87,11 +85,12 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.machine.memory | object | `{"base":"2Gi","overcommit":{"enabled":false,"limit":"4Gi","overhead":false}}` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
 | virtualMachine.machine.memory.overcommit.enabled | bool | `false` | Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled. |
 | virtualMachine.machine.memory.overcommit.overhead | bool | `false` | Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory. |
-| virtualMachine.machine.pinCores | bool | `true` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet |
+| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet When true, encorces cpu requests equal to number of vCores (no-overcommit) and pins emulation threads to physical cores. |
 | virtualMachine.machine.priorityClassName | string | `"system-node-critical"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
-| virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. |
-| virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. |
-| virtualMachine.machine.vCores | int | `2` | Number of Virtual cores to pass to the Guest ignored when instancetype is defined |
+| virtualMachine.machine.reservedCores | string | `"200m"` | Minimum Garunteed CPU (millicores) provided to an overprovisioned vm Ignored when pinCores is set to true |
+| virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. Ignored if pinCores is set to false |
+| virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. Ignored if pinCores is set to false |
+| virtualMachine.machine.vCores | int | `2` | Max Number of Virtual cores to pass to the Guest Garunteed when pinCores is set to true. Ignored when instancetype is defined |
 | virtualMachine.name | string | `"test"` | name of the virtualMachine or virtualMachinePool object |
 | virtualMachine.namespace | string | `"default"` | namespace to deploy to |
 | virtualMachine.networks[0].name | string | `"default"` |  |

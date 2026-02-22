@@ -413,7 +413,7 @@ cloudinit:
       value: test
     - name: macaddress
       value: 'b8:a3:86:70:cc:e6'
-  # - name: TEST_PASSWORD
+  # - name: USER0_PASSWORD
   #   valueFrom:
   #     secretKeyRef:
   #       name: admin-password
