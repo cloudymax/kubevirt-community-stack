@@ -113,18 +113,27 @@ virtualMachine:
     # Note: Multiple cpu-bound microbenchmarks show a significant
     # performance advantage when using sockets instead of cores
     # Does not work with some cpuManagerPolicy options.
+    # Ignored if pinCores is set to false
     sockets: 1
 
-    # -- Number of Virtual cores to pass to the Guest
-    # ignored when instancetype is defined
+    # -- Max Number of Virtual cores to pass to the Guest
+    # Garunteed when pinCores is set to true.
+    # Ignored when instancetype is defined
     vCores: 2
 
+    # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
+    # Ignored when pinCores is set to true
+    reservedCores: 200m
+
     # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+    # Ignored if pinCores is set to false
     threads: 1
 
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
-    pinCores: true
+    # When true, encorces cpu requests equal to number of vCores (no-overcommit)
+    # and pins emulation threads to physical cores.
+    pinCores: false
 
     # -- In order to enhance the real-time support in KubeVirt and provide
     # improved latency, KubeVirt will allocate an additional dedicated CPU,
@@ -400,7 +409,7 @@ cloudinit:
   # Not an official part of cloid-init
   envsubst: true
   extraEnvVars:
-    - name: USERNAME
+    - name: USER0_USERNAME
       value: test
     - name: macaddress
       value: 'b8:a3:86:70:cc:e6'
@@ -485,13 +494,16 @@ cloudinit:
   # because it conflicts with multiple cloud-images default user configurations
   # When using with cloudbase-init syntax the use of "Admin" as a username is fine.
   users:
-    - name: $USERNAME
+    - name: $USER0_USERNAME
       groups: users, admin, docker, sudo, kvm
       sudo: ALL=(ALL) NOPASSWD:ALL
       shell: /bin/bash
       lock_passwd: false
 
       # -- When set to 'random' a password will be generated for the user.
+      # When empty "" we will look for an env-var named USER[int]_PASSWORD
+      # eg. USER0_PASSWORD, USER1_PASSWORD
+      # Passing plain-text passwords is not supported.
       passwd: "random"
 
       # -- import user ssh public keys from github, gitlab, or launchpad
@@ -518,7 +530,7 @@ cloudinit:
   write_files: []
   #####################################
   # Download a file from a URL
-  #- path: /home/${USERNAME}/runner.sh
+  #- path: /home/${USER0_USERNAME}/runner.sh
   #  permissions: "0644"
   #  url: "https://raw.githubusercontent.com/small-hack/smol-metal/refs/heads/main/gha-runner.sh"
 
