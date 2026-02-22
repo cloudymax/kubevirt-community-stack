@@ -3,7 +3,7 @@ name: kubevirt-stack
 description: Combined meta-chart for installing Kubevirt, its dependencies, and addons
 
 type: application
-version: 0.4.1
+version: 0.4.2-rc1
 appVersion: "0.0.0"
 
 maintainers:
@@ -14,7 +14,7 @@ maintainers:
 dependencies:
 - name: kubevirt-cdi
   alias: cdi
-  version: 0.4.0
+  version: 0.5.0
   repository: https://cloudymax.github.io/kubevirt-community-stack
 - name: kubevirt
   alias: operator
