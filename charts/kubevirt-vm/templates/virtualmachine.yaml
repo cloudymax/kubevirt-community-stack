@@ -97,9 +97,11 @@ spec:
           {{- end }}
           model: {{ .Values.virtualMachine.machine.cpuModel }}
           {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
+          {{- if eq .Values.virtualMachine.machine.pinCores true }}
           sockets: {{ .Values.virtualMachine.machine.sockets }}
           cores: {{ .Values.virtualMachine.machine.vCores }}
           threads: {{ .Values.virtualMachine.machine.threads }}
+          {{- end }}
           {{- end }}
         {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
         memory:
@@ -182,11 +184,17 @@ spec:
           {{- end }}
           requests:
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
+            {{- if eq .Values.virtualMachine.machine.pinCores false }}
+            cpu: {{ .Values.virtualMachine.machine.reservedCores }}
+            {{- end }}
           limits:
             {{- if eq .Values.virtualMachine.machine.memory.overcommit.enabled true }}
             memory: {{ .Values.virtualMachine.machine.memory.overcommit.limit | quote }}
             {{ else }}
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
+            {{- end }}
+            {{- if eq .Values.virtualMachine.machine.pinCores false }}
+            cpu: {{ .Values.virtualMachine.machine.vCores }}
             {{- end }}
         {{- end }}
       {{- with .Values.livenessProbe }}
