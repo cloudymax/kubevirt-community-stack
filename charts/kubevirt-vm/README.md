@@ -1,6 +1,6 @@
 # kubevirt-vm
 
-![Version: 0.10.0-rc1](https://img.shields.io/badge/Version-0.10.0--rc1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Configure a virtual machine for use with Kubevirt
 
@@ -68,6 +68,7 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.features.autoattachGraphicsDevice | bool | `true` | Attach a basic graphics device for VNC access |
 | virtualMachine.features.autoattachPodInterface | bool | `true` | Make pod network interface the default for the VM |
 | virtualMachine.features.autoattachSerialConsole | bool | `true` | Attach a serial console device |
+| virtualMachine.features.graphicsDeviceType | string | `"virtio"` | Specify a video device type. Requires `VideoConfig` feature gate One of: virtio, vga, bochs, cirrus, ramfb |
 | virtualMachine.features.hyperv | bool | `false` | Set default hyperv settings for windows guests |
 | virtualMachine.features.kvm | object | `{"enabled":true,"hidden":false}` | Enable KVM acceleration. Setting the 'hidden' flag to `true` will obscure kvm from the host. Set `hidden` to `false` when using vGPU in Windows Guests. |
 | virtualMachine.features.networkInterfaceMultiqueue | bool | `true` | Enhances network performance by allowing multiple TX and RX queues. |
@@ -79,24 +80,25 @@ Configure a virtual machine for use with Kubevirt
 | virtualMachine.interfaces[0] | object | `{"masquerade":{},"model":"virtio","name":"default"}` | bridge mode, vms are connected to the network via a linux "bridge". Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP |
 | virtualMachine.machine.architecture | string | `"amd64"` | System Arch. Supported options are amd64 and arm64 |
 | virtualMachine.machine.cpuModel | string | `"host-passthrough"` | Specify hots-passthrough or a named cpu model https://www.qemu.org/docs/master/system/qemu-cpu-models.html |
-| virtualMachine.machine.emulatorThread | bool | `false` | In order to enhance the real-time support in KubeVirt and provide improved latency, KubeVirt will allocate an additional dedicated CPU, exclusively for the emulator thread, to which it will be pinned. Requires `dedicatedCpuPlacement` set to `true` |
+| virtualMachine.machine.emulatorThread | bool | `false` | In order to enhance the real-time support in KubeVirt and provide improved latency, KubeVirt will allocate an additional dedicated CPU, exclusively for the emulator thread, to which it will be pinned. Requires `pinCores` set to `true`  Broken, see https://github.com/kubevirt/kubevirt/issues/17003 |
 | virtualMachine.machine.instancetype | object | `{"enabled":false,"kind":"virtualMachineClusterInstancetype","name":"standard-small"}` | Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus |
 | virtualMachine.machine.machineType | string | `"q35"` | QEMU virtual-machine type. Options are q35 and i440fx |
 | virtualMachine.machine.memory | object | `{"base":"2Gi","overcommit":{"enabled":false,"limit":"4Gi","overhead":false}}` | Amount of RAM to pass to the Guest. Ignored when instancetype is defined |
 | virtualMachine.machine.memory.overcommit.enabled | bool | `false` | Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled. |
 | virtualMachine.machine.memory.overcommit.overhead | bool | `false` | Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory. |
-| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet When true, encorces cpu requests equal to number of vCores (no-overcommit) and pins emulation threads to physical cores. |
+| virtualMachine.machine.overProvisionCPU | bool | `false` | Set CPU requests of VM to below CPU limit - allows overprovisioning |
+| virtualMachine.machine.pinCores | bool | `false` | Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet When true pins emulation threads to physical cores. May not be used when overProvisionCPU set to true |
 | virtualMachine.machine.priorityClassName | string | `"system-node-critical"` | If a Pod cannot be scheduled, lower priorityClass Pods will be evicted |
-| virtualMachine.machine.reservedCores | string | `"200m"` | Minimum Garunteed CPU (millicores) provided to an overprovisioned vm Ignored when pinCores is set to true |
-| virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. Ignored if pinCores is set to false |
-| virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. Ignored if pinCores is set to false |
-| virtualMachine.machine.vCores | int | `2` | Max Number of Virtual cores to pass to the Guest Garunteed when pinCores is set to true. Ignored when instancetype is defined |
+| virtualMachine.machine.reservedCores | string | `"200m"` | Minimum Garunteed CPU (millicores) provided to an overprovisioned vm Ignored when overProvisionCPU set to false |
+| virtualMachine.machine.sockets | int | `1` | Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. Ignored if overProvisionCPU is set to true |
+| virtualMachine.machine.threads | int | `1` | Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs. Ignored if overProvisionCPU is set to true |
+| virtualMachine.machine.vCores | int | `2` | Max Number of Virtual cores to pass to the Guest Garunteed when overProvisionCPU is false Ignored when instancetype is defined |
 | virtualMachine.name | string | `"test"` | name of the virtualMachine or virtualMachinePool object |
 | virtualMachine.namespace | string | `"default"` | namespace to deploy to |
 | virtualMachine.networks[0].name | string | `"default"` |  |
 | virtualMachine.networks[0].pod | object | `{}` |  |
 | virtualMachine.runStrategy | string | `"Always"` | One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once` See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy |
-| virtualMachinePool.enabled | bool | `false` |  |
+| virtualMachinePool.enabled | bool | `true` |  |
 | virtualMachinePool.hpa.enabled | bool | `false` |  |
 | virtualMachinePool.hpa.maxReplicas | int | `5` |  |
 | virtualMachinePool.hpa.minReplicas | int | `1` |  |
