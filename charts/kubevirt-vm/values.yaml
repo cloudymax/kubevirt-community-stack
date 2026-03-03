@@ -126,7 +126,7 @@ virtualMachine:
     vCores: 2
 
     # -- Set CPU requests of VM to below CPU limit - allows overprovisioning
-    overProvisionCPU: true
+    overProvisionCPU: false
 
     # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
     # Ignored when overProvisionCPU set to false
