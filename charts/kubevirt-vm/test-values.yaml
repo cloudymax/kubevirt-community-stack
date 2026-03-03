@@ -17,6 +17,7 @@ virtualMachine:
     autoattachPodInterface: true
     autoattachSerialConsole: true
     autoattachGraphicsDevice: true
+    graphicsDeviceType: virtio
     networkInterfaceMultiqueue: true
   clock:
     enabled: true
@@ -47,10 +48,12 @@ virtualMachine:
     architecture: amd64
     machineType: q35
     cpuModel: host-passthrough
+    overProvisionCPU: true
+    reservedCores: 200m
     sockets: 1
     vCores: 2
     threads: 1
-    pinCores: true
+    pinCores: false
     emulatorThread: false
     memory:
       base: 4Gi
@@ -116,7 +119,7 @@ userDataSecret:
 cloudinit:
   enabled: true
   secret_name: "friend-desktop-user-data"
-  image: deserializeme/kv-cloud-init:v0.0.2
+  image: deserializeme/kv-cloud-init:1.0.0
   serviceAccount:
     create: true
     name: "friend-desktop-sa"
@@ -124,7 +127,7 @@ cloudinit:
   existingConfigMap: false
   envsubst: true
   extraEnvVars:
-    - name: USERNAME
+    - name: USER0_USERNAME
       value: friend
     # Create a password to use with VNC
     # kubectl create secret generic vnc-password --from-literal=password=$(petname --words 3)
@@ -140,27 +143,31 @@ cloudinit:
   salt: "saltsaltlettuce"
   network:
     config: disabled
-  wireguard: []
+  wireguard:
+    interfaces: []
   users:
-    - name: $USERNAME
+    - name: $USER0_USERNAME
       groups: users, admin, docker, sudo, kvm
       sudo: ALL=(ALL) NOPASSWD:ALL
       shell: /bin/bash
       lock_passwd: false
-      password:
-        random: true
-      ssh_import_id: []
-      ssh_authorized_keys: []
+      passwd: "random"
+      #ssh_import_id: []
+      #ssh_authorized_keys: []
   ca_certs: []
   boot_cmd: []
-  write_files: []
+  write_files:
+    - path: /etc/docker/daemon.json
+      permissions: "0644"
+      content: |
+        { "dns" : ["1.1.1.1" , "10.0.2.1"], "mtu": 1450 }
   package_reboot_if_required: false
   package_update: true
   package_upgrade: false
   packages:
     - gpg
   runcmd:
-    - sudo chown -R $USERNAME:$USERNAME /home/$USERNAME
+    - sudo chown -R $USER0_USERNAME:$USER0_USERNAME /home/$USER0_USERNAME
     ######################
     # Install Docker
     - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -223,7 +230,7 @@ ingress:
 # |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\ |_|   \___/|_|_|\___|_|\___||___/
 ################################################################################
 networkPolicy:
-  enabled: true
+  enabled: false
   egress:
     - to:
       - namespaceSelector:
@@ -259,18 +266,18 @@ networkPolicy:
 # |  __/| | | (_) | |_) |  __/\__ \
 # |_|   |_|  \___/|_.__/ \___||___/
 ################################################################################
-livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  tcpSocket:
-    port: 8888
-  timeoutSeconds: 10
+livenessProbe: {}
+#  initialDelaySeconds: 60
+#  periodSeconds: 10
+#  tcpSocket:
+#    port: 8888
+#  timeoutSeconds: 10
 
-readinessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  timeoutSeconds: 10
-  failureThreshold: 30
-  successThreshold: 1
-  httpGet:
-    port: 8888
+readinessProbe: {}
+#  initialDelaySeconds: 60
+#  periodSeconds: 10
+#  timeoutSeconds: 10
+#  failureThreshold: 30
+#  successThreshold: 1
+#  httpGet:
+#    port: 8888
