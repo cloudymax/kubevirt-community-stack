@@ -24,6 +24,7 @@ spec:
         kubevirt-manager.io/managed: "true"
     spec:
       architecture: {{ .Values.virtualMachine.machine.architecture }}
+
       domain:
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
@@ -91,13 +92,14 @@ spec:
         cpu:
           {{- if eq .Values.virtualMachine.machine.pinCores true }}
           dedicatedCpuPlacement: true
-          {{- end }}
           {{- if eq .Values.virtualMachine.machine.emulatorThread true }}
           isolateEmulatorThread: true
+          ioThreadsPolicy: auto
+          {{- end }}
           {{- end }}
           model: {{ .Values.virtualMachine.machine.cpuModel }}
           {{- if eq .Values.virtualMachine.machine.instancetype.enabled false }}
-          {{- if eq .Values.virtualMachine.machine.pinCores true }}
+          {{- if eq .Values.virtualMachine.machine.overProvisionCPU false }}
           sockets: {{ .Values.virtualMachine.machine.sockets }}
           cores: {{ .Values.virtualMachine.machine.vCores }}
           threads: {{ .Values.virtualMachine.machine.threads }}
@@ -123,6 +125,10 @@ spec:
           bootloader: {}
         {{- end }}
         devices:
+          {{- if .Values.virtualMachine.features.autoattachGraphicsDevice }}
+          video:
+            type: {{ .Values.virtualMachine.features.graphicsDeviceType }}
+          {{- end }}
           {{- with .Values.virtualMachine.interfaces }}
           interfaces:
           {{- toYaml . | nindent 10 }}
@@ -184,7 +190,7 @@ spec:
           {{- end }}
           requests:
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
-            {{- if eq .Values.virtualMachine.machine.pinCores false }}
+            {{- if eq .Values.virtualMachine.machine.overProvisionCPU true }}
             cpu: {{ .Values.virtualMachine.machine.reservedCores }}
             {{- end }}
           limits:
@@ -193,7 +199,7 @@ spec:
             {{ else }}
             memory: {{ .Values.virtualMachine.machine.memory.base | quote }}
             {{- end }}
-            {{- if eq .Values.virtualMachine.machine.pinCores false }}
+            {{- if eq .Values.virtualMachine.machine.overProvisionCPU true }}
             cpu: {{ .Values.virtualMachine.machine.vCores }}
             {{- end }}
         {{- end }}

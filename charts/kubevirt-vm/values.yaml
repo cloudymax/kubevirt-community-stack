@@ -46,6 +46,10 @@ virtualMachine:
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
 
+    # -- Specify a video device type. Requires `VideoConfig` feature gate
+    # One of: virtio, vga, bochs, cirrus, ramfb
+    graphicsDeviceType: virtio
+
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
 
@@ -113,32 +117,37 @@ virtualMachine:
     # Note: Multiple cpu-bound microbenchmarks show a significant
     # performance advantage when using sockets instead of cores
     # Does not work with some cpuManagerPolicy options.
-    # Ignored if pinCores is set to false
+    # Ignored if overProvisionCPU is set to true
     sockets: 1
 
     # -- Max Number of Virtual cores to pass to the Guest
-    # Garunteed when pinCores is set to true.
+    # Garunteed when overProvisionCPU is false
     # Ignored when instancetype is defined
     vCores: 2
 
+    # -- Set CPU requests of VM to below CPU limit - allows overprovisioning
+    overProvisionCPU: false
+
     # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
-    # Ignored when pinCores is set to true
+    # Ignored when overProvisionCPU set to false
     reservedCores: 200m
 
     # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
-    # Ignored if pinCores is set to false
+    # Ignored if overProvisionCPU is set to true
     threads: 1
 
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
-    # When true, encorces cpu requests equal to number of vCores (no-overcommit)
-    # and pins emulation threads to physical cores.
+    # When true pins emulation threads to physical cores.
+    # May not be used when overProvisionCPU set to true
     pinCores: false
 
     # -- In order to enhance the real-time support in KubeVirt and provide
     # improved latency, KubeVirt will allocate an additional dedicated CPU,
     # exclusively for the emulator thread, to which it will be pinned.
-    # Requires `dedicatedCpuPlacement` set to `true`
+    # Requires `pinCores` set to `true`
+    #
+    # Broken, see https://github.com/kubevirt/kubevirt/issues/17003
     emulatorThread: false
 
     # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
@@ -185,7 +194,7 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: false
+  enabled: true
   # -- number of replicas to create. Ignored when hpa is set to 'true'
   replicas: 2
   hpa:
@@ -208,25 +217,27 @@ disks:
   #################################################
   # DataVolume disk with URL source example
   #################################################
-  #  - name: harddrive
-  #    # -- Disk type: disk, cdrom, filesystem, or lun
-  #    type: disk
-  #    # -- Bus type: sata or virtio
-  #    bus: virtio
-  #    # -- Sets disk position in boot order, lower numbers are checked earlier
-  #    bootorder: 2
-  #    # -- Set disk to be Read-only
-  #    readonly: false
-  #    # -- Size of disk in GB
-  #    pvsize: 16Gi
-  #    # -- Storage class to use for the pvc
-  #    pvstorageClassName: fast-raid
-  #    # -- Access mode for the PVC
-  #    pvaccessMode: ReadWriteOnce
-  #    # -- source type of the disk image. One of `url`, `pvc`
-  #    source: url
-  #    # -- URL of cloud-image
-  #    url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+  # - name: harddrive
+  #   # -- Disk type: disk, cdrom, filesystem, or lun
+  #   type: disk
+  #   # -- Bus type: sata or virtio
+  #   bus: virtio
+  #   # -- Sets disk position in boot order, lower numbers are checked earlier
+  #   bootorder: 2
+  #   # -- Set disk to be Read-only
+  #   readonly: false
+  #   # -- Size of disk in GB
+  #   pvsize: 16Gi
+  #   # -- Storage class to use for the pvc
+  #   pvstorageClassName: fast-raid
+  #   # -- Access mode for the PVC
+  #   pvaccessMode: ReadWriteOnce
+  #   # -- source type of the disk image. One of `url`, `pvc`
+  #   source: url
+  #   # -- URL of cloud-image
+  #   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+  #   # -- Optional, Specify a node to deploy this PVC to
+  #   # nodePlacement: compufam
 
   #########################################################
   # Ephemeral disk example
@@ -295,12 +306,12 @@ disks:
     bootorder: 2
     readonly: false
     image: "quay.io/containerdisks/debian:13"
-#  - name: virtio-drivers
-#    type: cdrom
-#    bus: sata
-#    bootorder: 3
-#    readonly: true
-#    image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
+  # - name: virtio-drivers
+  #   type: cdrom
+  #   bus: sata
+  #   bootorder: 3
+  #   readonly: true
+  #   image: "quay.io/kubevirt/virtio-container-disk:v1.0.0-rc.1-amd64"
 
 ###########################################################
 # Local Disk example
