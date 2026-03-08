@@ -9,7 +9,14 @@ metadata:
     kubevirt-manager.io/managed: "true"
     kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}
 spec:
+  {{/* If HPA or KEDA are enabled, dont specify replicas
+    they will default to 1 and then be controlled by the scaler.
+    Specifying a replica count here will cause Argo to override your autoscaler*/}}
+  {{- if not .Values.virtualMachinePool.hpa.enabled }}
+  {{- if not .Values.virtualMachinePool.keda.enabled }}
   replicas: {{ .Values.virtualMachinePool.replicas }}
+  {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       kubevirt.io/vmpool: {{ .Values.virtualMachine.name }}

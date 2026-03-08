@@ -194,10 +194,16 @@ virtualMachine:
 # Vm pools should be used with ephemeral disks or containerdisks
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
-  enabled: true
-  # -- number of replicas to create. Ignored when hpa is set to 'true'
+  enabled: false
+  # -- number of replicas to create. Ignored when hpa or Keda is set to 'true'
   replicas: 2
+
+  keda:
+    # -- options for using Keda HPA.
+    enabled: false
+
   hpa:
+    # -- Options for default K8s HPA
     enabled: false
     maxReplicas: 5
     minReplicas: 1
