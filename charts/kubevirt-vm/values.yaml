@@ -195,12 +195,10 @@ virtualMachine:
 # otherwise they would all fight over the same PVC.
 virtualMachinePool:
   enabled: false
-  # -- number of replicas to create. Ignored when hpa or Keda is set to 'true'
+  # -- number of replicas to create.
+  # be sure to set RespectIgnoreDifferences in argocd when using autoscaling
+  # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#respect-ignore-differences-configs
   replicas: 2
-
-  keda:
-    # -- options for using Keda HPA.
-    enabled: false
 
   hpa:
     # -- Options for default K8s HPA
