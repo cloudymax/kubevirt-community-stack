@@ -191,6 +191,8 @@ service:
   - name: "desktop-service"
     type: NodePort
     externalTrafficPolicy: Cluster
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: "192.168.1.100"
     ports:
       - name: ssh
         port: 22
