@@ -1,6 +1,6 @@
 # cluster-api-operator
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.24.0](https://img.shields.io/badge/AppVersion-v0.24.0-informational?style=flat-square)
+![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.26.0](https://img.shields.io/badge/AppVersion-v0.26.0-informational?style=flat-square)
 
 Cluster API Operator
 
@@ -11,7 +11,7 @@ Cluster API Operator
 | "manager.featureGates" | object | `{}` |  |
 | addon.helm.createNamespace | bool | `false` |  |
 | addon.helm.namespace | string | `"default"` |  |
-| addon.helm.version | string | `"v0.4.1"` |  |
+| addon.helm.version | string | `"v0.6.1"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key | string | `"kubernetes.io/arch"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator | string | `"In"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0] | string | `"amd64"` |  |
@@ -21,29 +21,29 @@ Cluster API Operator
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].operator | string | `"In"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].values[0] | string | `"linux"` |  |
 | bootstrap.k3s.createNamespace | bool | `false` |  |
-| bootstrap.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/bootstrap-components.yaml"` |  |
+| bootstrap.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/bootstrap-components.yaml"` |  |
 | bootstrap.k3s.namespace | string | `"default"` |  |
 | bootstrap.k3s.version | string | `"v0.3.0"` |  |
 | bootstrap.kubeadm.createNamespace | bool | `false` |  |
 | bootstrap.kubeadm.namespace | string | `"default"` |  |
-| bootstrap.kubeadm.version | string | `"v1.11.2"` |  |
+| bootstrap.kubeadm.version | string | `"v1.12.3"` |  |
 | bootstrap.rke2.createNamespace | bool | `false` |  |
 | bootstrap.rke2.namespace | string | `"default"` |  |
-| bootstrap.rke2.version | string | `"v0.21.0"` |  |
+| bootstrap.rke2.version | string | `"v0.24.1"` |  |
 | configSecret | object | `{}` | - Common configuration secret options |
 | containerSecurityContext | object | `{}` |  |
 | contentionProfiling | bool | `false` |  |
 | controlPlane.k3s.createNamespace | bool | `false` |  |
-| controlPlane.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/control-plane-components.yaml"` |  |
+| controlPlane.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/control-plane-components.yaml"` |  |
 | controlPlane.k3s.namespace | string | `"default"` |  |
-| controlPlane.k3s.version | string | `"v0.2.1"` |  |
+| controlPlane.k3s.version | string | `"v0.3.0"` |  |
 | controlPlane.kubeadm.createNamespace | bool | `false` |  |
 | controlPlane.kubeadm.namespace | string | `"default"` |  |
-| controlPlane.kubeadm.version | string | `"v1.11.2"` |  |
+| controlPlane.kubeadm.version | string | `"v1.12.3"` |  |
 | controlPlane.rke2.createNamespace | bool | `false` |  |
 | controlPlane.rke2.namespace | string | `"default"` |  |
-| controlPlane.rke2.version | string | `"v0.20.1"` |  |
-| core | object | `{"cluster-api":{"createNamespace":true,"namespace":"capi-system","version":"v1.11.2"}}` | - Cluster API provider options |
+| controlPlane.rke2.version | string | `"v0.24.1"` |  |
+| core | object | `{"cluster-api":{"createNamespace":true,"namespace":"capi-system","version":"v1.12.3"}}` | - Cluster API provider options |
 | diagnosticsAddress | string | `":8443"` |  |
 | enableHelmHook | bool | `false` |  |
 | env.manager | list | `[]` |  |
@@ -55,7 +55,7 @@ Cluster API Operator
 | imagePullSecrets | object | `{}` |  |
 | infrastructure.kubevirt.createNamespace | bool | `false` |  |
 | infrastructure.kubevirt.namespace | string | `"default"` |  |
-| infrastructure.kubevirt.version | string | `"v0.1.10"` |  |
+| infrastructure.kubevirt.version | string | `"v0.11.2"` |  |
 | insecureDiagnostics | bool | `false` |  |
 | ipam.in-cluster.createNamespace | bool | `false` |  |
 | ipam.in-cluster.namespace | string | `"default"` |  |

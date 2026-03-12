@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    clusterctl.cluster.x-k8s.io/core: capi-operator
+    control-plane: controller-manager
+  name: capi-operator-controller-manager
+  namespace: capi-operator-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      clusterctl.cluster.x-k8s.io/core: capi-operator
+      control-plane: controller-manager
+  template:
+    metadata:
+      labels:
+        clusterctl.cluster.x-k8s.io/core: capi-operator
+        control-plane: controller-manager
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - --leader-elect
+          command:
+            - /manager
+          image: registry.k8s.io/capi-operator/cluster-api-operator:v0.26.0
+          imagePullPolicy: IfNotPresent
+          name: manager
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+            - containerPort: 6060
+              name: profiler
+              protocol: TCP
+            - containerPort: 8443
+              name: metrics
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - mountPath: /tmp/k8s-webhook-server/serving-certs
+              name: cert
+              readOnly: true
+      serviceAccountName: capi-operator-manager
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+      volumes:
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: capi-operator-webhook-service-cert

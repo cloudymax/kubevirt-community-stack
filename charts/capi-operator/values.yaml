@@ -4,52 +4,52 @@
 core:
   cluster-api:
     namespace: "capi-system"
-    version: "v1.11.2"
+    version: "v1.12.3"
     createNamespace: true
 
 bootstrap:
   kubeadm:
     namespace: "default"
-    version: "v1.11.2"
+    version: "v1.12.3"
     createNamespace: false
   rke2:
     namespace: "default"
-    version: "v0.21.0"
+    version: "v0.24.1"
     createNamespace: false
   k3s:
     namespace: "default"
     version: "v0.3.0"
     createNamespace: false
     fetchConfig:
-      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/bootstrap-components.yaml"
+      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/bootstrap-components.yaml"
 
 controlPlane:
   kubeadm:
     namespace: "default"
-    version: "v1.11.2"
+    version: "v1.12.3"
     createNamespace: false
   rke2:
     namespace: "default"
-    version: "v0.20.1"
+    version: "v0.24.1"
     createNamespace: false
   k3s:
     namespace: "default"
-    version: "v0.2.1"
+    version: "v0.3.0"
     createNamespace: false
     fetchConfig:
-      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.2.1/control-plane-components.yaml"
+      url: "https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/control-plane-components.yaml"
 
 infrastructure:
   kubevirt:
     namespace: "default"
     createNamespace: false
-    version: "v0.1.10"
+    version: "v0.11.2"
 
 addon:
   helm:
     namespace: "default"
     createNamespace: false
-    version: "v0.4.1"
+    version: "v0.6.1"
 
 ipam:
   in-cluster:
