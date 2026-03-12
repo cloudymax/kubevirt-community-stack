@@ -9,5 +9,13 @@ spec:
   template:
     spec:
       agentConfig: {}
+      {{- with .Values.cluster.preCommands }}
+      preRKE2Commands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cluster.postCommands }}
+      postRKE2Commands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       gzipUserData: false
 {{- end }}
