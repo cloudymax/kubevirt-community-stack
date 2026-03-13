@@ -9,6 +9,10 @@ metadata:
   labels:
     kubevirt.io/domain: {{ $.Values.virtualMachine.name }}
     kubevirt-manager.io/managed: "true"
+  {{ range $key, $value := $props.annotations }}
+  annotations:
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   externalTrafficPolicy: {{ $props.externalTrafficPolicy }}
   type: {{ $props.type }}

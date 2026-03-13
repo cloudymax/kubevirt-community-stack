@@ -1,0 +1,75 @@
+# Updating this chart
+
+The current process is the following steps + manual checking of diffs
+
+```bash
+pipx install semver
+
+mkdir tmp
+cd tmp
+
+export APPVERSION="v0.26.0"
+
+export REPO=/Users/max/repos/kubevirt-community-stack/charts/capi-operator
+
+export CHART_VERSION=$(cat $REPO/Chart.yaml |yq '.version')
+
+export NEW_CHART_VERSION=$(pysemver bump minor $CHART_VERSION)
+
+export URL="https://github.com/kubernetes-sigs/cluster-api-operator"
+
+wget $URL/releases/download/$APPVERSION/operator-components.yaml
+
+yq -s '$index + "-" + .kind + ".yaml"' operator-components.yaml
+
+rm operator-components.yaml
+
+
+mv *Namespace.yaml  $REPO/templates/Namespace.yaml
+
+mv *ClusterRole.yaml  $REPO/templates/ClusterRole.yaml
+
+mv *RoleBinding.yaml  $REPO/templates/RoleBinding.yaml
+
+mv *Role.yaml  $REPO/templates/Role.yaml
+
+mv *ClusterRoleBinding.yaml  $REPO/templates/ClusterRoleBinding.yaml
+
+mv *Service.yaml  $REPO/templates/Service.yaml
+
+mv *Deployment.yaml  $REPO/templates/Deployment.yaml
+
+mv *Certificate.yaml  $REPO/templates/Certificate.yaml
+
+mv *Issuer.yaml  $REPO/templates/Issuer.yaml
+
+mv *MutatingWebhookConfiguration.yaml  $REPO/templates/MutatingWebhookConfiguration.yaml
+
+mv *ValidatingWebhookConfiguration.yaml  $REPO/templates/ValidatingWebhookConfiguration.yaml
+
+mv *ServiceAccount.yaml  $REPO/templates/ServiceAccount.yaml
+
+
+mv 1-CustomResourceDefinition.yaml $(cat 1-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 2-CustomResourceDefinition.yaml $(cat 2-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 3-CustomResourceDefinition.yaml $(cat 3-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 4-CustomResourceDefinition.yaml $(cat 4-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 5-CustomResourceDefinition.yaml $(cat 5-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 6-CustomResourceDefinition.yaml $(cat 6-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv 7-CustomResourceDefinition.yaml $(cat 7-CustomResourceDefinition.yaml |yq '.spec.names.kind').yaml
+
+mv *Provider.yaml $REPO/crds/
+
+yq -i '.appVersion = env(APPVERSION)' $REPO/Chart.yaml
+
+yq -i '.version = env(NEW_CHART_VERSION)' $REPO/Chart.yaml
+
+helm-docs
+```
+

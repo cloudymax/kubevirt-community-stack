@@ -604,6 +604,7 @@ service: []
 #  - name: test-service
 #    type: NodePort
 #    externalTrafficPolicy: Cluster
+#    annotations: {}
 #    ports:
 #      - name: nginx
 #        port: 8080
