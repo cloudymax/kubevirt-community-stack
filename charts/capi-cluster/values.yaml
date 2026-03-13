@@ -12,15 +12,15 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: k3s
+  provider: rke2
 
   # -- Version of kubernetes to deploy
   # v1.34.1+rke2r1
   # v1.34.1+k3s1
-  version: v1.34.1+k3s1
+  version: v1.34.1+rke2r1
 
   # -- Namespace in which to host cluster components
-  namespace: default
+  namespace: my-capi-cluster
 
   # -- Cluster internal DNS domain
   dnsDomain: cluster.local
@@ -35,7 +35,7 @@ cluster:
   serviceCidrBlock: "10.11.0.0/16"
 
   # -- Type of service to use when exposing control plane endpoint on Host
-  controlPlaneServiceType: ClusterIP
+  controlPlaneServiceType: LoadBalancer
 
   tlsSan: []
 
@@ -79,8 +79,8 @@ cluster:
   # -- Commands to run after starting the kubernetes service
   postCommands: []
 
-  disableComponents:
-    - servicelb
+  disableComponents: []
+    # - servicelb
 
 ###############################################################
 # __     ____  __   ____             _
@@ -415,8 +415,6 @@ workers:
     enabled: false
     networkData:
       enabled: false
-
-
 
 ###############################################################
 # _   _      _              ____ _                _

@@ -20,8 +20,16 @@ spec:
     nodeDeletionTimeout: 30s
     nodeDrainTimeout: 2m
     nodeVolumeDetachTimeout: 5m
+  {{- with .Values.cluster.preCommands }}
+  preRKE2Commands:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.cluster.postCommands }}
+  postRKE2Commands:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
   registrationMethod: internal-first
-  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
+  replicas: {{ .Values.controlPlane.size }}
   rolloutStrategy:
     rollingUpdate:
       maxSurge: 1

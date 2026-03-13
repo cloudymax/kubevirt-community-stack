@@ -11,6 +11,14 @@ spec:
   clusterNetwork:
     apiServerPort: 6443
     serviceDomain: cluster.local
+    {{- if eq .Values.cluster.provider "rke2" }}
+    pods:
+      cidrBlocks:
+        - {{ .Values.cluster.podCidrBlock }}
+    services:
+      cidrBlocks:
+        - {{ .Values.cluster.serviceCidrBlock }}
+    {{- end }}
   controlPlaneRef:
     apiGroup: controlplane.cluster.x-k8s.io
     {{- if eq .Values.cluster.provider "rke2" }}
