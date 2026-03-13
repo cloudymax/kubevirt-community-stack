@@ -1,6 +1,6 @@
 # cluster-api-operator
 
-![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.26.0](https://img.shields.io/badge/AppVersion-v0.26.0-informational?style=flat-square)
+![Version: 2.2.1](https://img.shields.io/badge/Version-2.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.26.0](https://img.shields.io/badge/AppVersion-v0.26.0-informational?style=flat-square)
 
 Cluster API Operator
 
@@ -21,9 +21,9 @@ Cluster API Operator
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].operator | string | `"In"` |  |
 | affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[1].values[0] | string | `"linux"` |  |
 | bootstrap.k3s.createNamespace | bool | `false` |  |
-| bootstrap.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/bootstrap-components.yaml"` |  |
+| bootstrap.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.1/bootstrap-components.yaml"` |  |
 | bootstrap.k3s.namespace | string | `"default"` |  |
-| bootstrap.k3s.version | string | `"v0.3.0"` |  |
+| bootstrap.k3s.version | string | `"v0.3.1"` |  |
 | bootstrap.kubeadm.createNamespace | bool | `false` |  |
 | bootstrap.kubeadm.namespace | string | `"default"` |  |
 | bootstrap.kubeadm.version | string | `"v1.12.3"` |  |
@@ -34,9 +34,9 @@ Cluster API Operator
 | containerSecurityContext | object | `{}` |  |
 | contentionProfiling | bool | `false` |  |
 | controlPlane.k3s.createNamespace | bool | `false` |  |
-| controlPlane.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.0/control-plane-components.yaml"` |  |
+| controlPlane.k3s.fetchConfig.url | string | `"https://github.com/k3s-io/cluster-api-k3s/releases/v0.3.1/control-plane-components.yaml"` |  |
 | controlPlane.k3s.namespace | string | `"default"` |  |
-| controlPlane.k3s.version | string | `"v0.3.0"` |  |
+| controlPlane.k3s.version | string | `"v0.3.1"` |  |
 | controlPlane.kubeadm.createNamespace | bool | `false` |  |
 | controlPlane.kubeadm.namespace | string | `"default"` |  |
 | controlPlane.kubeadm.version | string | `"v1.12.3"` |  |

@@ -3,4 +3,4 @@ appVersion: v0.26.0
 description: Cluster API Operator
 name: cluster-api-operator
 type: application
-version: 2.2.0
+version: 2.2.1
