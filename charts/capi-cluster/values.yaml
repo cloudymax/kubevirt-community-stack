@@ -12,12 +12,13 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: rke2
+  provider: k3s
 
   # -- Version of kubernetes to deploy
   # v1.34.1+rke2r1
-  # v1.34.1+k3s1
-  version: v1.34.1+rke2r1
+  # v1.32.1+rke2r1
+  # v1.32.1+k3s1
+  version: v1.32.1+k3s1
 
   # -- Namespace in which to host cluster components
   namespace: my-capi-cluster
@@ -35,18 +36,30 @@ cluster:
   serviceCidrBlock: "10.11.0.0/16"
 
   # -- Type of service to use when exposing control plane endpoint on Host
-  controlPlaneServiceType: LoadBalancer
+  controlPlaneService:
+    type: ClusterIP
+    annotations: {}
+    #  metallb.io/loadBalancerIPs: 192.168.1.129
 
-  tlsSan: []
+  # -- Disable the built-in cloud controller.
+  # Set to `false` when using kubevirt cloud controller.
+  disableCloudController: false
 
-  advertiseAddress: ""
+  # -- Name of the cloud provider to use when provisioning LoadBalancers
+  # set to `external` when using Kubevirt cloud controller
+  cloudProviderName: external
 
-  advertisePort: ""
+  tlsSan:
+    - capi-lb.my-capi-cluster.svc.cluster.local
+
+  advertiseAddress: null
+
+  advertisePort: null
 
   # -- Kubelet config in yaml file format
   # https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
   kubeletConfigFile:
-    enabled: true
+    enabled: false
     content: |-
       apiVersion: kubelet.config.k8s.io/v1beta1
       kind: KubeletConfiguration
@@ -79,8 +92,9 @@ cluster:
   # -- Commands to run after starting the kubernetes service
   postCommands: []
 
-  disableComponents: []
-    # - servicelb
+  disableComponents:
+    - servicelb
+    - traefik
 
 ###############################################################
 # __     ____  __   ____             _
@@ -183,13 +197,13 @@ controlPlane:
       emulatorThread: false
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 4G
+        base: 8G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4G
+          limit: 8G
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
           overhead: false
@@ -205,19 +219,6 @@ controlPlane:
       #       ramFB:
       #         enabled: true
 
-      # -- virtual network interface config options.
-      # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
-      interfaces:
-        # -- bridge mode, vms are connected to the network via a linux "bridge".
-        # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-        - masquerade: {}
-          name: default
-          model: virtio
-      networks:
-        # Use the default pod network
-        - name: default
-          pod: {}
-
   # -- controls hypervisor behavior when I/O errors occur on disk read or write.
   # Possible values are: 'report', 'ignore', 'enospace'
   diskErrorPolicy: "report"
@@ -230,6 +231,7 @@ controlPlane:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+      node: scremlin
 
   # -- not implimentded
   cloudinit:
@@ -359,13 +361,13 @@ workers:
 
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 4G
+        base: 8G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4G
+          limit: 8G
 
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
@@ -383,20 +385,6 @@ workers:
       #       ramFB:
       #         enabled: true
 
-      # -- virtual network interface config options.
-      # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
-      interfaces:
-      # -- bridge mode, vms are connected to the network via a linux "bridge".
-      # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-        - masquerade: {}
-          name: default
-          model: virtio
-
-      networks:
-      # Use the default pod network
-      - name: default
-        pod: {}
-
   # -- controls hypervisor behavior when I/O errors occur on disk read or write.
   # Possible values are: 'report', 'ignore', 'enospace'
   diskErrorPolicy: "report"
@@ -408,7 +396,8 @@ workers:
       bus: virtio
       bootorder: 1
       readonly: false
-      image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+      image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+      node: scremlin
 
   # -- not implimentded
   cloudinit:
@@ -423,7 +412,7 @@ workers:
 #|  _  |  __/ | | | | | | | |___| | | | (_| | |  | |_\__ \
 #|_| |_|\___|_|_| |_| |_|  \____|_| |_|\__,_|_|   \__|___/
 ###############################################################
-helmCharts: []
+helmCharts:
   # Helm Chart for Cilium CNI
   # - name: cilium
   #   namespace: kube-system
@@ -447,18 +436,18 @@ helmCharts: []
   #       ui:
   #         enabled: true
 
-  # - name: cert-manager
-  #   repoUrl: https://charts.jetstack.io
-  #   namespace: certmanager
-  #   options:
-  #     waitForJobs: true
-  #     wait: true
-  #     timeout: 5m
-  #     install:
-  #       createNamespace: true
-  #   values:
-  #     crds:
-  #       enabled: true
+  #- name: cert-manager
+  #  repoUrl: https://charts.jetstack.io
+  #  namespace: certmanager
+  #  options:
+  #    waitForJobs: true
+  #    wait: true
+  #    timeout: 5m
+  #    install:
+  #      createNamespace: true
+  #  values:
+  #    crds:
+  #      enabled: true
 
   # - name: metrics-server
   #   repoUrl: https://kubernetes-sigs.github.io/metrics-server/

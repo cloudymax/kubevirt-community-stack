@@ -12,9 +12,6 @@ spec:
       virtualMachineTemplate:
         metadata:
           namespace: {{ .Values.cluster.namespace }}
-          labels:
-            cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-            cluster.x-k8s.io/role: {{ .Values.controlPlane.role }}
         spec:
           {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled true }}
           instancetype:
@@ -28,9 +25,7 @@ spec:
               labels:
                 kubevirt.io/domain: {{ .Values.cluster.name }}-control-plane
                 kubevirt-service: {{ .Values.cluster.name }}-control-plane
-                cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
                 kubevirt-manager.io/managed: "true"
-                cluster.x-k8s.io/role: {{ .Values.controlPlane.role }}
             spec:
               architecture: {{ .Values.controlPlane.virtualMachine.machine.architecture }}
               domain:
@@ -130,10 +125,6 @@ spec:
                   bootloader: {}
                 {{- end }}
                 devices:
-                  {{- with .Values.controlPlane.virtualMachine.interfaces }}
-                  interfaces:
-                  {{- toYaml . | nindent 18 }}
-                  {{- end }}
                   {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled false }}
                   {{- with .Values.controlPlane.virtualMachine.gpus }}
                   gpus:
@@ -190,10 +181,6 @@ spec:
                     memory: {{ .Values.controlPlane.virtualMachine.machine.memory.base | quote }}
                     {{- end }}
                 {{- end }}
-              {{- with .Values.controlPlane.virtualMachine.networks }}
-              networks:
-              {{- toYaml . | nindent 16 }}
-              {{- end }}
               terminationGracePeriodSeconds: 0
               priorityClassName: {{ .Values.controlPlane.virtualMachine.machine.priorityClassName }}
               volumes:

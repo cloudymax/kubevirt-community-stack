@@ -6,8 +6,8 @@ metadata:
   namespace: {{ .Values.cluster.namespace }}
 spec:
   kthreesConfigSpec:
-    files:
     {{- if .Values.cluster.kubeletConfigFile.enabled }}
+    files:
     {{- $content := .Values.cluster.kubeletConfigFile.content }}
       - path: /etc/kubernetes/kubelet.yaml
         permissions: "0640"
@@ -23,7 +23,7 @@ spec:
       {{- toYaml . | nindent 6 }}
     {{- end}}
     serverConfig:
-      disableCloudController: false
+      disableCloudController: {{ .Values.cluster.disableCloudController }}
       kubeAPIServerArg: []
       kubeControllerManagerArgs: []
       kubeSchedulerArgs: []
@@ -31,28 +31,27 @@ spec:
       tlsSan:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      #advertiseAddress: {{ .Values.cluster.advertiseAddress }}
-      #advertisePort: {{ .Values.cluster.advertisePort }}
+      {{- if .Values.cluster.advertiseAddress }}
+      advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+      {{- end }}
+      {{- if .Values.cluster.advertisePort }}
+      advertisePort: {{ .Values.cluster.advertisePort | quote }}
+      {{- end }}
       clusterCidr: {{ .Values.cluster.podCidrBlock }}
       serviceCidr: {{ .Values.cluster.serviceCidrBlock }}
-      clusterDNS: ""
       clusterDomain: {{ .Values.cluster.dnsDomain }}
-      cloudProviderName: external
+      cloudProviderName: {{ .Values.cluster.cloudProviderName }}
       {{- with .Values.cluster.disableComponents }}
       disableComponents:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      httpsListenPort: ""
+    {{- if .Values.cluster.kubeletConfigFile.enabled }}
     agentConfig:
-      kubeProxyArgs: []
-      {{- if .Values.cluster.kubeletConfigFile.enabled }}
       kubeletArgs:
         - --config=/etc/kubernetes/kubelet.yaml
-      {{- end }}
-      nodeLabels: []
-      nodeName: ""
-      nodeTaints: []
-      privateRegistry: ""
+    {{- else }}
+    agentConfig: {}
+    {{- end }}
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1

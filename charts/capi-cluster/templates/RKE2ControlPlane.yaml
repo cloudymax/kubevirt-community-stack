@@ -35,6 +35,7 @@ spec:
       maxSurge: 1
     type: RollingUpdate
   serverConfig:
+    cni: cilium
     disableComponents:
       pluginComponents:
         - "rke2-ingress-nginx"

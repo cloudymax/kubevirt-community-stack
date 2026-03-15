@@ -130,10 +130,6 @@ spec:
                   bootloader: {}
                 {{- end }}
                 devices:
-                  {{- with .Values.workers.virtualMachine.interfaces }}
-                  interfaces:
-                  {{- toYaml . | nindent 18 }}
-                  {{- end }}
                   {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
                   {{- with .Values.workers.virtualMachine.gpus }}
                   gpus:
@@ -190,10 +186,6 @@ spec:
                     memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
                     {{- end }}
                 {{- end }}
-              {{- with .Values.workers.virtualMachine.networks }}
-              networks:
-              {{- toYaml . | nindent 16 }}
-              {{- end }}
               terminationGracePeriodSeconds: 0
               priorityClassName: {{ .Values.workers.virtualMachine.machine.priorityClassName }}
               volumes:

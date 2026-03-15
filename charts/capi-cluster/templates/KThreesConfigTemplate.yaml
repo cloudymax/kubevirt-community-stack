@@ -7,9 +7,9 @@ metadata:
 spec:
   template:
     spec:
+      {{- if .Values.cluster.kubeletConfigFile.enabled }}
       files:
-       {{- if .Values.cluster.kubeletConfigFile.enabled }}
-       {{- $content := .Values.cluster.kubeletConfigFile.content }}
+      {{- $content := .Values.cluster.kubeletConfigFile.content }}
         - path: /etc/kubernetes/kubelet.yaml
           permissions: "0640"
           content: |-
@@ -24,22 +24,6 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       serverConfig: {}
-      #  disableCloudController: false
-      #  kubeAPIServerArg: []
-      #  kubeControllerManagerArgs: []
-      #  kubeSchedulerArgs: []
-      #  tlsSan: []
-      #  advertiseAddress: ""
-      #  advertisePort: ""
-      #  clusterCidr: 10.10.0.0/16
-      #  serviceCidr: 10.11.0.0/16
-      #  clusterDNS: ""
-      #  clusterDomain: "cluster.local"
-      #  cloudProviderName: external
-      #  disableComponents:
-      #    - servicelb
-      #    - traefik
-      #  httpsListenPort: ""
       agentConfig: {}
       #  kubeProxyArgs: []
       #  kubeletArgs: []
