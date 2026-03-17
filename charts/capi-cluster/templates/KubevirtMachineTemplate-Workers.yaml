@@ -106,9 +106,11 @@ spec:
                   {{- end }}
                   model: {{ .Values.workers.virtualMachine.machine.cpuModel }}
                   {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                  {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU false }}
                   sockets: {{ .Values.workers.virtualMachine.machine.sockets }}
                   cores: {{ .Values.workers.virtualMachine.machine.vCores }}
                   threads: {{ .Values.workers.virtualMachine.machine.threads }}
+                  {{- end }}
                   {{- end }}
                 {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
                 memory:
@@ -130,6 +132,10 @@ spec:
                   bootloader: {}
                 {{- end }}
                 devices:
+                  {{- if .Values.workers.virtualMachine.features.autoattachGraphicsDevice }}
+                  video:
+                    type: {{ .Values.controlPlane.virtualMachine.features.graphicsDeviceType }}
+                  {{- end }}
                   {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
                   {{- with .Values.workers.virtualMachine.gpus }}
                   gpus:
@@ -179,11 +185,17 @@ spec:
                   {{- end }}
                   requests:
                     memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
+                    {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.workers.virtualMachine.machine.reservedCores | quote }}
+                    {{- end }}
                   limits:
                     {{- if eq .Values.workers.virtualMachine.machine.memory.overcommit.enabled true }}
                     memory: {{ .Values.workers.virtualMachine.machine.memory.overcommit.limit | quote }}
                     {{ else }}
                     memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
+                    {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.workers.virtualMachine.machine.vCores |quote }}
                     {{- end }}
                 {{- end }}
               terminationGracePeriodSeconds: 0

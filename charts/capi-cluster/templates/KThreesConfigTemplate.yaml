@@ -7,14 +7,15 @@ metadata:
 spec:
   template:
     spec:
-      {{- if .Values.cluster.kubeletConfigFile.enabled }}
+      {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
       files:
-      {{- $content := .Values.cluster.kubeletConfigFile.content }}
-        - path: /etc/kubernetes/kubelet.yaml
-          permissions: "0640"
-          content: |-
-            {{- $content | nindent 12 }}
-        {{- end }}
+      {{- range $key, $value := .Values.cluster.extraFiles.worker }}
+        - path: {{ $value.path }}
+          owner: {{ $value.owner }}
+          content: |
+            {{- $value.content | nindent 12 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.cluster.preCommands }}
       preK3sCommands:
         {{- toYaml . | nindent 6 }}
@@ -24,11 +25,10 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}
       serverConfig: {}
-      agentConfig: {}
-      #  kubeProxyArgs: []
-      #  kubeletArgs: []
-      #  nodeLabels: []
-      #  nodeName: ""
-      #  nodeTaints: []
-      #  privateRegistry: ""
+      agentConfig:
+        {{- with .Values.cluster.kubeletArgs }}
+        kubeletArgs:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        privateRegistry: ""
 {{- end }}

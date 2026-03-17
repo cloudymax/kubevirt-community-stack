@@ -6,13 +6,14 @@ metadata:
   namespace: {{ .Values.cluster.namespace }}
 spec:
   kthreesConfigSpec:
-    {{- if .Values.cluster.kubeletConfigFile.enabled }}
+    {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
     files:
-    {{- $content := .Values.cluster.kubeletConfigFile.content }}
-      - path: /etc/kubernetes/kubelet.yaml
-        permissions: "0640"
+    {{- range $key, $value := .Values.cluster.extraFiles.controlPlane }}
+      - path: {{ $value.path }}
+        owner: {{ $value.owner }}
         content: |
-          {{- $content | nindent 10 }}
+          {{- $value.content | nindent 10}}
+    {{- end }}
     {{- end }}
     {{- with .Values.cluster.preCommands }}
     preK3sCommands:
@@ -45,13 +46,12 @@ spec:
       disableComponents:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- if .Values.cluster.kubeletConfigFile.enabled }}
     agentConfig:
+      {{- with .Values.cluster.kubeletArgs }}
       kubeletArgs:
-        - --config=/etc/kubernetes/kubelet.yaml
-    {{- else }}
-    agentConfig: {}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      privateRegistry: ""
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1

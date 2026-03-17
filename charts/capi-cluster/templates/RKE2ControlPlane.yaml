@@ -35,10 +35,12 @@ spec:
       maxSurge: 1
     type: RollingUpdate
   serverConfig:
-    cni: cilium
+    cni: {{ .Values.cluster.rke2CNI }}
     disableComponents:
+      {{- with .Values.cluster.disableComponents }}
       pluginComponents:
-        - "rke2-ingress-nginx"
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       kubernetesComponents:
         - cloudController
     kubeAPIServer:
