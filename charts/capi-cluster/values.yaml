@@ -12,7 +12,7 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: rke2
+  provider: kubeadm
 
   # -- Version of kubernetes to deploy
   # v1.35.2+rke2r1
