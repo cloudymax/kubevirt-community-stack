@@ -1,6 +1,6 @@
 {{- if eq .Values.cluster.provider "rke2" }}
 ---
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: RKE2ControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
@@ -21,21 +21,19 @@ spec:
         {{- $value.content | nindent 10}}
   {{- end }}
   {{- end }}
+  {{- with .Values.cluster.kubeletArgs }}
   agentConfig:
-    {{- with .Values.cluster.kubeletArgs }}
     kubelet:
       extraArgs:
         {{- toYaml . | nindent 10 }}
-    {{- end }}
+  {{- end }}
   gzipUserData: false
   machineTemplate:
-    infrastructureRef:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
-      kind: KubevirtMachineTemplate
-      name: {{ .Values.cluster.name }}-control-plane
-    nodeDeletionTimeout: 30s
-    nodeDrainTimeout: 2m
-    nodeVolumeDetachTimeout: 5m
+    spec:
+      infrastructureRef:
+        apiGroup: infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: {{ .Values.cluster.name }}-control-plane
   {{- with .Values.cluster.preCommands }}
   preRKE2Commands:
     {{- toYaml . | nindent 6 }}

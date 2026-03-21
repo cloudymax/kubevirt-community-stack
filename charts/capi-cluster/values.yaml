@@ -12,7 +12,7 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: kubeadm
+  provider: rke2
 
   # -- Version of kubernetes tested
   # RKE2
@@ -20,7 +20,8 @@ cluster:
   # v1.34.1+rke2r1
   # v1.32.1+rke2r1
   #
-  # K3s (only partially working)
+  # K3s
+  # v1.33.8+k3s1
   # v1.32.1+k3s1
   #
   # Kubeadm (be sure to install your own CNI via helm)
@@ -28,7 +29,7 @@ cluster:
   # v1.34.1
   # v1.32.1
 
-  version: v1.34.1
+  version: v1.35.2+rke2r1
 
   # -- Namespace in which to host cluster components
   namespace: my-capi-cluster
@@ -48,8 +49,8 @@ cluster:
   # -- Type of service to use when exposing control plane endpoint on Host
   controlPlaneService:
     type: LoadBalancer
-    annotations:
-      metallb.io/loadBalancerIPs: 192.168.1.129
+    annotations: {}
+    #  metallb.io/loadBalancerIPs: 192.168.1.129
 
   # -- Disable the built-in cloud controller.
   # Set to `false` when using kubevirt cloud controller.
@@ -72,23 +73,14 @@ cluster:
   #  - --config=/etc/kubernetes/kubelet.yaml
 
   # -- write arbitraty files to the controlPlane and/or Workers
+  # See provider docs for guidance when using this option to overwrite
+  # the kubelet config file.
   extraFiles:
     controlPlane: []
     worker: []
 
   # -- Commands to run befores starting the kubernetes service
-  preCommands:
-    - sleep 10
-    - useradd -m friend
-    - echo 'friend:password' | chpasswd
-    - usermod -aG sudo friend
-    - echo 'friend ALL=(ALL) NOPASSWD:ALL' | EDITOR='tee -a' visudo
-    - mkdir -p /home/friend/.ssh
-    - chown friend:friend /home/friend/.ssh
-    - chmod 700 /home/friend/.ssh
-    - 'echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC3xEankn5zUklqZ5XVRbjP9XrXmK49VZ4OJqkzRF5JJpolBAwmJIUoww6G51g9IlYWzzijtfRSsQxoZHmHp+sSz/qP5zbjoFVCJ08N0ulqb8okM5C7+uET3dZKxwMT6DLFKSLebYnFlCtbp6VnDvp6gP+ZIesL6cxVWC/fSjTbyesEaNWkigI+2zF3sSDOvrSGvRmQSOfOvdjAY8xvcKkwj4uSXa5qsVM7OX+j+2vARredbvya6YyAkumB9SXVHqnFdOOo1jgMtdNGFPi703dgAnfQp7yafR9Ext46pkO8zcyroysogKjI0HqLqUtV6tAG7NZo4+u8k9uYkZmQa26u2rmkx6kUP1jaDfrSp/33dcCLRVKd/FOiv5Ztwvl71fKh3az9khf/ZxFO2thDy8M0TY46TWs87eow8McNmOJWvsyuvVsI7ZyRhGWQkx7V0vpsd8ClDf91enKt4tBDlTu8PYvI2i2UMCeFb+uSt4c2D/kjTCM/+XPrljLupIfs7pM= max" > /home/friend/.ssh/authorized_keys'
-    - chown friend:friend /home/friend/.ssh/authorized_keys
-    - chmod 600 /home/friend/.ssh/authorized_keys
+  preCommands: []
 
   # -- Commands to run after starting the kubernetes service
   postCommands: []
@@ -96,8 +88,8 @@ cluster:
   # -- disable plugin components of k3s and RKE2
   disableComponents:
     - rke2-ingress-nginx
-  #  - servicelb
   #  - traefik
+  #  - servicelb
 
   # -- Choose CNI to use with RKE2. Ignored for all other providers
   rke2CNI: canal
@@ -489,66 +481,66 @@ workers:
 #|  _  |  __/ | | | | | | | |___| | | | (_| | |  | |_\__ \
 #|_| |_|\___|_|_| |_| |_|  \____|_| |_|\__,_|_|   \__|___/
 ###############################################################
-helmCharts:
+helmCharts: []
   # Helm Chart for Cilium CNI
-  - name: cilium
-    namespace: kube-system
-    repoUrl: https://helm.cilium.io/
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      operator:
-        replicas: 1
-      encryption:
-        enabled: false
-        type: wireguard
-      hubble:
-        enabled: true
-        relay:
-          enabled: true
-        ui:
-          enabled: true
+  #- name: cilium
+  #  namespace: kube-system
+  #  repoUrl: https://helm.cilium.io/
+  #  options:
+  #    waitForJobs: true
+  #    wait: true
+  #    timeout: 5m
+  #    install:
+  #      createNamespace: true
+  #  values:
+  #    operator:
+  #      replicas: 1
+  #    encryption:
+  #      enabled: false
+  #      type: wireguard
+  #    hubble:
+  #      enabled: true
+  #      relay:
+  #        enabled: true
+  #      ui:
+  #        enabled: true
 
-  - name: cert-manager
-    repoUrl: https://charts.jetstack.io
-    namespace: certmanager
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      crds:
-        enabled: true
+  #- name: cert-manager
+  #  repoUrl: https://charts.jetstack.io
+  #  namespace: certmanager
+  #  options:
+  #    waitForJobs: true
+  #    wait: true
+  #    timeout: 5m
+  #    install:
+  #      createNamespace: true
+  #  values:
+  #    crds:
+  #      enabled: true
 
-  - name: metrics-server
-    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
-    namespace: kube-system
-    options:
-      waitForJobs: true
-      wait: true
-      timeout: 5m
-      install:
-        createNamespace: true
-    values:
-      defaultArgs:
-        - --cert-dir=/tmp
-        - --secure-port=10250
-        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-        - --kubelet-use-node-status-port
-        - --metric-resolution=15s
-        - --kubelet-insecure-tls=true
-      args: []
-      apiService:
-        create: true
-        insecureSkipTLSVerify: true
-      tls:
-        type: "metrics-server"
+  #- name: metrics-server
+  #  repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+  #  namespace: kube-system
+  #  options:
+  #    waitForJobs: true
+  #    wait: true
+  #    timeout: 5m
+  #    install:
+  #      createNamespace: true
+  #  values:
+  #    defaultArgs:
+  #      - --cert-dir=/tmp
+  #      - --secure-port=10250
+  #      - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  #      - --kubelet-use-node-status-port
+  #      - --metric-resolution=15s
+  #      - --kubelet-insecure-tls=true
+  #    args: []
+  #    apiService:
+  #      create: true
+  #      insecureSkipTLSVerify: true
+  #    tls:
+  #      type: "metrics-server"
 
   # - name: ingress-nginx
   #   repoUrl: https://kubernetes.github.io/ingress-nginx

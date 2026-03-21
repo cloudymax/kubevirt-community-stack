@@ -1,6 +1,6 @@
 {{- if eq .Values.cluster.provider "rke2" }}
 ---
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: RKE2ConfigTemplate
 metadata:
   name: {{ .Values.cluster.name }}-md-0
@@ -10,12 +10,12 @@ metadata:
 spec:
   template:
     spec:
+      {{- with .Values.cluster.kubeletArgs }}
       agentConfig:
-        {{- with .Values.cluster.kubeletArgs }}
         kubelet:
           extraArgs:
             {{- toYaml . | nindent 10 }}
-        {{- end }}
+      {{- end }}
       {{- if gt (len .Values.cluster.extraFiles.worker ) 0 }}
       files:
       {{- range $key, $value := .Values.cluster.extraFiles.worker }}

@@ -27,9 +27,8 @@ spec:
     {{- end}}
     serverConfig:
       disableCloudController: {{ .Values.cluster.disableCloudController }}
-      kubeAPIServerArg: []
-      kubeControllerManagerArgs: []
-      kubeSchedulerArgs: []
+      kubeAPIServerArg:
+        - --anonymous-auth=true
       {{- with .Values.cluster.tlsSan }}
       tlsSan:
         {{- toYaml . | nindent 8 }}

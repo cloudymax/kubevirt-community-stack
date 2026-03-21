@@ -26,7 +26,6 @@ spec:
       postK3sCommands:
         {{- toYaml . | nindent 6 }}
       {{- end }}
-      serverConfig: {}
       agentConfig:
         {{- with .Values.cluster.kubeletArgs }}
         kubeletArgs:
