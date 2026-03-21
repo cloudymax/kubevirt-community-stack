@@ -8,7 +8,21 @@ metadata:
 spec:
   template:
     spec:
-      agentConfig: {}
+      agentConfig:
+        {{- with .Values.cluster.kubeletArgs }}
+        kubelet:
+          extraArgs:
+            {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- if gt (len .Values.cluster.extraFiles.worker ) 0 }}
+      files:
+      {{- range $key, $value := .Values.cluster.extraFiles.worker }}
+        - path: {{ $value.path }}
+          owner: {{ $value.owner }}
+          content: |
+            {{- $value.content | nindent 12 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.cluster.preCommands }}
       preRKE2Commands:
         {{- toYaml . | nindent 8 }}

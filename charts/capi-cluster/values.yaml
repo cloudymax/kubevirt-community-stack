@@ -15,10 +15,11 @@ cluster:
   provider: rke2
 
   # -- Version of kubernetes to deploy
+  # v1.35.2+rke2r1
   # v1.34.1+rke2r1
   # v1.32.1+rke2r1
   # v1.32.1+k3s1
-  version: v1.34.1+rke2r1
+  version: v1.35.2+rke2r1
 
   # -- Namespace in which to host cluster components
   namespace: my-capi-cluster
@@ -37,9 +38,9 @@ cluster:
 
   # -- Type of service to use when exposing control plane endpoint on Host
   controlPlaneService:
-    type: ClusterIP
-    annotations: {}
-    #  metallb.io/loadBalancerIPs: 192.168.1.129
+    type: LoadBalancer
+    annotations:
+      metallb.io/loadBalancerIPs: 192.168.1.129
 
   # -- Disable the built-in cloud controller.
   # Set to `false` when using kubevirt cloud controller.
@@ -328,7 +329,7 @@ controlPlane:
 
 #-- Worker VM spec
 workers:
-  size: 1
+  size: 2
   bootstrapCheck: ssh
   role: worker
 

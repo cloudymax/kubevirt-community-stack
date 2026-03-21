@@ -10,7 +10,21 @@ metadata:
     controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"
   {{- end }}
 spec:
-  agentConfig: {}
+  {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
+  files:
+  {{- range $key, $value := .Values.cluster.extraFiles.controlPlane }}
+    - path: {{ $value.path }}
+      owner: {{ $value.owner }}
+      content: |
+        {{- $value.content | nindent 10}}
+  {{- end }}
+  {{- end }}
+  agentConfig:
+    {{- with .Values.cluster.kubeletArgs }}
+    kubelet:
+      extraArgs:
+        {{- toYaml . | nindent 10 }}
+    {{- end }}
   gzipUserData: false
   machineTemplate:
     infrastructureRef:
@@ -36,6 +50,12 @@ spec:
     type: RollingUpdate
   serverConfig:
     cni: {{ .Values.cluster.rke2CNI }}
+    {{- if .Values.cluster.advertiseAddress }}
+    advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+    {{- end }}
+    {{- if .Values.cluster.advertisePort }}
+    advertisePort: {{ .Values.cluster.advertisePort | quote }}
+    {{- end }}
     disableComponents:
       {{- with .Values.cluster.disableComponents }}
       pluginComponents:
