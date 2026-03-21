@@ -1,17 +1,50 @@
 {{- if eq .Values.cluster.provider "kubeadm" }}
 ---
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: KubeadmConfigTemplate
 metadata:
   name: {{ .Values.cluster.name }}-md-0
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   template:
     spec:
+      {{- if gt (len .Values.cluster.extraFiles.worker ) 0 }}
+      files:
+      {{- range $key, $value := .Values.cluster.extraFiles.worker }}
+        - path: {{ $value.path }}
+          owner: {{ $value.owner }}
+          content: |
+            {{- $value.content | nindent 12 }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.cluster.preCommands }}
+      preKubeadmCommands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cluster.postCommands }}
+      postKubeadmCommands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if gt (len .Values.cluster.kubeletArgs) 0 }}
       joinConfiguration:
         nodeRegistration:
-          {{- with .Values.cluster.kubeletExtraArgs }}
           kubeletExtraArgs:
-            {{- toYaml . | nindent 12 }}
+          {{- range $key, $value := .Values.cluster.kubeletArgs }}
+          {{- $parts := splitn "=" 2 $value }}
+            - name: {{ trimPrefix "--" $parts._0 }}
+              value: {{ $parts._1 | quote }}
           {{- end }}
+      {{- end }}
+      # initConfiguration:
+      #   nodeRegistration:
+      #     {{- if gt (len .Values.cluster.kubeletArgs) 0 }}
+      #     kubeletExtraArgs:
+      #     {{- range $key, $value := .Values.cluster.kubeletArgs }}
+      #     {{- $parts := splitn "=" 2 $value }}
+      #       - name: {{ trimPrefix "--" $parts._0 }}
+      #         value: {{ $parts._1 | quote }}
+      #     {{- end }}
+      #     {{- end }}
 {{- end }}

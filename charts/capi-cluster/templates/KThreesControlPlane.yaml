@@ -4,15 +4,18 @@ kind: KThreesControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   kthreesConfigSpec:
+    {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
     files:
-    {{- if .Values.cluster.kubeletConfigFile.enabled }}
-    {{- $content := .Values.cluster.kubeletConfigFile.content }}
-      - path: /etc/kubernetes/kubelet.yaml
-        permissions: "0640"
+    {{- range $key, $value := .Values.cluster.extraFiles.controlPlane }}
+      - path: {{ $value.path }}
+        owner: {{ $value.owner }}
         content: |
-          {{- $content | nindent 10 }}
+          {{- $value.content | nindent 10}}
+    {{- end }}
     {{- end }}
     {{- with .Values.cluster.preCommands }}
     preK3sCommands:
@@ -23,35 +26,32 @@ spec:
       {{- toYaml . | nindent 6 }}
     {{- end}}
     serverConfig:
-      disableCloudController: false
-      kubeAPIServerArg: []
-      kubeControllerManagerArgs: []
-      kubeSchedulerArgs: []
+      disableCloudController: {{ .Values.cluster.disableCloudController }}
+      kubeAPIServerArg:
+        - --anonymous-auth=true
       {{- with .Values.cluster.tlsSan }}
       tlsSan:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      #advertiseAddress: {{ .Values.cluster.advertiseAddress }}
-      #advertisePort: {{ .Values.cluster.advertisePort }}
+      {{- if .Values.cluster.advertiseAddress }}
+      advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+      {{- end }}
+      {{- if .Values.cluster.advertisePort }}
+      advertisePort: {{ .Values.cluster.advertisePort | quote }}
+      {{- end }}
       clusterCidr: {{ .Values.cluster.podCidrBlock }}
       serviceCidr: {{ .Values.cluster.serviceCidrBlock }}
-      clusterDNS: ""
       clusterDomain: {{ .Values.cluster.dnsDomain }}
-      cloudProviderName: external
+      cloudProviderName: {{ .Values.cluster.cloudProviderName }}
       {{- with .Values.cluster.disableComponents }}
       disableComponents:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      httpsListenPort: ""
     agentConfig:
-      kubeProxyArgs: []
-      {{- if .Values.cluster.kubeletConfigFile.enabled }}
+      {{- with .Values.cluster.kubeletArgs }}
       kubeletArgs:
-        - --config=/etc/kubernetes/kubelet.yaml
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      nodeLabels: []
-      nodeName: ""
-      nodeTaints: []
       privateRegistry: ""
   machineTemplate:
     infrastructureRef:

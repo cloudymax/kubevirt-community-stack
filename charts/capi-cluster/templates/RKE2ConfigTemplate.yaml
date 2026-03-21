@@ -1,13 +1,37 @@
 {{- if eq .Values.cluster.provider "rke2" }}
 ---
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: RKE2ConfigTemplate
 metadata:
   name: {{ .Values.cluster.name }}-md-0
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   template:
     spec:
-      agentConfig: {}
+      {{- with .Values.cluster.kubeletArgs }}
+      agentConfig:
+        kubelet:
+          extraArgs:
+            {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- if gt (len .Values.cluster.extraFiles.worker ) 0 }}
+      files:
+      {{- range $key, $value := .Values.cluster.extraFiles.worker }}
+        - path: {{ $value.path }}
+          owner: {{ $value.owner }}
+          content: |
+            {{- $value.content | nindent 12 }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.cluster.preCommands }}
+      preRKE2Commands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cluster.postCommands }}
+      postRKE2Commands:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       gzipUserData: false
 {{- end }}

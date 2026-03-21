@@ -4,6 +4,8 @@ kind: KubevirtMachineTemplate
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   template:
     spec:
@@ -12,9 +14,6 @@ spec:
       virtualMachineTemplate:
         metadata:
           namespace: {{ .Values.cluster.namespace }}
-          labels:
-            cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
-            cluster.x-k8s.io/role: {{ .Values.controlPlane.role }}
         spec:
           {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled true }}
           instancetype:
@@ -28,9 +27,7 @@ spec:
               labels:
                 kubevirt.io/domain: {{ .Values.cluster.name }}-control-plane
                 kubevirt-service: {{ .Values.cluster.name }}-control-plane
-                cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
                 kubevirt-manager.io/managed: "true"
-                cluster.x-k8s.io/role: {{ .Values.controlPlane.role }}
             spec:
               architecture: {{ .Values.controlPlane.virtualMachine.machine.architecture }}
               domain:
@@ -106,9 +103,11 @@ spec:
                   {{- end }}
                   model: {{ .Values.controlPlane.virtualMachine.machine.cpuModel }}
                   {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled false }}
+                  {{- if eq .Values.controlPlane.virtualMachine.machine.overProvisionCPU false }}
                   sockets: {{ .Values.controlPlane.virtualMachine.machine.sockets }}
                   cores: {{ .Values.controlPlane.virtualMachine.machine.vCores }}
                   threads: {{ .Values.controlPlane.virtualMachine.machine.threads }}
+                  {{- end }}
                   {{- end }}
                 {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled false }}
                 memory:
@@ -130,9 +129,9 @@ spec:
                   bootloader: {}
                 {{- end }}
                 devices:
-                  {{- with .Values.controlPlane.virtualMachine.interfaces }}
-                  interfaces:
-                  {{- toYaml . | nindent 18 }}
+                  {{- if .Values.controlPlane.virtualMachine.features.autoattachGraphicsDevice }}
+                  video:
+                    type: {{ .Values.controlPlane.virtualMachine.features.graphicsDeviceType }}
                   {{- end }}
                   {{- if eq .Values.controlPlane.virtualMachine.machine.instancetype.enabled false }}
                   {{- with .Values.controlPlane.virtualMachine.gpus }}
@@ -183,17 +182,19 @@ spec:
                   {{- end }}
                   requests:
                     memory: {{ .Values.controlPlane.virtualMachine.machine.memory.base | quote }}
+                    {{- if eq .Values.controlPlane.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.controlPlane.virtualMachine.machine.reservedCores | quote }}
+                    {{- end }}
                   limits:
                     {{- if eq .Values.controlPlane.virtualMachine.machine.memory.overcommit.enabled true }}
                     memory: {{ .Values.controlPlane.virtualMachine.machine.memory.overcommit.limit | quote }}
                     {{ else }}
                     memory: {{ .Values.controlPlane.virtualMachine.machine.memory.base | quote }}
                     {{- end }}
+                    {{- if eq .Values.controlPlane.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.controlPlane.virtualMachine.machine.vCores |quote }}
+                    {{- end }}
                 {{- end }}
-              {{- with .Values.controlPlane.virtualMachine.networks }}
-              networks:
-              {{- toYaml . | nindent 16 }}
-              {{- end }}
               terminationGracePeriodSeconds: 0
               priorityClassName: {{ .Values.controlPlane.virtualMachine.machine.priorityClassName }}
               volumes:

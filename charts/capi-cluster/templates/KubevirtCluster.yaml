@@ -6,5 +6,11 @@ metadata:
   namespace: {{ .Values.cluster.namespace }}
 spec:
   controlPlaneServiceTemplate:
+    metadata:
+      namespace: {{ .Values.cluster.namespace }}
+      {{- range $key, $value := .Values.cluster.controlPlaneService.annotations }}
+      annotations:
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
     spec:
-      type: {{ .Values.cluster.controlPlaneServiceType }}
+      type: {{ .Values.cluster.controlPlaneService.type }}

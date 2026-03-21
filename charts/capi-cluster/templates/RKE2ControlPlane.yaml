@@ -1,35 +1,66 @@
 {{- if eq .Values.cluster.provider "rke2" }}
 ---
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: RKE2ControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
   {{- if eq .Values.cluster.disableKubePorxy true }}
   annotations:
     controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"
   {{- end }}
 spec:
-  agentConfig: {}
+  {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
+  files:
+  {{- range $key, $value := .Values.cluster.extraFiles.controlPlane }}
+    - path: {{ $value.path }}
+      owner: {{ $value.owner }}
+      content: |
+        {{- $value.content | nindent 10}}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.cluster.kubeletArgs }}
+  agentConfig:
+    kubelet:
+      extraArgs:
+        {{- toYaml . | nindent 10 }}
+  {{- end }}
   gzipUserData: false
   machineTemplate:
-    infrastructureRef:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
-      kind: KubevirtMachineTemplate
-      name: {{ .Values.cluster.name }}-control-plane
-    nodeDeletionTimeout: 30s
-    nodeDrainTimeout: 2m
-    nodeVolumeDetachTimeout: 5m
+    spec:
+      infrastructureRef:
+        apiGroup: infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: {{ .Values.cluster.name }}-control-plane
+  {{- with .Values.cluster.preCommands }}
+  preRKE2Commands:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.cluster.postCommands }}
+  postRKE2Commands:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
   registrationMethod: internal-first
-  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
+  replicas: {{ .Values.controlPlane.size }}
   rolloutStrategy:
     rollingUpdate:
       maxSurge: 1
     type: RollingUpdate
   serverConfig:
+    cni: {{ .Values.cluster.rke2CNI }}
+    {{- if .Values.cluster.advertiseAddress }}
+    advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+    {{- end }}
+    {{- if .Values.cluster.advertisePort }}
+    advertisePort: {{ .Values.cluster.advertisePort | quote }}
+    {{- end }}
     disableComponents:
+      {{- with .Values.cluster.disableComponents }}
       pluginComponents:
-        - "rke2-ingress-nginx"
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       kubernetesComponents:
         - cloudController
     kubeAPIServer:
