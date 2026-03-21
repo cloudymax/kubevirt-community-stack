@@ -5,6 +5,8 @@ kind: KubeadmControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
   {{- if eq .Values.cluster.disableKubePorxy true }}
   annotations:
     controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"
@@ -41,8 +43,8 @@ spec:
         {{- end }}
         {{- end }}
     joinConfiguration:
+      {{- if or (.Values.advertiseAddress) (.Values.advertisePort) }}
       controlPlane:
-        {{- if or (.Values.advertiseAddress) (.Values.advertisePort) }}
         localAPIEndpoint:
           {{- if .Values.cluster.advertiseAddress }}
           advertiseAddress: {{ .Values.cluster.advertiseAddress }}
@@ -61,14 +63,14 @@ spec:
             value: {{ $parts._1 | quote }}
         {{- end }}
         {{- end }}
-      {{- with .Values.cluster.preCommands }}
-      preKubeadmCommands:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.cluster.postCommands }}
-      postKubeadmCommands:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+    {{- with .Values.cluster.preCommands }}
+    preKubeadmCommands:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.cluster.postCommands }}
+    postKubeadmCommands:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
   machineTemplate:
     spec:
       infrastructureRef:

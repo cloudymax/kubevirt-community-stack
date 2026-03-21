@@ -4,6 +4,8 @@ kind: KubevirtMachineTemplate
 metadata:
   name: {{ .Values.cluster.name }}-md-0
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   template:
     spec:

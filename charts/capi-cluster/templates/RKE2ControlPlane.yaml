@@ -5,6 +5,8 @@ kind: RKE2ControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
   {{- if eq .Values.cluster.disableKubePorxy true }}
   annotations:
     controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"

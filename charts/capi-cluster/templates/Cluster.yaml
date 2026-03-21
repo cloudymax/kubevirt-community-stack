@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.cluster.name }}
   namespace: {{ .Values.cluster.namespace }}
   labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
     {{- range $reg, $props := .Values.helmCharts }}
     {{ $props.name }}: enabled
     {{- end }}
@@ -11,7 +12,7 @@ spec:
   clusterNetwork:
     apiServerPort: 6443
     serviceDomain: cluster.local
-    {{- if eq .Values.cluster.provider "rke2" }}
+    {{- if or (eq .Values.cluster.provider "rke2") (eq .Values.cluster.provider "kubeadm") }}
     pods:
       cidrBlocks:
         - {{ .Values.cluster.podCidrBlock }}

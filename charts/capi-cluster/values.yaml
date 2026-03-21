@@ -14,12 +14,21 @@ cluster:
   # One of: kubeadm, k3s, rke2
   provider: kubeadm
 
-  # -- Version of kubernetes to deploy
+  # -- Version of kubernetes tested
+  # RKE2
   # v1.35.2+rke2r1
   # v1.34.1+rke2r1
   # v1.32.1+rke2r1
+  #
+  # K3s (only partially working)
   # v1.32.1+k3s1
-  version: v1.35.2+rke2r1
+  #
+  # Kubeadm (be sure to install your own CNI via helm)
+  # Must use a disk image with matching version
+  # v1.34.1
+  # v1.32.1
+
+  version: v1.34.1
 
   # -- Namespace in which to host cluster components
   namespace: my-capi-cluster
@@ -59,53 +68,13 @@ cluster:
   advertisePort: null
 
   # -- Pass command-line arguments to the kubelet
-  kubeletArgs:
-    - --config=/etc/kubernetes/kubelet.yaml
+  kubeletArgs: []
+  #  - --config=/etc/kubernetes/kubelet.yaml
 
   # -- write arbitraty files to the controlPlane and/or Workers
   extraFiles:
-    controlPlane:
-      - path: /etc/kubernetes/kubelet.yaml
-        owner: root:root
-        content: |-
-          apiVersion: kubelet.config.k8s.io/v1beta1
-          kind: KubeletConfiguration
-          maxPods: 200
-          kubeReserved:
-            cpu: "500m"
-            memory: "512M"
-            ephemeral-storage: "1G"
-          systemReserved:
-            cpu: "500m"
-            memory: "512M"
-            ephemeral-storage: "1G"
-          evictionHard:
-            memory.available: "500M"
-            nodefs.available: "10%"
-
-      #- path: /etc/rancher/k3s/config.yaml.d/disable-flannel.yaml
-      #  owner: root:root
-      #  content: |
-      #    flannel-backend: none
-
-    worker:
-      - path: /etc/kubernetes/kubelet.yaml
-        owner: root:root
-        content: |-
-          apiVersion: kubelet.config.k8s.io/v1beta1
-          kind: KubeletConfiguration
-          maxPods: 200
-          kubeReserved:
-            cpu: "500m"
-            memory: "512M"
-            ephemeral-storage: "1G"
-          systemReserved:
-            cpu: "500m"
-            memory: "512M"
-            ephemeral-storage: "1G"
-          evictionHard:
-            memory.available: "500M"
-            nodefs.available: "10%"
+    controlPlane: []
+    worker: []
 
   # -- Commands to run befores starting the kubernetes service
   preCommands:
@@ -522,62 +491,64 @@ workers:
 ###############################################################
 helmCharts:
   # Helm Chart for Cilium CNI
-  #- name: cilium
-  #  namespace: kube-system
-  #  repoUrl: https://helm.cilium.io/
-  #  options:
-  #    waitForJobs: true
-  #    wait: true
-  #    timeout: 5m
-  #    install:
-  #      createNamespace: true
-  #  values:
-  #    operator:
-  #      replicas: 1
-  #    encryption:
-  #      enabled: false
-  #      type: wireguard
-  #    hubble:
-  #      enabled: true
-  #      relay:
-  #        enabled: true
-  #      ui:
-  #        enabled: true
+  - name: cilium
+    namespace: kube-system
+    repoUrl: https://helm.cilium.io/
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      operator:
+        replicas: 1
+      encryption:
+        enabled: false
+        type: wireguard
+      hubble:
+        enabled: true
+        relay:
+          enabled: true
+        ui:
+          enabled: true
 
-  #- name: cert-manager
-  #  repoUrl: https://charts.jetstack.io
-  #  namespace: certmanager
-  #  options:
-  #    waitForJobs: true
-  #    wait: true
-  #    timeout: 5m
-  #    install:
-  #      createNamespace: true
-  #  values:
-  #    crds:
-  #      enabled: true
+  - name: cert-manager
+    repoUrl: https://charts.jetstack.io
+    namespace: certmanager
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      crds:
+        enabled: true
 
-  # - name: metrics-server
-  #   repoUrl: https://kubernetes-sigs.github.io/metrics-server/
-  #   namespace: kube-system
-  #   options:
-  #     waitForJobs: true
-  #     wait: true
-  #     timeout: 5m
-  #     install:
-  #       createNamespace: true
-  #   values:
-  #     defaultArgs:
-  #       - --cert-dir=/tmp
-  #       - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-  #       - --kubelet-use-node-status-port
-  #       - --metric-resolution=15s
-  #     args: []
-  #     apiService:
-  #       create: true
-  #       insecureSkipTLSVerify: true
-  #     tls:
-  #       type: "metrics-server"
+  - name: metrics-server
+    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+    namespace: kube-system
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      defaultArgs:
+        - --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls=true
+      args: []
+      apiService:
+        create: true
+        insecureSkipTLSVerify: true
+      tls:
+        type: "metrics-server"
 
   # - name: ingress-nginx
   #   repoUrl: https://kubernetes.github.io/ingress-nginx
