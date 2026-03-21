@@ -1,37 +1,82 @@
 {{- if eq .Values.cluster.provider "kubeadm" }}
 ---
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: KubeadmControlPlane
 metadata:
   name: {{ .Values.cluster.name }}-control-plane
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
   {{- if eq .Values.cluster.disableKubePorxy true }}
   annotations:
     controlplane.cluster.x-k8s.io/skip-kube-proxy: "true"
   {{- end }}
 spec:
   kubeadmConfigSpec:
-    clusterConfiguration:
-      networking:
-        dnsDomain: {{ .Values.cluster.dnsDomain }}
-        podSubnet: {{ .Values.cluster.podCidrBlock }}
-        serviceSubnet: {{ .Values.cluster.serviceCidrBlock }}
+    {{- if gt (len .Values.cluster.extraFiles.controlPlane ) 0 }}
+    files:
+    {{- range $key, $value := .Values.cluster.extraFiles.worker }}
+      - path: {{ $value.path }}
+        owner: {{ $value.owner }}
+        content: |
+          {{- $value.content | nindent 12 }}
+    {{- end }}
+    {{- end }}
     initConfiguration:
+      {{- if or (.Values.advertiseAddress) (.Values.advertisePort) }}
+      localAPIEndpoint:
+        {{- if .Values.cluster.advertiseAddress }}
+        advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+        {{- end }}
+        {{- if .Values.cluster.advertisePort }}
+        bindPort: {{ .Values.cluster.advertisePort }}
+        {{- end }}
+      {{- end }}
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
-        {{- if eq .Values.cluster.disableKubePorxy true }}
-        skipPhases:
-        - "addon/kube-proxy"
+        {{- if gt (len .Values.cluster.kubeletArgs) 0 }}
+        kubeletExtraArgs:
+        {{- range $key, $value := .Values.cluster.kubeletArgs }}
+        {{- $parts := splitn "=" 2 $value }}
+          - name: {{ trimPrefix "--" $parts._0 }}
+            value: {{ $parts._1 | quote }}
+        {{- end }}
         {{- end }}
     joinConfiguration:
+      {{- if or (.Values.advertiseAddress) (.Values.advertisePort) }}
+      controlPlane:
+        localAPIEndpoint:
+          {{- if .Values.cluster.advertiseAddress }}
+          advertiseAddress: {{ .Values.cluster.advertiseAddress }}
+          {{- end }}
+          {{- if .Values.cluster.advertisePort }}
+          bindPort: {{ .Values.cluster.advertisePort }}
+          {{- end }}
+        {{- end }}
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
+        {{- if gt (len .Values.cluster.kubeletArgs) 0 }}
+        kubeletExtraArgs:
+        {{- range $key, $value := .Values.cluster.kubeletArgs }}
+        {{- $parts := splitn "=" 2 $value }}
+          - name: {{ trimPrefix "--" $parts._0 }}
+            value: {{ $parts._1 | quote }}
+        {{- end }}
+        {{- end }}
+    {{- with .Values.cluster.preCommands }}
+    preKubeadmCommands:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.cluster.postCommands }}
+    postKubeadmCommands:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
   machineTemplate:
-    infrastructureRef:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
-      kind: KubevirtMachineTemplate
-      name: {{ .Values.cluster.name }}-control-plane
-      namespace: {{ .Values.cluster.namespace }}
-  replicas: {{ .Values.MachineTemplates.controlPlane.size }}
+    spec:
+      infrastructureRef:
+        apiGroup: infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: {{ .Values.cluster.name }}-control-plane
+  replicas: {{ .Values.controlPlane.size }}
   version: {{ .Values.cluster.version }}
 {{- end }}

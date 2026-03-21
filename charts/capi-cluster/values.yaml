@@ -12,15 +12,26 @@ cluster:
 
   # -- Choose which provider to use when creating the cluster
   # One of: kubeadm, k3s, rke2
-  provider: k3s
+  provider: kubeadm
 
-  # -- Version of kubernetes to deploy
+  # -- Version of kubernetes tested
+  # RKE2
+  # v1.35.2+rke2r1
   # v1.34.1+rke2r1
-  # v1.34.1+k3s1
-  version: v1.34.1+k3s1
+  # v1.32.1+rke2r1
+  #
+  # K3s (only partially working)
+  # v1.32.1+k3s1
+  #
+  # Kubeadm (be sure to install your own CNI via helm)
+  # Must use a disk image with matching version
+  # v1.34.1
+  # v1.32.1
+
+  version: v1.34.1
 
   # -- Namespace in which to host cluster components
-  namespace: default
+  namespace: my-capi-cluster
 
   # -- Cluster internal DNS domain
   dnsDomain: cluster.local
@@ -35,36 +46,39 @@ cluster:
   serviceCidrBlock: "10.11.0.0/16"
 
   # -- Type of service to use when exposing control plane endpoint on Host
-  controlPlaneServiceType: ClusterIP
+  controlPlaneService:
+    type: LoadBalancer
+    annotations:
+      metallb.io/loadBalancerIPs: 192.168.1.129
 
-  tlsSan: []
+  # -- Disable the built-in cloud controller.
+  # Set to `false` when using kubevirt cloud controller.
+  disableCloudController: false
 
-  advertiseAddress: ""
+  # -- Name of the cloud provider to use when provisioning LoadBalancers
+  # set to `external` when using Kubevirt cloud controller
+  cloudProviderName: external
 
-  advertisePort: ""
+  # -- Extra DNS names and IPs from which the k8s API will accept connections
+  tlsSan:
+    - capi-lb.my-capi-cluster.svc.cluster.local
 
-  # -- Kubelet config in yaml file format
-  # https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
-  kubeletConfigFile:
-    enabled: true
-    content: |-
-      apiVersion: kubelet.config.k8s.io/v1beta1
-      kind: KubeletConfiguration
-      maxPods: 200
-      kubeReserved:
-        cpu: "500m"
-        memory: "1G"
-        ephemeral-storage: "1G"
-      systemReserved:
-        cpu: "500m"
-        memory: "1G"
-        ephemeral-storage: "1G"
-      evictionHard:
-        memory.available: "500M"
-        nodefs.available: "10%"
+  advertiseAddress: null
+
+  advertisePort: null
+
+  # -- Pass command-line arguments to the kubelet
+  kubeletArgs: []
+  #  - --config=/etc/kubernetes/kubelet.yaml
+
+  # -- write arbitraty files to the controlPlane and/or Workers
+  extraFiles:
+    controlPlane: []
+    worker: []
 
   # -- Commands to run befores starting the kubernetes service
   preCommands:
+    - sleep 10
     - useradd -m friend
     - echo 'friend:password' | chpasswd
     - usermod -aG sudo friend
@@ -79,8 +93,14 @@ cluster:
   # -- Commands to run after starting the kubernetes service
   postCommands: []
 
+  # -- disable plugin components of k3s and RKE2
   disableComponents:
-    - servicelb
+    - rke2-ingress-nginx
+  #  - servicelb
+  #  - traefik
+
+  # -- Choose CNI to use with RKE2. Ignored for all other providers
+  rke2CNI: canal
 
 ###############################################################
 # __     ____  __   ____             _
@@ -98,6 +118,7 @@ controlPlane:
     # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
     # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
     runStrategy: "Always"
+
     features:
       # -- Enable KVM acceleration.
       # Setting the 'hidden' flag to `true` will obscure kvm from the host.
@@ -105,94 +126,138 @@ controlPlane:
       kvm:
         enabled: true
         hidden: false
+
       # -- Set default hyperv settings for windows guests
       hyperv: false
+
       # Enable ACPI platform event device
       acpiEnabled: true
+
       # -- Make pod network interface the default for the VM
       autoattachPodInterface: true
+
       # -- Attach a serial console device
       autoattachSerialConsole: true
+
       # -- Attach a basic graphics device for VNC access
       autoattachGraphicsDevice: true
+
+      # -- Specify a video device type. Requires `VideoConfig` feature gate
+      # One of: virtio, vga, bochs, cirrus, ramfb
+      graphicsDeviceType: virtio
+
       # -- Enhances network performance by allowing multiple TX and RX queues.
       networkInterfaceMultiqueue: true
+
     # -- Options for machine clock
     clock:
       enabled: true
+
       # -- Set clock timezone eg: "Europe/Amsterdam" or "utc"
       timezone: utc
+
       # -- High Precision Event Timer
       hpet:
         enabled: true
         present: false
+
       # -- Programmable interval timer
       pit:
         enabled: true
         tickPolicy: delay
+
       # -- Real-Time Clock
       rtc:
         enabled: true
         tickPolicy: catchup
+
       # -- Paravirtualized clock that provides better accuracy and performance.
       # Recommended clock source for KVM guest virtual machines.
+
       kvm: true
+
       # -- Hyper-V's reference time counter for use with Windows guests.
       hyperv: false
+
     firmware:
       # Enable System Management Mode (required for secureboot)
       smmEnabled: false
+
       # -- Enable EFI bios and secureboot
       efi:
         enabled: false
         secureBoot: false
       uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+
     machine:
       # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
       priorityClassName: system-cluster-critical
+
       # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
       # Overrides: vCores, memory, gpus
       instancetype:
         enabled: false
         name: standard-small
         kind: virtualMachineClusterInstancetype
+
       # -- System Arch. Supported options are amd64 and arm64
       architecture: amd64
+
       # -- QEMU virtual-machine type. Options are q35 and i440fx
       machineType: q35
+
       # -- Specify hots-passthrough or a named cpu model
       # https://www.qemu.org/docs/master/system/qemu-cpu-models.html
       cpuModel: host-passthrough
+
       # -- Number of simulated CPU sockets.
       # Note: Multiple cpu-bound microbenchmarks show a significant
       # performance advantage when using sockets instead of cores
       # Does not work with some cpuManagerPolicy options.
       sockets: 1
+
       # -- Number of Virtual cores to pass to the Guest
       # ignored when instancetype is defined
       vCores: 4
+
+      # -- Set CPU requests of VM to below CPU limit - allows overprovisioning
+      overProvisionCPU: true
+
+      # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
+      # Ignored when overProvisionCPU set to false
+      reservedCores: 200m
+
+      # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+      # Ignored if overProvisionCPU is set to true
       # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
       threads: 1
+
       # -- Pin QEMU process threads to specific physical cores
       # Requires `--cpu-manager-policy` enabled in kubelet
-      pinCores: true
+      # When true pins emulation threads to physical cores.
+      # May not be used when overProvisionCPU set to true
+      pinCores: false
+
       # -- In order to enhance the real-time support in KubeVirt and provide
       # improved latency, KubeVirt will allocate an additional dedicated CPU,
       # exclusively for the emulator thread, to which it will be pinned.
       # Requires `dedicatedCpuPlacement` set to `true`
       emulatorThread: false
+
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 4G
+        base: 8G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4G
+          limit: 8G
+
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
           overhead: false
+
       # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
       # kubevirt custom resource. ignored when instancetype is defined.
       # ramFB & display may only be enabled on 1 vGPU
@@ -204,19 +269,6 @@ controlPlane:
       #       enabled: true
       #       ramFB:
       #         enabled: true
-
-      # -- virtual network interface config options.
-      # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
-      interfaces:
-        # -- bridge mode, vms are connected to the network via a linux "bridge".
-        # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-        - masquerade: {}
-          name: default
-          model: virtio
-      networks:
-        # Use the default pod network
-        - name: default
-          pod: {}
 
   # -- controls hypervisor behavior when I/O errors occur on disk read or write.
   # Possible values are: 'report', 'ignore', 'enospace'
@@ -230,6 +282,13 @@ controlPlane:
       bootorder: 1
       readonly: false
       image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+  #  - name: controlplane-harddrive
+  #    type: disk
+  #    bus: virtio
+  #    bootorder: 2
+  #    readonly: false
+  #    pvc: source-drive
+  #    ephemeral: true
 
   # -- not implimentded
   cloudinit:
@@ -271,6 +330,10 @@ workers:
       # -- Attach a basic graphics device for VNC access
       autoattachGraphicsDevice: true
 
+      # -- Specify a video device type. Requires `VideoConfig` feature gate
+      # One of: virtio, vga, bochs, cirrus, ramfb
+      graphicsDeviceType: virtio
+
       # -- Enhances network performance by allowing multiple TX and RX queues.
       networkInterfaceMultiqueue: true
 
@@ -344,12 +407,22 @@ workers:
       # ignored when instancetype is defined
       vCores: 4
 
+      # -- Set CPU requests of VM to below CPU limit - allows overprovisioning
+      overProvisionCPU: true
+
+      # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
+      # Ignored when overProvisionCPU set to false
+      reservedCores: 200m
+
       # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+      # Ignored if overProvisionCPU is set to true
       threads: 1
 
       # -- Pin QEMU process threads to specific physical cores
       # Requires `--cpu-manager-policy` enabled in kubelet
-      pinCores: true
+      # When true pins emulation threads to physical cores.
+      # May not be used when overProvisionCPU set to true
+      pinCores: false
 
       # -- In order to enhance the real-time support in KubeVirt and provide
       # improved latency, KubeVirt will allocate an additional dedicated CPU,
@@ -359,13 +432,13 @@ workers:
 
       # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
       memory:
-        base: 4G
+        base: 8G
         overcommit:
           # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
           # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
           # GPU passthrough and vGPU will not function with overcommit enabled.
           enabled: false
-          limit: 4G
+          limit: 8G
 
           # -- Do not allocate hypervisor overhead memory to VM. Will work for as
           # long as most of the VirtualMachineInstances do not request the full memory.
@@ -383,20 +456,6 @@ workers:
       #       ramFB:
       #         enabled: true
 
-      # -- virtual network interface config options.
-      # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
-      interfaces:
-      # -- bridge mode, vms are connected to the network via a linux "bridge".
-      # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-        - masquerade: {}
-          name: default
-          model: virtio
-
-      networks:
-      # Use the default pod network
-      - name: default
-        pod: {}
-
   # -- controls hypervisor behavior when I/O errors occur on disk read or write.
   # Possible values are: 'report', 'ignore', 'enospace'
   diskErrorPolicy: "report"
@@ -408,15 +467,20 @@ workers:
       bus: virtio
       bootorder: 1
       readonly: false
-      image: quay.io/capk/ubuntu-2404-container-disk:v1.32.1
+      image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+  #  - name: worker-harddrive
+  #    type: disk
+  #    bus: virtio
+  #    bootorder: 2
+  #    readonly: false
+  #    pvc: source-drive
+  #    ephemeral: true
 
-  # -- not implimentded
+      # -- not implimentded
   cloudinit:
     enabled: false
     networkData:
       enabled: false
-
-
 
 ###############################################################
 # _   _      _              ____ _                _
@@ -425,64 +489,66 @@ workers:
 #|  _  |  __/ | | | | | | | |___| | | | (_| | |  | |_\__ \
 #|_| |_|\___|_|_| |_| |_|  \____|_| |_|\__,_|_|   \__|___/
 ###############################################################
-helmCharts: []
+helmCharts:
   # Helm Chart for Cilium CNI
-  # - name: cilium
-  #   namespace: kube-system
-  #   repoUrl: https://helm.cilium.io/
-  #   options:
-  #     waitForJobs: true
-  #     wait: true
-  #     timeout: 5m
-  #     install:
-  #       createNamespace: true
-  #   values:
-  #     operator:
-  #       replicas: 1
-  #     encryption:
-  #       enabled: false
-  #       type: wireguard
-  #     hubble:
-  #       enabled: true
-  #       relay:
-  #         enabled: true
-  #       ui:
-  #         enabled: true
+  - name: cilium
+    namespace: kube-system
+    repoUrl: https://helm.cilium.io/
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      operator:
+        replicas: 1
+      encryption:
+        enabled: false
+        type: wireguard
+      hubble:
+        enabled: true
+        relay:
+          enabled: true
+        ui:
+          enabled: true
 
-  # - name: cert-manager
-  #   repoUrl: https://charts.jetstack.io
-  #   namespace: certmanager
-  #   options:
-  #     waitForJobs: true
-  #     wait: true
-  #     timeout: 5m
-  #     install:
-  #       createNamespace: true
-  #   values:
-  #     crds:
-  #       enabled: true
+  - name: cert-manager
+    repoUrl: https://charts.jetstack.io
+    namespace: certmanager
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      crds:
+        enabled: true
 
-  # - name: metrics-server
-  #   repoUrl: https://kubernetes-sigs.github.io/metrics-server/
-  #   namespace: kube-system
-  #   options:
-  #     waitForJobs: true
-  #     wait: true
-  #     timeout: 5m
-  #     install:
-  #       createNamespace: true
-  #   values:
-  #     defaultArgs:
-  #       - --cert-dir=/tmp
-  #       - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-  #       - --kubelet-use-node-status-port
-  #       - --metric-resolution=15s
-  #     args: []
-  #     apiService:
-  #       create: true
-  #       insecureSkipTLSVerify: true
-  #     tls:
-  #       type: "metrics-server"
+  - name: metrics-server
+    repoUrl: https://kubernetes-sigs.github.io/metrics-server/
+    namespace: kube-system
+    options:
+      waitForJobs: true
+      wait: true
+      timeout: 5m
+      install:
+        createNamespace: true
+    values:
+      defaultArgs:
+        - --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls=true
+      args: []
+      apiService:
+        create: true
+        insecureSkipTLSVerify: true
+      tls:
+        type: "metrics-server"
 
   # - name: ingress-nginx
   #   repoUrl: https://kubernetes.github.io/ingress-nginx

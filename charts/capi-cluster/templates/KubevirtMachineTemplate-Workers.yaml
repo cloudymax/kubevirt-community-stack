@@ -4,6 +4,8 @@ kind: KubevirtMachineTemplate
 metadata:
   name: {{ .Values.cluster.name }}-md-0
   namespace: {{ .Values.cluster.namespace }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ .Values.cluster.name }}
 spec:
   template:
     spec:
@@ -106,9 +108,11 @@ spec:
                   {{- end }}
                   model: {{ .Values.workers.virtualMachine.machine.cpuModel }}
                   {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
+                  {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU false }}
                   sockets: {{ .Values.workers.virtualMachine.machine.sockets }}
                   cores: {{ .Values.workers.virtualMachine.machine.vCores }}
                   threads: {{ .Values.workers.virtualMachine.machine.threads }}
+                  {{- end }}
                   {{- end }}
                 {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
                 memory:
@@ -130,9 +134,9 @@ spec:
                   bootloader: {}
                 {{- end }}
                 devices:
-                  {{- with .Values.workers.virtualMachine.interfaces }}
-                  interfaces:
-                  {{- toYaml . | nindent 18 }}
+                  {{- if .Values.workers.virtualMachine.features.autoattachGraphicsDevice }}
+                  video:
+                    type: {{ .Values.controlPlane.virtualMachine.features.graphicsDeviceType }}
                   {{- end }}
                   {{- if eq .Values.workers.virtualMachine.machine.instancetype.enabled false }}
                   {{- with .Values.workers.virtualMachine.gpus }}
@@ -183,17 +187,19 @@ spec:
                   {{- end }}
                   requests:
                     memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
+                    {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.workers.virtualMachine.machine.reservedCores | quote }}
+                    {{- end }}
                   limits:
                     {{- if eq .Values.workers.virtualMachine.machine.memory.overcommit.enabled true }}
                     memory: {{ .Values.workers.virtualMachine.machine.memory.overcommit.limit | quote }}
                     {{ else }}
                     memory: {{ .Values.workers.virtualMachine.machine.memory.base | quote }}
                     {{- end }}
+                    {{- if eq .Values.workers.virtualMachine.machine.overProvisionCPU true }}
+                    cpu: {{ .Values.workers.virtualMachine.machine.vCores |quote }}
+                    {{- end }}
                 {{- end }}
-              {{- with .Values.workers.virtualMachine.networks }}
-              networks:
-              {{- toYaml . | nindent 16 }}
-              {{- end }}
               terminationGracePeriodSeconds: 0
               priorityClassName: {{ .Values.workers.virtualMachine.machine.priorityClassName }}
               volumes:
