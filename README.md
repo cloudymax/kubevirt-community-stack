@@ -20,7 +20,7 @@ Kubevirt Community Stack
 
 ## What is this:
 
-This repo contains the resources and documentation for installing and operating Kubevirt using ArgoCD + Helm. An opinionted integration with Cloud-Init allows defining the full configuration VMs, VmPools, and ClusterAPI workload clusters in a single template. 
+This repo contains the resources and documentation for installing and operating Kubevirt using ArgoCD + Helm. An opinionted integration with [Cloud-Init](https://cloud-init.io/) & [Cloudbase-init](https://github.com/cloudbase/cloudbase-init) allows defining the full configuration a VM, VmPool, or ClusterAPI workload cluster in a single template. 
 
 Users who prefer a Kustomize-based based solution should see [cwilkers/kubevirt-gitops](https://github.com/cwilkers/kubevirt-gitops) instead
 
