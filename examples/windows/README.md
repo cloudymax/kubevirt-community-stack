@@ -44,7 +44,7 @@ Since Windows is proprietary software, downloading an ISO is not as straight-for
 
 Once you have your ISO you can upload it to a PVC using the CDI as described in the [Work with Disk Images via the CDI](https://github.com/cloudymax/kubevirt-community-stack/blob/main/examples/disks/upload-local-image.md) doc. You could also download an existing image from the web:
 
-    ```yaml
+  ```yaml
     ---
     apiVersion: v1
     kind: PersistentVolumeClaim
@@ -63,7 +63,7 @@ Once you have your ISO you can upload it to a PVC using the CDI as described in 
       resources:
         requests:
           storage: 8Gi
-    ```
+  ```
 
 ## Creating the vm
 
