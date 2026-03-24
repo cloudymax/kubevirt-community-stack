@@ -14,21 +14,27 @@ Kubevirt Community Stack
 </p>
 
 <p align="center">
-<i>This project is in an alpha state. It is functional but missing automated tests and is only partially documented. Some chart schemas may still change as more features are integrated.</i>
+<i>This project is now in beta. It is functional but missing automated tests and is only partially documented. Chart schema changes will be reserved for major versions.</i>
   <br>
 </p>
+
+## What is this:
+
+This repo contains the resources and documentation for installing and operating Kubevirt using ArgoCD + Helm. An opinionted integration with Cloud-Init allows defining the full configuration VMs, VmPools, and ClusterAPI workload clusters in a single template. 
+
+Users who prefer a Kustomize-based based solution should see [cwilkers/kubevirt-gitops](https://github.com/cwilkers/kubevirt-gitops) instead
 
 ## Who is this for:
 
 The Kubevirt-Community-Stack may be of interest if you:
-- operate one or more physical computers which you would like to split into smaller virtual machines.
-- are already running kubernetes to orchestrate container workloads
-- are already in the <a href="https://argoproj.github.io/cd/">ArgoCD</a> or <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> ecosystem and/or work primarily with some other Helm-based tooling.
-- want/need fully-featured VMs for things like hardware emulation, hardware-passthrough, Virtual Desktops, vGPU, etc... which are not suppoted by Micro-VMs such as <a href="https://firecracker-microvm.github.io/">Firecracker</a>.
-- want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
-- want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
-- desire tight integration with cloud-init while respecting git-ops best practices
-- prefer to use cloud-init for system configuration over ansible & packer based workflows
+- Operate one or more physical computers which you would like to split into smaller virtual machines.
+- Are already running kubernetes to orchestrate container workloads
+- Are already in the <a href="https://argoproj.github.io/cd/">ArgoCD</a> or <a href="https://github.com/kubevirt/kubevirt-tekton-tasks?tab=readme-ov-file">Tekton</a> ecosystem and/or work primarily with some other Helm-based tooling.
+- Want/need fully-featured VMs for things like hardware emulation, hardware-passthrough, Virtual Desktops, vGPU, SR-IOV etc... which are not suppoted by Micro-VMs such as <a href="https://firecracker-microvm.github.io/">Firecracker</a>.
+- Want to integrate Kubevirt into your existing infrastructure without needing to adopt a full platform like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization">OpenShift Virtuazation</a>, <a href="https://harvesterhci.io/">HarvesterHCI</a>, <a href="https://www.starlingx.io/">StarlingX</a>, or <a href="">KubeSphere</a> etc...
+- Want to install and operate Kubevirt on an existing system withhout needing to re-image it with an installer ISO.
+- Desire tight integration with Cloud-init while respecting git-ops best practices
+- Prefer to use Cloud-init for system configuration over Ansible & Packer based workflows
 
 ## Component charts
 
@@ -104,7 +110,7 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
 <details>
   <summary>CAPI Cluster</summary>
   <br>
-  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure, Kubeadm Bootstrap + ControlPlane, and Helm providers.
+  The CAPI Cluster helm chart provides a way to create workload clusters using the Kubevirt infrastructure provider (CAPK), Kubeadm/K3s/Rke2 Bootstrap + ControlPlane, and Helm providers.
   <br>
   <br>
 </details>
