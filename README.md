@@ -115,6 +115,10 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
   <br>
 </details>
 
+## Recommended Tools
+
+- [Headlamp](https://headlamp.dev/)
+- [Headlamp Kubevirt Plugin](https://github.com/naval-group/headlamp-kubevirt)
 
 ## Dependencies
 
