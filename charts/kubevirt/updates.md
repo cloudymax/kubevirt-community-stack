@@ -5,7 +5,7 @@ The current process is the following steps + manual checking of diffs
 ```bash
 pipx install semver
 
-export APPVERSION="v1.6.2"
+export APPVERSION="v1.8.0"
 export REPO=/Users/max/repos/kubevirt-community-stack/charts/kubevirt
 export CHART_VERSION=$(cat $REPO/Chart.yaml |yq '.version')
 export NEW_CHART_VERSION=$(pysemver bump minor $CHART_VERSION)
@@ -37,5 +37,5 @@ rm *Namespace.yaml
 yq -i '.appVersion = env(APPVERSION)' $REPO/Chart.yaml
 yq -i '.version = env(NEW_CHART_VERSION)' $REPO/Chart.yaml
 
-helm-docs 
+helm-docs
 ```
