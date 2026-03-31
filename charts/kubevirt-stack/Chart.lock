@@ -4,12 +4,12 @@ dependencies:
   version: 0.5.0
 - name: kubevirt
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  version: 0.5.0
+  version: 0.7.0
 - name: kubevirt-manager
   repository: https://cloudymax.github.io/kubevirt-community-stack
   version: 0.3.0
 - name: cluster-api-operator
   repository: https://cloudymax.github.io/kubevirt-community-stack
-  version: 2.1.0
-digest: sha256:d98fbc85ea5274d8ca4c276f125f08eb5eccdeeeec4eb26b5bb71d66e5628f2b
-generated: "2026-02-22T13:22:22.340215939+01:00"
+  version: 2.2.1
+digest: sha256:05b095b7d5aaea9726c6735e174cad8a2273a1a90a382e14b872f1f7b257f846
+generated: "2026-03-31T12:20:59.635561546+02:00"
