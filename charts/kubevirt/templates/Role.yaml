@@ -12,6 +12,7 @@ rules:
     resourceNames:
       - kubevirt-ca
       - kubevirt-export-ca
+      - kubevirt-backup-ca
       - kubevirt-virt-handler-certs
       - kubevirt-virt-handler-server-certs
       - kubevirt-virt-handler-migration-client-certs
@@ -22,6 +23,9 @@ rules:
       - kubevirt-exportproxy-certs
       - kubevirt-synchronization-controller-certs
       - kubevirt-synchronization-controller-server-certs
+      - kubevirt-virt-template-api-certs
+      - kubevirt-virt-template-webhook-certs
+      - kubevirt-virt-template-controller-metrics-certs
     resources:
       - secrets
     verbs:
