@@ -1158,7 +1158,7 @@ entries:
   kubevirt-stack:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2026-02-22T12:23:31.483570758Z"
+    created: "2026-03-31T10:29:14.555386617Z"
     dependencies:
     - alias: cdi
       name: kubevirt-cdi
@@ -1167,7 +1167,7 @@ entries:
     - alias: operator
       name: kubevirt
       repository: https://cloudymax.github.io/kubevirt-community-stack
-      version: 0.5.0
+      version: 0.7.0
     - alias: manager
       condition: manager.enabled
       name: kubevirt-manager
@@ -1177,10 +1177,10 @@ entries:
       condition: capi.enabled
       name: cluster-api-operator
       repository: https://cloudymax.github.io/kubevirt-community-stack
-      version: 2.1.0
+      version: 2.2.1
     description: Combined meta-chart for installing Kubevirt, its dependencies, and
       addons
-    digest: 7b63855e7147b81c7aed9b5f55853a2533ea397f0fc2da2174ec9ce88a757016
+    digest: df058ea6a75c3ab28afcf87cdb42d6c0a09895bfb568bab8243a258c28c8023a
     maintainers:
     - email: emax@cloudydev.net
       name: cloudymax
@@ -1188,8 +1188,8 @@ entries:
     name: kubevirt-stack
     type: application
     urls:
-    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.4.2-rc1/kubevirt-stack-0.4.2-rc1.tgz
-    version: 0.4.2-rc1
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.4.3/kubevirt-stack-0.4.3.tgz
+    version: 0.4.3
   - apiVersion: v2
     appVersion: 0.0.0
     created: "2026-02-22T13:37:02.153862545Z"
@@ -1215,6 +1215,40 @@ entries:
     description: Combined meta-chart for installing Kubevirt, its dependencies, and
       addons
     digest: 9863571765aa3fe772904ad755c405d0c96b629de65e8be5c9c408b3d196ed1f
+    maintainers:
+    - email: emax@cloudydev.net
+      name: cloudymax
+      url: https://github.com/cloudymax/
+    name: kubevirt-stack
+    type: application
+    urls:
+    - https://github.com/cloudymax/kubevirt-community-stack/releases/download/kubevirt-stack-0.4.2-rc1/kubevirt-stack-0.4.2-rc1.tgz
+    version: 0.4.2-rc1
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2026-02-22T12:23:31.483570758Z"
+    dependencies:
+    - alias: cdi
+      name: kubevirt-cdi
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.5.0
+    - alias: operator
+      name: kubevirt
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.5.0
+    - alias: manager
+      condition: manager.enabled
+      name: kubevirt-manager
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 0.3.0
+    - alias: capi
+      condition: capi.enabled
+      name: cluster-api-operator
+      repository: https://cloudymax.github.io/kubevirt-community-stack
+      version: 2.1.0
+    description: Combined meta-chart for installing Kubevirt, its dependencies, and
+      addons
+    digest: 7b63855e7147b81c7aed9b5f55853a2533ea397f0fc2da2174ec9ce88a757016
     maintainers:
     - email: emax@cloudydev.net
       name: cloudymax
@@ -2582,4 +2616,4 @@ entries:
     urls:
     - https://github.com/cloudymax/kubevirt-charts/releases/download/okd-dashboard-0.1.1/okd-dashboard-0.1.1.tgz
     version: 0.1.1
-generated: "2026-03-31T10:18:00.907808054Z"
+generated: "2026-03-31T10:29:14.556030557Z"
