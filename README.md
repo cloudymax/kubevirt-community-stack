@@ -119,6 +119,7 @@ See <a href="https://github.com/cloudymax/kubevirt-community-stack/blob/main/CAP
 
 - [Headlamp](https://headlamp.dev/)
 - [Headlamp Kubevirt Plugin](https://github.com/naval-group/headlamp-kubevirt)
+- [Headlamp Cluster API Plugin](https://github.com/headlamp-k8s/plugins/releases/tag/cluster-api-0.1.0-alpha)
 
 ## Dependencies
 
