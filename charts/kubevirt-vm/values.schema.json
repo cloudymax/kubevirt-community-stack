@@ -1,0 +1,1297 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "cloudinit": {
+      "description": "A Helm chart that generates cloud-init config files",
+      "properties": {
+        "argocd": {
+          "additionalProperties": false,
+          "description": "Add ArgoCD annotations to generated secrets (optional)",
+          "properties": {
+            "appName": {
+              "default": "none",
+              "description": "ArgoCD App name for optional resource tracking",
+              "required": [],
+              "title": "appName"
+            },
+            "compare": {
+              "default": "IgnoreExtraneous",
+              "description": "String containing ArgoCD comparison options",
+              "required": [],
+              "title": "compare"
+            },
+            "enabled": {
+              "default": false,
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "syncString": {
+              "default": "Prune=false,Delete=false",
+              "description": "String containing ArgoCD resource sync options",
+              "required": [],
+              "title": "syncString"
+            }
+          },
+          "required": [],
+          "title": "argocd",
+          "type": "object"
+        },
+        "boot_cmd": {
+          "description": "Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "boot_cmd"
+        },
+        "ca_certs": {
+          "description": "Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "ca_certs"
+        },
+        "cloudbase": {
+          "default": "false",
+          "description": " see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and https://cloudbase-init.readthedocs.io/en/latest/services.html#nocloud-configuration-drive for a list of all supported values.",
+          "required": [],
+          "title": "cloudbase"
+        },
+        "debug": {
+          "default": "false",
+          "description": "when enabled job sleeps to allow user to exec into the container",
+          "required": [],
+          "title": "debug"
+        },
+        "disable_root": {
+          "default": "false",
+          "description": "Disable root login over ssh",
+          "required": [],
+          "title": "disable_root"
+        },
+        "disk_setup": {
+          "items": {
+            "required": []
+          },
+          "title": "disk_setup",
+          "type": "array"
+        },
+        "enabled": {
+          "description": "Conditional property used in parent chart",
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "envsubst": {
+          "default": "true",
+          "description": "Run envsubst against user-data in the templated configmap during job run. Not an official part of cloid-init",
+          "required": [],
+          "title": "envsubst"
+        },
+        "existingConfigMap": {
+          "default": "false",
+          "description": "Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace",
+          "required": [],
+          "title": "existingConfigMap"
+        },
+        "extraEnvVars": {
+          "description": "Set extra environment variables for the job container.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "default": "USER0_USERNAME",
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "value": {
+                    "default": "friend",
+                    "title": "value",
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnvVars"
+        },
+        "force": {
+          "default": "true",
+          "description": "overwrite any existing secrets matching `secret_name`",
+          "required": [],
+          "title": "force"
+        },
+        "fs_setup": {
+          "items": {
+            "required": []
+          },
+          "title": "fs_setup",
+          "type": "array"
+        },
+        "global": {
+          "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+          "required": [],
+          "title": "global",
+          "type": "object"
+        },
+        "hostname": {
+          "default": "random",
+          "description": "virtual-machine hostname. When set to 'random' a hostname will be generated using golang-petname.",
+          "required": [],
+          "title": "hostname"
+        },
+        "image": {
+          "default": "deserializeme/kv-cloud-init:1.0.0",
+          "description": "image version",
+          "required": [],
+          "title": "image"
+        },
+        "mounts": {
+          "description": "Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "mounts"
+        },
+        "namespace": {
+          "default": "default",
+          "description": "namespace in which to create resources",
+          "required": [],
+          "title": "namespace"
+        },
+        "network": {
+          "additionalProperties": false,
+          "description": "networking options",
+          "properties": {
+            "config": {
+              "default": "enabled",
+              "description": "disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations.",
+              "required": [],
+              "title": "config"
+            }
+          },
+          "required": [],
+          "title": "network"
+        },
+        "networkData": {
+          "additionalProperties": false,
+          "description": " When envSubst is enabled this file will also be templated. https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1 https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2",
+          "properties": {
+            "content": {
+              "default": "network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp1s0:\n      dhcp4: true\n      dhcp6: false\n",
+              "title": "content",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "title": "enabled",
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "title": "networkData"
+        },
+        "package_reboot_if_required": {
+          "default": "false",
+          "description": "Update, upgrade, and install package See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install",
+          "required": [],
+          "title": "package_reboot_if_required"
+        },
+        "package_update": {
+          "default": true,
+          "title": "package_update",
+          "type": "boolean"
+        },
+        "package_upgrade": {
+          "default": false,
+          "title": "package_upgrade",
+          "type": "boolean"
+        },
+        "packages": {
+          "items": {
+            "required": []
+          },
+          "title": "packages",
+          "type": "array"
+        },
+        "runcmd": {
+          "description": "Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "runcmd"
+        },
+        "salt": {
+          "default": "saltsaltlettuce",
+          "description": "salt used for password generation",
+          "required": [],
+          "title": "salt"
+        },
+        "secret_name": {
+          "default": "my-userdata",
+          "description": "secret in which to save the user-data file, must be unique within namespace",
+          "required": [],
+          "title": "secret_name"
+        },
+        "serviceAccount": {
+          "additionalProperties": false,
+          "description": "Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs, or use a uniqne name per vm.",
+          "properties": {
+            "create": {
+              "default": true,
+              "title": "create",
+              "type": "boolean"
+            },
+            "existingServiceAccountName": {
+              "default": "some-other-sa",
+              "title": "existingServiceAccountName",
+              "type": "string"
+            },
+            "name": {
+              "default": "my-service-account",
+              "title": "name",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "serviceAccount"
+        },
+        "swap": {
+          "additionalProperties": false,
+          "description": "creates a swap file using human-readable values.",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "filename": {
+              "default": "/swapfile",
+              "title": "filename",
+              "type": "string"
+            },
+            "maxsize": {
+              "default": "1G",
+              "title": "maxsize",
+              "type": "string"
+            },
+            "size": {
+              "default": "1G",
+              "title": "size",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "swap"
+        },
+        "users": {
+          "description": "user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups You are advised NOT to use 'admin' as username for linux systems because it conflicts with multiple cloud-images default user configurations When using with cloudbase-init syntax the use of \"Admin\" as a username is fine.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "groups": {
+                    "default": "users, admin, docker, sudo, kvm",
+                    "title": "groups",
+                    "type": "string"
+                  },
+                  "lock_passwd": {
+                    "default": false,
+                    "title": "lock_passwd",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "default": "$USER0_USERNAME",
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "passwd": {
+                    "default": "random",
+                    "description": "When set to 'random' a password will be generated for the user. When empty \"\" we will look for an env-var named USER[int]_PASSWORD eg. USER0_PASSWORD, USER1_PASSWORD Passing plain-text passwords is not supported.",
+                    "required": [],
+                    "title": "passwd"
+                  },
+                  "shell": {
+                    "default": "/bin/bash",
+                    "title": "shell",
+                    "type": "string"
+                  },
+                  "sudo": {
+                    "default": "ALL=(ALL) NOPASSWD:ALL",
+                    "title": "sudo",
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "users"
+        },
+        "wireguard": {
+          "additionalProperties": false,
+          "description": "add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard",
+          "properties": {
+            "interfaces": {
+              "items": {
+                "required": []
+              },
+              "title": "interfaces",
+              "type": "array"
+            }
+          },
+          "required": [],
+          "title": "wireguard"
+        },
+        "write_files": {
+          "description": "Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "write_files"
+        }
+      },
+      "required": [],
+      "title": "cloud-init",
+      "type": "object"
+    },
+    "diskErrorPolicy": {
+      "default": "report",
+      "description": "Control hypervisor behavior when I/O errors occur on disk read or write.",
+      "enum": [
+        "report",
+        "ignore",
+        "enospace"
+      ],
+      "title": "diskErrorPolicy",
+      "type": "string"
+    },
+    "disks": {
+      "description": "List of disks to create for the VM. Will be used to create Datavolumes or PVCs.",
+      "items": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "bootorder": {
+                "default": 2,
+                "title": "bootorder",
+                "type": "integer"
+              },
+              "bus": {
+                "default": "virtio",
+                "title": "bus",
+                "type": "string"
+              },
+              "image": {
+                "default": "quay.io/containerdisks/debian:13",
+                "title": "image",
+                "type": "string"
+              },
+              "name": {
+                "default": "harddrive",
+                "title": "name",
+                "type": "string"
+              },
+              "readonly": {
+                "default": false,
+                "title": "readonly",
+                "type": "boolean"
+              },
+              "type": {
+                "default": "disk",
+                "title": "type",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "bus",
+              "bootorder",
+              "readonly",
+              "image"
+            ],
+            "type": "object"
+          }
+        ],
+        "required": []
+      },
+      "title": "disks",
+      "type": "array"
+    },
+    "global": {
+      "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+      "required": [],
+      "title": "global",
+      "type": "object"
+    },
+    "ingress": {
+      "additionalProperties": false,
+      "description": "Ingress configuration",
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "description": " type: object @schema",
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "className": {
+          "default": "nginx",
+          "title": "className",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "hostname": {
+          "default": "novnc.buildstar.online",
+          "title": "hostname",
+          "type": "string"
+        },
+        "paths": {
+          "description": " type: array items:   type: object @schema",
+          "items": {
+            "required": [],
+            "type": "object"
+          },
+          "title": "paths",
+          "type": "array"
+        },
+        "tls": {
+          "additionalProperties": false,
+          "description": " type: object @schema",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "secretName": {
+              "default": "tls-kubevirt-manager",
+              "title": "secretName",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "secretName"
+          ],
+          "title": "tls",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "className",
+        "hostname"
+      ],
+      "title": "ingress",
+      "type": "object"
+    },
+    "networkPolicy": {
+      "additionalProperties": false,
+      "description": "Setup kubernetes network policies",
+      "properties": {
+        "egress": {
+          "description": "Define egress rules",
+          "items": {
+            "required": [],
+            "type": "object"
+          },
+          "title": "egress",
+          "type": "array"
+        },
+        "enabled": {
+          "default": false,
+          "description": "Enable the creation of network policies",
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "ingress": {
+          "description": "Define ingress rules",
+          "items": {
+            "required": [],
+            "type": "object"
+          },
+          "title": "ingress",
+          "type": "array"
+        }
+      },
+      "required": [],
+      "title": "networkPolicy",
+      "type": "object"
+    },
+    "service": {
+      "description": "Service cinfiguration. Used to expose VM to the outside world. Accepts a list of ports to open.",
+      "items": {
+        "required": [],
+        "type": "object"
+      },
+      "title": "service",
+      "type": "array"
+    },
+    "userDataSecret": {
+      "additionalProperties": false,
+      "description": "Use an existing cloud-init userdata secret ignored if cloudinit subchart is enabled.",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "description": " type: boolean default: false @schema",
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "name": {
+          "default": "my-secret",
+          "description": " type: string default: my-secret @schema",
+          "title": "name",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "title": "userDataSecret",
+      "type": "object"
+    },
+    "virtualMachine": {
+      "additionalProperties": false,
+      "description": "Set options for a kubevirt virtual machine",
+      "properties": {
+        "capiMachineTemplate": {
+          "additionalProperties": false,
+          "description": "Cluster API Machine Template Configuration",
+          "properties": {
+            "bootstrapCheck": {
+              "default": "ssh",
+              "description": "capi bootstrap testing method",
+              "enum": [
+                "ssh",
+                "none"
+              ],
+              "title": "bootstrapCheck",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "description": "Create the VM as a KubevirtMachineTemplate for use with Cluster API disables all other templates and only create the VM and DataVolume DataVolume",
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "role": {
+              "default": "worker",
+              "description": "role to assign the vm",
+              "enum": [
+                "worker",
+                "control-plane"
+              ],
+              "title": "role",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "capiMachineTemplate",
+          "type": "object"
+        },
+        "clock": {
+          "additionalProperties": false,
+          "description": "Clock and Timer Settings",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "description": "Enable machine clock",
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "hpet": {
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Enable High Precision Event Timer Options",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "present": {
+                  "default": false,
+                  "description": "Specify if HPET is present or not",
+                  "title": "present",
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "title": "hpet",
+              "type": "object"
+            },
+            "hyperv": {
+              "default": false,
+              "description": "Hyper-V's reference time counter for use with Windows guests.",
+              "title": "hyperv",
+              "type": "boolean"
+            },
+            "kvm": {
+              "default": true,
+              "description": "Paravirtualized clock that provides better accuracy and performance. Recommended clock source for KVM guest virtual machines.",
+              "title": "kvm",
+              "type": "boolean"
+            },
+            "pit": {
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Enable Programmable interval timer",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "tickPolicy": {
+                  "default": "delay",
+                  "description": "Set PIT lost_tick_policy",
+                  "enum": [
+                    "discard",
+                    "delay",
+                    "slew"
+                  ],
+                  "title": "tickPolicy",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "pit",
+              "type": "object"
+            },
+            "rtc": {
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Enable Real-Time Clock",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "tickPolicy": {
+                  "default": "catchup",
+                  "description": "Real-Time Clock tick policy",
+                  "enum": [
+                    "catchup",
+                    "delay",
+                    "discard"
+                  ],
+                  "title": "tickPolicy",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "rtc",
+              "type": "object"
+            },
+            "timezone": {
+              "default": "utc",
+              "description": "Set clock timezone eg: \"Europe/Amsterdam\" or \"utc\"",
+              "title": "timezone",
+              "type": "string"
+            }
+          },
+          "required": [
+            "hpet",
+            "pit",
+            "rtc"
+          ],
+          "title": "clock",
+          "type": "object"
+        },
+        "features": {
+          "additionalProperties": false,
+          "description": "Virtual Machine features",
+          "properties": {
+            "acpiEnabled": {
+              "default": true,
+              "description": "Enable ACPI platform event device",
+              "title": "acpiEnabled",
+              "type": "boolean"
+            },
+            "autoattachGraphicsDevice": {
+              "default": true,
+              "description": "Attach a basic graphics device for VNC access",
+              "title": "autoattachGraphicsDevice",
+              "type": "boolean"
+            },
+            "autoattachPodInterface": {
+              "default": true,
+              "description": "Make pod network interface the default for the VM",
+              "title": "autoattachPodInterface",
+              "type": "boolean"
+            },
+            "autoattachSerialConsole": {
+              "default": true,
+              "description": "Attach a serial console device",
+              "title": "autoattachSerialConsole",
+              "type": "boolean"
+            },
+            "graphicsDeviceType": {
+              "default": "virtio",
+              "description": "Specify a video device type. Requires `VideoConfig` feature gate",
+              "enum": [
+                "virtio",
+                "vga",
+                "bochs",
+                "cirrus",
+                "ramfb"
+              ],
+              "title": "graphicsDeviceType",
+              "type": "string"
+            },
+            "hyperv": {
+              "default": false,
+              "description": "Set default hyperv settings for windows guests",
+              "title": "hyperv",
+              "type": "boolean"
+            },
+            "kvm": {
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Enable KVM acceleration.",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "hidden": {
+                  "default": false,
+                  "description": "When set to `true` will obscure kvm from the host.",
+                  "title": "hidden",
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "title": "kvm",
+              "type": "object"
+            },
+            "networkInterfaceMultiqueue": {
+              "default": true,
+              "description": "Enhances network performance by allowing multiple TX and RX queues.",
+              "title": "networkInterfaceMultiqueue",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kvm"
+          ],
+          "title": "features",
+          "type": "object"
+        },
+        "firmware": {
+          "additionalProperties": false,
+          "description": "Firmware and Bios Options",
+          "properties": {
+            "efi": {
+              "additionalProperties": false,
+              "description": "EFI Bios Options",
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Enable EFI bios",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "secureBoot": {
+                  "default": false,
+                  "description": "Enable secureboot (Requiers EFI)",
+                  "title": "secureBoot",
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "title": "efi",
+              "type": "object"
+            },
+            "serial": {
+              "default": "a16a7d3d-65bc-4528-8470-8f0698be869a",
+              "description": "SMBIOS serial number",
+              "title": "serial",
+              "type": "string"
+            },
+            "smmEnabled": {
+              "default": false,
+              "description": "Enable System Management Mode (required for secureboot)",
+              "title": "smmEnabled",
+              "type": "boolean"
+            },
+            "uuid": {
+              "default": "c3c6c3f4-7e3b-4538-8e5a-b31975deb07d",
+              "description": "SMBIOS UUID",
+              "title": "uuid",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "firmware",
+          "type": "object"
+        },
+        "gpus": {
+          "description": "GPU to pass to guest, requires that the GPUs are pre-configured in the kubevirt custom resource. ignored when instancetype is defined. ramFB \u0026 display may only be enabled on 1 vGPU",
+          "items": {
+            "properties": {
+              "deviceName": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [],
+            "type": "object"
+          },
+          "title": "gpus",
+          "type": "array"
+        },
+        "interfaces": {
+          "default": [
+            {
+              "bridge": {},
+              "name": "default"
+            }
+          ],
+          "description": "virtual interfaces to connect to the network. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "bridge": {
+                    "additionalProperties": false,
+                    "required": [],
+                    "title": "bridge",
+                    "type": "object"
+                  },
+                  "name": {
+                    "default": "default",
+                    "title": "name",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "bridge"
+                ],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "title": "interfaces",
+          "type": "array"
+        },
+        "machine": {
+          "additionalProperties": false,
+          "description": "Virtual Hardware Options",
+          "properties": {
+            "architecture": {
+              "default": "amd64",
+              "description": "System Architecture.",
+              "enum": [
+                "amd64",
+                "arm64"
+              ],
+              "title": "architecture",
+              "type": "string"
+            },
+            "cpuModel": {
+              "default": "host-passthrough",
+              "description": "Specify hots-passthrough or a named cpu model https://www.qemu.org/docs/master/system/qemu-cpu-models.html",
+              "required": [],
+              "title": "cpuModel"
+            },
+            "emulatorThread": {
+              "default": false,
+              "description": "In order to enhance the real-time support in KubeVirt and provide improved latency, KubeVirt will allocate an additional dedicated CPU, exclusively for the emulator thread, to which it will be pinned. Requires `pinCores` set to `true`  Broken, see https://github.com/kubevirt/kubevirt/issues/17003",
+              "title": "emulatorThread",
+              "type": "boolean"
+            },
+            "instancetype": {
+              "additionalProperties": false,
+              "description": "Define CPU, RAM, GPU, HostDevice settings for VMs. Overrides: vCores, memory, gpus",
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "description": "Enable usage of InstanceTypes",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "kind": {
+                  "default": "virtualMachineClusterInstancetype",
+                  "description": "CRD name of the instance type",
+                  "title": "kind",
+                  "type": "string"
+                },
+                "name": {
+                  "default": "u1.nano",
+                  "description": "Name of the instance type",
+                  "required": [],
+                  "title": "name"
+                }
+              },
+              "required": [],
+              "title": "instancetype"
+            },
+            "ioThreads": {
+              "additionalProperties": false,
+              "properties": {
+                "count": {
+                  "default": 1,
+                  "description": "number of total core to allocate to IO when using `supplementalPool`",
+                  "title": "count",
+                  "type": "integer"
+                },
+                "enabled": {
+                  "default": false,
+                  "description": "Libvirt has the ability to use IOThreads for dedicated disk access (for supported devices). These are dedicated event loop threads that perform block I/O requests and improve scalability on SMP systems.  broken: see https://github.com/kubevirt/kubevirt/issues/17003",
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "policy": {
+                  "default": "auto",
+                  "description": "See: https://kubevirt.io/user-guide/storage/disks_and_volumes/#iothreads",
+                  "enum": [
+                    "shared",
+                    "auto",
+                    "supplementalPool"
+                  ],
+                  "title": "policy",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "ioThreads",
+              "type": "object"
+            },
+            "machineType": {
+              "default": "q35",
+              "description": "QEMU virtual-machine type.",
+              "enum": [
+                "q35",
+                "i440fx"
+              ],
+              "title": "machineType",
+              "type": "string"
+            },
+            "memory": {
+              "additionalProperties": false,
+              "properties": {
+                "base": {
+                  "default": "2Gi",
+                  "description": "Amount of RAM to pass to the Guest. Ignored when instancetype is defined",
+                  "title": "base",
+                  "type": "string"
+                },
+                "overcommit": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "enabled": {
+                      "default": false,
+                      "description": "Enable memory overcommitment. Tells VM it has more RAM than requested. VMI becomes Burtable QOS class and may be preempted when node is under memory pressure. GPU passthrough and vGPU will not function with overcommit enabled.",
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "limit": {
+                      "default": "4Gi",
+                      "description": "Amount of memory to tell the VM it has access to.",
+                      "title": "limit",
+                      "type": "string"
+                    },
+                    "overhead": {
+                      "default": false,
+                      "description": "Do not allocate hypervisor overhead memory to VM. Will work for as long as most of the VirtualMachineInstances do not request the full memory.",
+                      "title": "overhead",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [],
+                  "title": "overcommit",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "overcommit"
+              ],
+              "title": "memory",
+              "type": "object"
+            },
+            "overProvisionCPU": {
+              "default": false,
+              "description": "Set CPU requests of VM to below CPU limit - allows overprovisioning",
+              "title": "overProvisionCPU",
+              "type": "boolean"
+            },
+            "pinCores": {
+              "default": false,
+              "description": "Pin QEMU process threads to specific physical cores Requires `--cpu-manager-policy` enabled in kubelet When true pins emulation threads to physical cores. May not be used when overProvisionCPU set to true",
+              "title": "pinCores",
+              "type": "boolean"
+            },
+            "priorityClassName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "required": []
+                }
+              ],
+              "default": "null",
+              "description": "If a Pod cannot be scheduled, lower priorityClass Pods will be evicted",
+              "required": [],
+              "title": "priorityClassName"
+            },
+            "reservedCores": {
+              "default": "200m",
+              "description": "Minimum Garunteed CPU (millicores) provided to an overprovisioned vm Ignored when overProvisionCPU set to false",
+              "title": "reservedCores",
+              "type": "string"
+            },
+            "sockets": {
+              "default": 1,
+              "description": "Number of simulated CPU sockets. Note: Multiple cpu-bound microbenchmarks show a significant performance advantage when using sockets instead of cores Does not work with some cpuManagerPolicy options. Ignored if overProvisionCPU is set to true",
+              "title": "sockets",
+              "type": "integer"
+            },
+            "threads": {
+              "default": 1,
+              "description": "Enable simulation of Hyperthreading on Intel CPUs or SMT AMD CPUs. Ignored if overProvisionCPU is set to true",
+              "title": "threads",
+              "type": "integer"
+            },
+            "vCores": {
+              "default": 2,
+              "description": "Max Number of Virtual cores to pass to the Guest Garunteed when overProvisionCPU is false Ignored when instancetype is defined",
+              "title": "vCores",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "ioThreads",
+            "memory"
+          ],
+          "title": "machine",
+          "type": "object"
+        },
+        "name": {
+          "default": "my-vm",
+          "description": "name of the virtualMachine or virtualMachinePool object",
+          "title": "name",
+          "type": "string"
+        },
+        "namespace": {
+          "default": "default",
+          "description": "namespace to deploy to",
+          "title": "namespace",
+          "type": "string"
+        },
+        "networks": {
+          "default": [
+            {
+              "name": "default",
+              "pod": {}
+            }
+          ],
+          "description": "Connecting a virtual machine to a network consists of two parts. First, networks are specified in spec.networks. Then, interfaces backed by the networks are added to the VM by specifying them in `spec.domain.devices.interfaces`. See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#networks",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "default": "default",
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "pod": {
+                    "additionalProperties": false,
+                    "required": [],
+                    "title": "pod",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name",
+                  "pod"
+                ],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "title": "networks",
+          "type": "array"
+        },
+        "runStrategy": {
+          "default": "Always",
+          "description": "See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy",
+          "enum": [
+            "Always",
+            "RerunOnFailure",
+            "Manual",
+            "Halted",
+            "Once"
+          ],
+          "title": "runStrategy",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "title": "virtualMachine",
+      "type": "object"
+    },
+    "virtualMachinePool": {
+      "additionalProperties": false,
+      "description": "Deploy multiple VMs as a pool",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "description": "Create a Virtual Machine Pool Vm pools should be used with ephemeral disks or containerdisks otherwise they would all fight over the same PVC.",
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "hpa": {
+          "additionalProperties": false,
+          "description": "Configure Horizontal Pod Autoscaler",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "Enable scaling the pool via the K8s HPA",
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 5,
+              "description": "Max number of replicas to allow",
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "description": "Minimum number of replicas to allow",
+              "title": "minReplicas",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "hpa",
+          "type": "object"
+        },
+        "maxUnavailable": {
+          "default": 1,
+          "description": "TODO",
+          "title": "maxUnavailable",
+          "type": "integer"
+        },
+        "replicas": {
+          "default": 2,
+          "description": "Number of replicas to create. be sure to set RespectIgnoreDifferences in argocd when using autoscaling https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#respect-ignore-differences-configs",
+          "title": "replicas",
+          "type": "integer"
+        },
+        "scaleInStrategy": {
+          "additionalProperties": false,
+          "properties": {
+            "proactive": {
+              "additionalProperties": false,
+              "properties": {
+                "selectionPolicy": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "basePolicy": {
+                      "default": "Oldest",
+                      "title": "basePolicy",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "basePolicy"
+                  ],
+                  "title": "selectionPolicy",
+                  "type": "object"
+                },
+                "statePreservation": {
+                  "default": "Offline",
+                  "title": "statePreservation",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "statePreservation",
+                "selectionPolicy"
+              ],
+              "title": "proactive",
+              "type": "object"
+            }
+          },
+          "required": [
+            "proactive"
+          ],
+          "title": "scaleInStrategy",
+          "type": "object"
+        },
+        "updateStrategy": {
+          "additionalProperties": false,
+          "properties": {
+            "proactive": {
+              "additionalProperties": false,
+              "properties": {
+                "selectionPolicy": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "basePolicy": {
+                      "default": "Oldest",
+                      "title": "basePolicy",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "basePolicy"
+                  ],
+                  "title": "selectionPolicy",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "selectionPolicy"
+              ],
+              "title": "proactive",
+              "type": "object"
+            }
+          },
+          "required": [
+            "proactive"
+          ],
+          "title": "updateStrategy",
+          "type": "object"
+        }
+      },
+      "required": [
+        "maxUnavailable",
+        "updateStrategy",
+        "scaleInStrategy"
+      ],
+      "title": "virtualMachinePool",
+      "type": "object"
+    }
+  },
+  "required": [],
+  "type": "object"
+}
