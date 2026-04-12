@@ -897,23 +897,57 @@ cloudinit:
   #       name: admin-password
   #       key: password
 
-  # set to 'true' use 'cloudbase-init' syntax for windows machines
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
+  # -- Set to 'true' use 'cloudbase-init' syntax for windows machines.
   # see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and
   # https://cloudbase-init.readthedocs.io/en/latest/services.html#nocloud-configuration-drive
   # for a list of all supported values.
   cloudbase: false
 
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
   # -- Set up mount points. mounts contains a list of lists.
   # The inner list contains entries for an /etc/fstab line
   mounts: []
 
+  # @schema
+  # type: object
+  # @schema
   # -- creates a swap file using human-readable values.
   swap:
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     enabled: false
+    # @schema
+    # type: string
+    # default: /swapfile
+    # @schema
     filename: /swapfile
+    # @schema
+    # type: string
+    # default: 1G
+    # @schema
     size: 1G
+    # @schema
+    # type: string
+    # default: 1G
+    # @schema
     maxsize: 1G
 
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
+  # -- Define disk partition and mount strategies
   disk_setup: []
   # -- The name of the device.
   #  - name: /dev/vdb
@@ -928,6 +962,12 @@ cloudinit:
   #    # -- Supported options ate `gpt` and `mbr`
   #    table_type: 'gpt'
 
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
+  # -- Define disk formatting options
   fs_setup: []
   # -- The device name.
   #  - device: /dev/vdb
@@ -938,25 +978,54 @@ cloudinit:
   #    # -- Options are `auto|any`, `auto`, or `any`
   #    partition: 'auto|any'
 
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   # -- Dont recreate script configmap. Set to true when keeping multiple
   # cloud-init secrets in the same namespace
   existingConfigMap: false
 
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   # -- Disable root login over ssh
   disable_root: false
 
+
+  # @schema
+  # type: string
+  # default: saltsaltlettuce
+  # @schema
   # -- salt used for password generation
   salt: "saltsaltlettuce"
 
+  # @schema
+  # type: object
+  # @schema
   # -- networking options
   network:
-    # --  disable cloud-init’s network configuration capability and rely on
+    # @schema
+    # type: boolean
+    # default: enabled
+    # @schema
+    # -- emanle/disable cloudinit’s network configuration capability and rely on
     # other methods such as embedded configuration or other customisations.
     config: enabled
 
+
+  # @schema
+  # type: object
+  # @schema
   # -- add wireguard configuration from existing secret or as plain-text
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard
   wireguard:
+    # @schema
+    # type: array
+    # items:
+    #   type: object
+    # @schema
     interfaces: []
     # Config from existing secret
     #  - name: wg0
@@ -966,6 +1035,12 @@ cloudinit:
     #      name: wg0-credentials
     #      key: wg0.conf
 
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
   # -- user configuration options
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups
   # You are advised NOT to use 'admin' as username for linux systems
@@ -991,6 +1066,12 @@ cloudinit:
       # -- provider user ssh pub key as plaintext
       # ssh_authorized_keys: []
 
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
   # -- Add CA certificates
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates
   ca_certs: []
@@ -998,10 +1079,22 @@ cloudinit:
   #  trusted:
   #    - certificate
 
+
+  # @schema
+  # type: array
+  # items:
+  #   type: string
+  # @schema
   # -- Run arbitrary commands early in the boot process
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd
   boot_cmd: []
 
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
   # -- Write arbitrary files to disk.
   # Files my be provided as plain-text or downloaded from a url
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files
@@ -1018,14 +1111,39 @@ cloudinit:
   #  permissions: "0644"
   #  url: "https://raw.githubusercontent.com/cloudymax/some-private-repo/refs/heads/main/some-file.md?token=${TOKEN}"
 
-  # -- Update, upgrade, and install packages
-  # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
-  package_reboot_if_required: false
-  package_update: true
-  package_upgrade: false
-  packages: []
-  #  - docker.io
 
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
+  # -- reboot VM if required by apt during installation process
+  package_reboot_if_required: false
+  # @schema
+  # type: boolean
+  # default: true
+  # @schema
+  # -- run apt-get update on first-boot to refresh package cache
+  package_update: true
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
+  # -- run apt-get upgrade on first-boot to appy new
+  # updates not present in base image
+  package_upgrade: false
+  # @schema
+  # type: array
+  # items:
+  #   type: string
+  # @schema
+  # -- Define apt packages to install on first-boot
+  packages: []
+
+  # @schema
+  # type: array
+  # items:
+  #   type: string
+  # @schema
   # -- Run arbitrary commands
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
   runcmd: []
@@ -1038,12 +1156,26 @@ cloudinit:
   # | |\  |  __/ |_ \ V  V / (_) | |  |   <| |_| | (_| | || (_| |
   # |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\____/ \__,_|\__\__,_|
   ################################################################################
+
+  # @schema
+  # type: object
+  # @schema
   # -- Provide instance networkData via the NoCloud networkData configuration source.
   # When envSubst is enabled this file will also be templated.
-  # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
-  # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
+  # See: https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
+  # and also: https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
+  # for more information
   networkData:
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
+    # -- Enable networkdata templating
     enabled: false
+    # @schema
+    # type: string
+    # @schema
+    # -- yaml formatted content of networkdata
     content: |-
       network:
         version: 2
@@ -1119,11 +1251,22 @@ ingress:
 # |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\ |_|   \___/|_|_|\___|_|\___||___/
 ################################################################################
 # @schema
+# type: object
 # @schema
 # -- Setup kubernetes network policies
 networkPolicy:
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   # -- Enable the creation of network policies
   enabled: false
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
+  # -- Define egress rules
   egress: []
   # Allow communication to Kubernetes DNS service
   #- to:
@@ -1146,6 +1289,13 @@ networkPolicy:
   #        - 10.0.0.0/8
   #        - 172.16.0.0/12
   #        - 192.168.0.0/16
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
+  # -- Define ingress rules
   ingress: []
   # Allow internet access from the ingress controller
   #- from:
