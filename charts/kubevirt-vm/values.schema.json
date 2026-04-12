@@ -1052,7 +1052,8 @@
                 }
               },
               "required": [],
-              "title": "instancetype"
+              "title": "instancetype",
+              "type": "object"
             },
             "ioThreads": {
               "additionalProperties": false,
