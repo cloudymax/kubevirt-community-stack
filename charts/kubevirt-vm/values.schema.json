@@ -3,34 +3,39 @@
   "additionalProperties": false,
   "properties": {
     "cloudinit": {
-      "description": "A Helm chart that generates cloud-init config files",
+      "additionalProperties": false,
+      "description": "Set the values for the CloudInit sub-chart Not all cloud-init modules are currently supported. See https://cloudinit.readthedocs.io/en/latest/reference/modules.html for more information about what each module does.",
       "properties": {
         "argocd": {
           "additionalProperties": false,
-          "description": "Add ArgoCD annotations to generated secrets (optional)",
+          "description": "Add ArgoCD-specific annotations to generated secrets (optional)",
           "properties": {
             "appName": {
               "default": "none",
               "description": "ArgoCD App name for optional resource tracking",
-              "required": [],
-              "title": "appName"
+              "title": "appName",
+              "type": "string"
             },
             "compare": {
               "default": "IgnoreExtraneous",
               "description": "String containing ArgoCD comparison options",
-              "required": [],
-              "title": "compare"
+              "enum": [
+                "IgnoreExtraneous"
+              ],
+              "title": "compare",
+              "type": "string"
             },
             "enabled": {
               "default": false,
+              "description": " type: boolean default: false @schema",
               "title": "enabled",
               "type": "boolean"
             },
             "syncString": {
               "default": "Prune=false,Delete=false",
               "description": "String containing ArgoCD resource sync options",
-              "required": [],
-              "title": "syncString"
+              "title": "syncString",
+              "type": "string"
             }
           },
           "required": [],
@@ -40,132 +45,141 @@
         "boot_cmd": {
           "description": "Run arbitrary commands early in the boot process See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#bootcmd",
           "items": {
-            "required": []
+            "type": "string"
           },
-          "required": [],
-          "title": "boot_cmd"
+          "title": "boot_cmd",
+          "type": "array"
         },
         "ca_certs": {
           "description": "Add CA certificates See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates",
           "items": {
-            "required": []
+            "required": [],
+            "type": "object"
           },
-          "required": [],
-          "title": "ca_certs"
+          "title": "ca_certs",
+          "type": "array"
         },
         "cloudbase": {
-          "default": "false",
-          "description": " see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and https://cloudbase-init.readthedocs.io/en/latest/services.html#nocloud-configuration-drive for a list of all supported values.",
-          "required": [],
-          "title": "cloudbase"
+          "default": false,
+          "description": "Set to 'true' use 'cloudbase-init' syntax for windows machines. see https://cloudbase-init.readthedocs.io/en/latest/userdata.html and https://cloudbase-init.readthedocs.io/en/latest/services.html#nocloud-configuration-drive for a list of all supported values.",
+          "title": "cloudbase",
+          "type": "boolean"
         },
         "debug": {
-          "default": "false",
+          "default": false,
           "description": "when enabled job sleeps to allow user to exec into the container",
-          "required": [],
-          "title": "debug"
+          "title": "debug",
+          "type": "boolean"
         },
         "disable_root": {
-          "default": "false",
+          "default": false,
           "description": "Disable root login over ssh",
-          "required": [],
-          "title": "disable_root"
+          "title": "disable_root",
+          "type": "boolean"
         },
         "disk_setup": {
+          "description": "Define disk partition and mount strategies",
           "items": {
-            "required": []
+            "required": [],
+            "type": "object"
           },
           "title": "disk_setup",
           "type": "array"
         },
         "enabled": {
-          "description": "Conditional property used in parent chart",
+          "default": false,
+          "description": "Enable or disable usage of cloud-init sub-chart.",
           "title": "enabled",
           "type": "boolean"
         },
         "envsubst": {
-          "default": "true",
-          "description": "Run envsubst against user-data in the templated configmap during job run. Not an official part of cloid-init",
-          "required": [],
-          "title": "envsubst"
+          "default": true,
+          "description": "Run envsubst against bootcmd and runcmd fields at the beginning of templating. Not an official part of cloid-init.",
+          "title": "envsubst",
+          "type": "boolean"
         },
         "existingConfigMap": {
-          "default": "false",
+          "default": false,
           "description": "Dont recreate script configmap. Set to true when keeping multiple cloud-init secrets in the same namespace",
-          "required": [],
-          "title": "existingConfigMap"
+          "title": "existingConfigMap",
+          "type": "boolean"
         },
         "extraEnvVars": {
-          "description": "Set extra environment variables for the job container.",
+          "description": "Set extra environment variables which will be pssed to the cloud-init templating job.",
           "items": {
-            "anyOf": [
-              {
-                "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueFrom": {
                 "properties": {
-                  "name": {
-                    "default": "USER0_USERNAME",
-                    "title": "name",
-                    "type": "string"
-                  },
-                  "value": {
-                    "default": "friend",
-                    "title": "value",
-                    "type": "string"
+                  "secretKeyRef": {
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
                   }
                 },
                 "required": [],
                 "type": "object"
               }
-            ],
-            "required": []
+            },
+            "required": [],
+            "type": "object"
           },
-          "required": [],
-          "title": "extraEnvVars"
+          "title": "extraEnvVars",
+          "type": "array"
         },
         "force": {
-          "default": "true",
+          "default": false,
           "description": "overwrite any existing secrets matching `secret_name`",
-          "required": [],
-          "title": "force"
+          "title": "force",
+          "type": "boolean"
         },
         "fs_setup": {
+          "description": "Define disk formatting options",
           "items": {
-            "required": []
+            "required": [],
+            "type": "object"
           },
           "title": "fs_setup",
           "type": "array"
         },
-        "global": {
-          "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
-          "required": [],
-          "title": "global",
-          "type": "object"
-        },
         "hostname": {
           "default": "random",
           "description": "virtual-machine hostname. When set to 'random' a hostname will be generated using golang-petname.",
-          "required": [],
-          "title": "hostname"
+          "title": "hostname",
+          "type": "string"
         },
         "image": {
           "default": "deserializeme/kv-cloud-init:1.0.0",
           "description": "image version",
-          "required": [],
-          "title": "image"
+          "title": "image",
+          "type": "string"
         },
         "mounts": {
           "description": "Set up mount points. mounts contains a list of lists. The inner list contains entries for an /etc/fstab line",
           "items": {
-            "required": []
+            "required": [],
+            "type": "object"
           },
-          "required": [],
-          "title": "mounts"
+          "title": "mounts",
+          "type": "array"
         },
         "namespace": {
           "default": "default",
           "description": "namespace in which to create resources",
-          "required": [],
-          "title": "namespace"
+          "title": "namespace",
+          "type": "string"
         },
         "network": {
           "additionalProperties": false,
@@ -173,51 +187,62 @@
           "properties": {
             "config": {
               "default": "enabled",
-              "description": "disable cloud-init’s network configuration capability and rely on other methods such as embedded configuration or other customisations.",
-              "required": [],
-              "title": "config"
+              "description": "enable/disable cloudinit’s network configuration capability and rely on other methods such as embedded configuration or other customisations.",
+              "enum": [
+                "enabled",
+                "disabled"
+              ],
+              "title": "config",
+              "type": "string"
             }
           },
           "required": [],
-          "title": "network"
+          "title": "network",
+          "type": "object"
         },
         "networkData": {
           "additionalProperties": false,
-          "description": " When envSubst is enabled this file will also be templated. https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1 https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2",
+          "description": "Provide instance networkData via the NoCloud networkData configuration source. When envSubst is enabled this file will also be templated. See: https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1 and also: https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2 for more information",
           "properties": {
             "content": {
-              "default": "network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp1s0:\n      dhcp4: true\n      dhcp6: false\n",
+              "default": "network:\n  version: 2\n  renderer: networkd\n  ethernets:\n    enp1s0:\n      dhcp4: true\n      dhcp6: false",
+              "description": "yaml formatted content of networkdata",
               "title": "content",
               "type": "string"
             },
             "enabled": {
               "default": false,
+              "description": "Enable networkdata templating",
               "title": "enabled",
               "type": "boolean"
             }
           },
           "required": [],
-          "title": "networkData"
+          "title": "networkData",
+          "type": "object"
         },
         "package_reboot_if_required": {
-          "default": "false",
-          "description": "Update, upgrade, and install package See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install",
-          "required": [],
-          "title": "package_reboot_if_required"
+          "default": false,
+          "description": "reboot VM if required by apt during installation process",
+          "title": "package_reboot_if_required",
+          "type": "boolean"
         },
         "package_update": {
           "default": true,
+          "description": "run apt-get update on first-boot to refresh package cache",
           "title": "package_update",
           "type": "boolean"
         },
         "package_upgrade": {
           "default": false,
+          "description": "run apt-get upgrade on first-boot to appy new updates not present in base image",
           "title": "package_upgrade",
           "type": "boolean"
         },
         "packages": {
+          "description": "Define apt packages to install on first-boot",
           "items": {
-            "required": []
+            "type": "string"
           },
           "title": "packages",
           "type": "array"
@@ -225,45 +250,49 @@
         "runcmd": {
           "description": "Run arbitrary commands See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd",
           "items": {
-            "required": []
+            "type": "string"
           },
-          "required": [],
-          "title": "runcmd"
+          "title": "runcmd",
+          "type": "array"
         },
         "salt": {
           "default": "saltsaltlettuce",
           "description": "salt used for password generation",
-          "required": [],
-          "title": "salt"
+          "title": "salt",
+          "type": "string"
         },
         "secret_name": {
-          "default": "my-userdata",
-          "description": "secret in which to save the user-data file, must be unique within namespace",
-          "required": [],
-          "title": "secret_name"
+          "default": "test-scrapmetal-user-data",
+          "description": "name of secret in which to save the user-data file",
+          "title": "secret_name",
+          "type": "string"
         },
         "serviceAccount": {
           "additionalProperties": false,
-          "description": "Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs, or use a uniqne name per vm.",
+          "description": "Choose weather to create a service-account or not. Once a SA has been created you should set this to false on subsequent runs.",
           "properties": {
             "create": {
               "default": true,
+              "description": "Enable/Disable creation of new ServiceAccount",
               "title": "create",
               "type": "boolean"
             },
             "existingServiceAccountName": {
-              "default": "some-other-sa",
+              "default": "cloud-init-sa",
+              "description": "Name of existing ServiceAccount to use. Ignored is `create` set to true",
               "title": "existingServiceAccountName",
               "type": "string"
             },
             "name": {
-              "default": "my-service-account",
+              "default": "cloud-init-sa",
+              "description": "Name of the ServiceAccount to create",
               "title": "name",
               "type": "string"
             }
           },
           "required": [],
-          "title": "serviceAccount"
+          "title": "serviceAccount",
+          "type": "object"
         },
         "swap": {
           "additionalProperties": false,
@@ -271,102 +300,72 @@
           "properties": {
             "enabled": {
               "default": false,
+              "description": " type: boolean default: false @schema",
               "title": "enabled",
               "type": "boolean"
             },
             "filename": {
               "default": "/swapfile",
+              "description": " type: string default: /swapfile @schema",
               "title": "filename",
               "type": "string"
             },
             "maxsize": {
               "default": "1G",
+              "description": " type: string default: 1G @schema",
               "title": "maxsize",
               "type": "string"
             },
             "size": {
               "default": "1G",
+              "description": " type: string default: 1G @schema",
               "title": "size",
               "type": "string"
             }
           },
           "required": [],
-          "title": "swap"
+          "title": "swap",
+          "type": "object"
         },
         "users": {
           "description": "user configuration options See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups You are advised NOT to use 'admin' as username for linux systems because it conflicts with multiple cloud-images default user configurations When using with cloudbase-init syntax the use of \"Admin\" as a username is fine.",
           "items": {
-            "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "groups": {
-                    "default": "users, admin, docker, sudo, kvm",
-                    "title": "groups",
-                    "type": "string"
-                  },
-                  "lock_passwd": {
-                    "default": false,
-                    "title": "lock_passwd",
-                    "type": "boolean"
-                  },
-                  "name": {
-                    "default": "$USER0_USERNAME",
-                    "title": "name",
-                    "type": "string"
-                  },
-                  "passwd": {
-                    "default": "random",
-                    "description": "When set to 'random' a password will be generated for the user. When empty \"\" we will look for an env-var named USER[int]_PASSWORD eg. USER0_PASSWORD, USER1_PASSWORD Passing plain-text passwords is not supported.",
-                    "required": [],
-                    "title": "passwd"
-                  },
-                  "shell": {
-                    "default": "/bin/bash",
-                    "title": "shell",
-                    "type": "string"
-                  },
-                  "sudo": {
-                    "default": "ALL=(ALL) NOPASSWD:ALL",
-                    "title": "sudo",
-                    "type": "string"
-                  }
-                },
-                "required": [],
-                "type": "object"
-              }
-            ],
-            "required": []
+            "required": [],
+            "type": "object"
           },
-          "required": [],
-          "title": "users"
+          "title": "users",
+          "type": "array"
         },
         "wireguard": {
           "additionalProperties": false,
           "description": "add wireguard configuration from existing secret or as plain-text See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard",
           "properties": {
             "interfaces": {
+              "description": " type: array items:   type: object @schema",
               "items": {
-                "required": []
+                "required": [],
+                "type": "object"
               },
               "title": "interfaces",
               "type": "array"
             }
           },
           "required": [],
-          "title": "wireguard"
+          "title": "wireguard",
+          "type": "object"
         },
         "write_files": {
           "description": "Write arbitrary files to disk. Files my be provided as plain-text or downloaded from a url See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files",
           "items": {
-            "required": []
+            "required": [],
+            "type": "object"
           },
-          "required": [],
-          "title": "write_files"
+          "title": "write_files",
+          "type": "array"
         }
       },
       "required": [],
-      "title": "cloud-init",
+      "title": "cloudinit",
       "type": "object"
     },
     "diskErrorPolicy": {
