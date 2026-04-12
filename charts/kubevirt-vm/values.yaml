@@ -258,9 +258,7 @@ virtualMachine:
   # -- Virtual Hardware Options
   machine:
     # @schema
-    # anyOf:
-    # - type: string
-    # - type: null
+    # type: string
     # default: null
     # @schema
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted

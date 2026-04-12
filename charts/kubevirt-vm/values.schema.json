@@ -1151,18 +1151,10 @@
               "type": "boolean"
             },
             "priorityClassName": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "required": []
-                }
-              ],
               "default": "null",
               "description": "If a Pod cannot be scheduled, lower priorityClass Pods will be evicted",
-              "required": [],
-              "title": "priorityClassName"
+              "title": "priorityClassName",
+              "type": "string"
             },
             "reservedCores": {
               "default": "200m",
