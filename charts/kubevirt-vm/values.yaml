@@ -1007,10 +1007,11 @@ cloudinit:
   # -- networking options
   network:
     # @schema
-    # type: boolean
+    # type: string
+    # enum: [enabled, disabled]
     # default: enabled
     # @schema
-    # -- emanle/disable cloudinit’s network configuration capability and rely on
+    # -- enable/disable cloudinit’s network configuration capability and rely on
     # other methods such as embedded configuration or other customisations.
     config: enabled
 
