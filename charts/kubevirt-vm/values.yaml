@@ -276,6 +276,8 @@ virtualMachine:
       # -- Enable usage of InstanceTypes
       enabled: false
       # @schema
+      # type: string
+      # enum: [cx1.2xlarge, cx1.2xlarge1gi, cx1.4xlarge, cx1.4xlarge1gi, cx1.8xlarge, cx1.8xlarge1gi, cx1.large, cx1.large1gi, cx1.medium, cx1.medium1gi, cx1.xlarge, cx1.xlarge1gi, d1.2xlarge, d1.2xmedium, d1.4xlarge, d1.8xlarge, d1.large, d1.medium, d1.micro, d1.nano, d1.small, d1.xlarge, m1.2xlarge, m1.2xlarge1gi, m1.4xlarge, m1.4xlarge1gi, m1.8xlarge, m1.8xlarge1gi, m1.large, m1.large1gi, m1.xlarge, m1.xlarge1gi, n1.2xlarge, n1.4xlarge, n1.8xlarge, n1.large, n1.medium, n1.xlarge, o1.2xlarge, o1.4xlarge, o1.8xlarge, o1.large, o1.medium, o1.micro, o1.nano, o1.small, o1.xlarge, rt1.2xlarge, rt1.4xlarge, rt1.8xlarge, rt1.large, rt1.medium, rt1.micro, rt1.small, rt1.xlarge, u1.2xlarge, u1.2xmedium, u1.4xlarge, u1.8xlarge, u1.large, u1.medium, u1.micro, u1.nano, u1.small, u1.xlarge]
       # default: u1.nano
       # @schema
       # -- Name of the instance type
