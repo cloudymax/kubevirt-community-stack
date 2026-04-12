@@ -3,116 +3,317 @@
 #  \ \ / /| | '__| __| | | |/ _` | | | |\/| |/ _` |/ __| '_ \| | '_ \ / _ \
 #   \ V / | | |  | |_| |_| | (_| | | | |  | | (_| | (__| | | | | | | |  __/
 #    \_/  |_|_|   \__|\__,_|\__,_|_| |_|  |_|\__,_|\___|_| |_|_|_| |_|\___|
-###############################################################################
+################################################################################
+# @schema
+# type: object
+# @schema
+# -- Set options for a kubevirt virtual machine
 virtualMachine:
-  # -- name of the virtualMachine or virtualMachinePool object
-  name: test
 
+  # @schema
+  # type: string
+  # default: my-vm
+  # @schema
+  # -- name of the virtualMachine or virtualMachinePool object
+  name: my-vm
+
+  # @schema
+  # type: string
+  # default: default
+  # @schema
   # -- namespace to deploy to
   namespace: default
 
-  # -- Create the VM as a KubevirtMachineTemplate for use with Cluster API
-  # disables all other templates and only create the VM and DataVolume
-  # DataVolume
+  # @schema
+  # type: object
+  # @schema
+  # -- Cluster API Machine Template Configuration
   capiMachineTemplate:
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
+    # -- Create the VM as a KubevirtMachineTemplate for use with Cluster API
+    # disables all other templates and only create the VM and DataVolume
+    # DataVolume
     enabled: false
+    # @schema
+    # type: string
+    # enum: [ssh, none]
+    # default: ssh
+    # @schema
+    # -- capi bootstrap testing method
     bootstrapCheck: ssh
+    # @schema
+    # type: string
+    # enum: [worker, control-plane]
+    # default: worker
+    # @schema
+    # -- role to assign the vm
     role: worker
 
-  # -- One of 'Always' `RerunOnFailure` `Manual` `Halted` `Once`
-  # See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
+  # @schema
+  # type: string
+  # enum: [Always, RerunOnFailure, Manual, Halted, Once]
+  # default: Always
+  # @schema
+  # -- See: https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: "Always"
 
+  # @schema
+  # type: object
+  # @schema
+  # -- Virtual Machine features
   features:
-    # -- Enable KVM acceleration.
-    # Setting the 'hidden' flag to `true` will obscure kvm from the host.
-    # Set `hidden` to `false` when using vGPU in Windows Guests.
     kvm:
+      # @schema
+      # type: boolean
+      # default: true
+      # @schema
+      # -- Enable KVM acceleration.
       enabled: true
+      # @schema
+      # type: boolean
+      # default: false
+      # @schema
+      # -- When set to `true` will obscure kvm from the host.
       hidden: false
 
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     # -- Set default hyperv settings for windows guests
     hyperv: false
 
-    # Enable ACPI platform event device
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
+    # -- Enable ACPI platform event device
     acpiEnabled: true
 
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
     # -- Make pod network interface the default for the VM
     autoattachPodInterface: true
 
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
     # -- Attach a serial console device
     autoattachSerialConsole: true
 
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
     # -- Attach a basic graphics device for VNC access
     autoattachGraphicsDevice: true
 
+    # @schema
+    # type: string
+    # enum: [virtio, vga, bochs, cirrus, ramfb]
+    # default: virtio
+    # @schema
     # -- Specify a video device type. Requires `VideoConfig` feature gate
-    # One of: virtio, vga, bochs, cirrus, ramfb
     graphicsDeviceType: virtio
 
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
     # -- Enhances network performance by allowing multiple TX and RX queues.
     networkInterfaceMultiqueue: true
 
-  # -- Options for machine clock
+  # @schema
+  # type: object
+  # @schema
+  # -- Clock and Timer Settings
   clock:
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
+    # -- Enable machine clock
     enabled: true
 
+    # @schema
+    # type: string
+    # default: utc
+    # @schema
     # -- Set clock timezone eg: "Europe/Amsterdam" or "utc"
     timezone: utc
 
-    # -- High Precision Event Timer
     hpet:
+      # @schema
+      # type: boolean
+      # default: true
+      # @schema
+      # -- Enable High Precision Event Timer Options
       enabled: true
+      # @schema
+      # type: boolean
+      # default: false
+      # @schema
+      # -- Specify if HPET is present or not
       present: false
 
-    # -- Programmable interval timer
     pit:
+      # @schema
+      # type: boolean
+      # default: true
+      # @schema
+      # -- Enable Programmable interval timer
       enabled: true
+      # @schema
+      # type: string
+      # enum: [discard, delay, slew]
+      # default: delay
+      # @schema
+      # -- Set PIT lost_tick_policy
       tickPolicy: delay
 
-    # -- Real-Time Clock
     rtc:
+      # @schema
+      # type: boolean
+      # default: true
+      # @schema
+      # -- Enable Real-Time Clock
       enabled: true
+      # @schema
+      # type: string
+      # enum: [catchup, delay, discard]
+      # default: catchup
+      # @schema
+      # -- Real-Time Clock tick policy
       tickPolicy: catchup
 
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
     # -- Paravirtualized clock that provides better accuracy and performance.
     # Recommended clock source for KVM guest virtual machines.
     kvm: true
 
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     # -- Hyper-V's reference time counter for use with Windows guests.
     hyperv: false
 
+  # @schema
+  # type: object
+  # @schema
+  # -- Firmware and Bios Options
   firmware:
-    # Enable System Management Mode (required for secureboot)
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
+    # -- Enable System Management Mode (required for secureboot)
     smmEnabled: false
 
-    # -- Enable EFI bios and secureboot
+    # @schema
+    # type: object
+    # @schema
+    # -- EFI Bios Options
     efi:
+      # @schema
+      # type: boolean
+      # default: true
+      # @schema
+      # -- Enable EFI bios
       enabled: true
-      secureBoot: false
-    uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
 
+      # @schema
+      # type: boolean
+      # default: false
+      # @schema
+      # -- Enable secureboot (Requiers EFI)
+      secureBoot: false
+
+    # @schema
+    # type: string
+    # default: c3c6c3f4-7e3b-4538-8e5a-b31975deb07d
+    # @schema
+    # -- SMBIOS UUID
+    uuid: c3c6c3f4-7e3b-4538-8e5a-b31975deb07d
+
+    # @schema
+    # type: string
+    # default: a16a7d3d-65bc-4528-8470-8f0698be869a
+    # @schema
+    # -- SMBIOS serial number
+    serial: a16a7d3d-65bc-4528-8470-8f0698be869a
+
+  # @schema
+  # type: object
+  # @schema
+  # -- Virtual Hardware Options
   machine:
+    # @schema
+    # anyOf:
+    # - type: string
+    # - type: null
+    # default: null
+    # @schema
     # -- If a Pod cannot be scheduled, lower priorityClass Pods will be evicted
-    priorityClassName: system-node-critical
+    priorityClassName: null
 
     # -- Define CPU, RAM, GPU, HostDevice settings for VMs.
     # Overrides: vCores, memory, gpus
     instancetype:
+      # @schema
+      # type: boolean
+      # default: false
+      # @schema
+      # -- Enable usage of InstanceTypes
       enabled: false
-      name: standard-small
+      # @schema
+      # default: u1.nano
+      # @schema
+      # -- Name of the instance type
+      name: u1.nano
+      # @schema
+      # type: string
+      # default: virtualMachineClusterInstancetype
+      # @schema
+      # -- CRD name of the instance type
       kind: virtualMachineClusterInstancetype
 
-    # -- System Arch. Supported options are amd64 and arm64
+    # @schema
+    # type: string
+    # enum: [amd64, arm64]
+    # default: amd64
+    # @schema
+    # -- System Architecture.
     architecture: amd64
 
-    # -- QEMU virtual-machine type. Options are q35 and i440fx
+    # @schema
+    # type: string
+    # enum: [q35, i440fx]
+    # default: q35
+    # @schema
+    # -- QEMU virtual-machine type.
     machineType: q35
 
+    # @schema
+    # default: host-passthrough
+    # @schema
     # -- Specify hots-passthrough or a named cpu model
     # https://www.qemu.org/docs/master/system/qemu-cpu-models.html
     cpuModel: host-passthrough
 
+    # @schema
+    # type: integer
+    # default: 1
+    # @schema
     # -- Number of simulated CPU sockets.
     # Note: Multiple cpu-bound microbenchmarks show a significant
     # performance advantage when using sockets instead of cores
@@ -120,28 +321,52 @@ virtualMachine:
     # Ignored if overProvisionCPU is set to true
     sockets: 1
 
+    # @schema
+    # type: integer
+    # default: 2
+    # @schema
     # -- Max Number of Virtual cores to pass to the Guest
     # Garunteed when overProvisionCPU is false
     # Ignored when instancetype is defined
     vCores: 2
 
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     # -- Set CPU requests of VM to below CPU limit - allows overprovisioning
     overProvisionCPU: false
 
+    # @schema
+    # type: string
+    # default: 200m
+    # @schema
     # -- Minimum Garunteed CPU (millicores) provided to an overprovisioned vm
     # Ignored when overProvisionCPU set to false
     reservedCores: 200m
 
-    # -- Enable simulation of Hyperthre ading on Intel CPUs or SMT AMD CPUs.
+    # @schema
+    # type: integer
+    # default: 1
+    # @schema
+    # -- Enable simulation of Hyperthreading on Intel CPUs or SMT AMD CPUs.
     # Ignored if overProvisionCPU is set to true
     threads: 1
 
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     # -- Pin QEMU process threads to specific physical cores
     # Requires `--cpu-manager-policy` enabled in kubelet
     # When true pins emulation threads to physical cores.
     # May not be used when overProvisionCPU set to true
     pinCores: false
 
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     # -- In order to enhance the real-time support in KubeVirt and provide
     # improved latency, KubeVirt will allocate an additional dedicated CPU,
     # exclusively for the emulator thread, to which it will be pinned.
@@ -150,20 +375,91 @@ virtualMachine:
     # Broken, see https://github.com/kubevirt/kubevirt/issues/17003
     emulatorThread: false
 
-    # -- Amount of RAM to pass to the Guest. Ignored when instancetype is defined
+    ioThreads:
+      # @schema
+      # type: boolean
+      # default: false
+      # @schema
+      # -- Libvirt has the ability to use IOThreads for dedicated disk access
+      # (for supported devices).
+      # These are dedicated event loop threads that perform block I/O requests
+      # and improve scalability on SMP systems.
+      #
+      # broken: see https://github.com/kubevirt/kubevirt/issues/17003
+      enabled: false
+      # @schema
+      # type: string
+      # enum: [shared, auto, supplementalPool]
+      # default: auto
+      # @schema
+      # -- See: https://kubevirt.io/user-guide/storage/disks_and_volumes/#iothreads
+      policy: auto
+      # @schema
+      # type: integer
+      # default: 1
+      # @schema
+      # -- number of total core to allocate to IO when using `supplementalPool`
+      count: 1
+
     memory:
+      # @schema
+      # type: string
+      # default: 2Gi
+      # @schema
+      # -- Amount of RAM to pass to the Guest.
+      # Ignored when instancetype is defined
       base: 2Gi
       overcommit:
-        # -- Enable memory overcommitment. Tells VM it has more RAM than requested.
-        # VMI becomes Burtable QOS class and may be preempted when node is under memory pressure.
+        # @schema
+        # type: boolean
+        # default: false
+        # @schema
+        # -- Enable memory overcommitment.
+        # Tells VM it has more RAM than requested.
+        # VMI becomes Burtable QOS class and may be preempted when node
+        # is under memory pressure.
         # GPU passthrough and vGPU will not function with overcommit enabled.
         enabled: false
+        # @schema
+        # type: string
+        # default: 4Gi
+        # @schema
+        # -- Amount of memory to tell the VM it has access to.
         limit: 4Gi
-        # -- Do not allocate hypervisor overhead memory to VM. Will work for as
-        # long as most of the VirtualMachineInstances do not request the full memory.
+        # @schema
+        # type: boolean
+        # default: false
+        # @schema
+        # -- Do not allocate hypervisor overhead memory to VM.
+        # Will work for as long as most of the VirtualMachineInstances
+        # do not request the full memory.
         overhead: false
 
-  # -- GPUs to pass to guest, requires that the GPUs are pre-configured in the
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  #   properties:
+  #     name:
+  #       type: string
+  #     deviceName:
+  #       type: string
+  # @schema
+  #     virtualGPUOptions:
+  #       type: object:
+  #       properties:
+  #         display:
+  #           type: object
+  #           properties:
+  #             enabled:
+  #               type: boolean
+  #             ramFB:
+  #               type: object
+  #               properties:
+  #                 enabled:
+  #                   type: boolean
+  # -- GPU to pass to guest, requires that the GPUs are pre-configured in the
   # kubevirt custom resource. ignored when instancetype is defined.
   # ramFB & display may only be enabled on 1 vGPU
   gpus: []
@@ -175,35 +471,85 @@ virtualMachine:
   #       ramFB:
   #         enabled: true
 
-  # -- virtual network interface config options.
-  # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
-  interfaces:
-    # -- bridge mode, vms are connected to the network via a linux "bridge".
-    # Pod network IP is delegated to vm via DHCPv4. VM must use DHCP for an IP
-    - masquerade: {}
-      name: default
-      model: virtio
-
+  # @schema
+  # type: array
+  # default: [{name: default, pod: {}}]
+  # @schema
+  # -- Connecting a virtual machine to a network consists of two parts.
+  # First, networks are specified in spec.networks.
+  # Then, interfaces backed by the networks are added to the VM by specifying
+  # them in `spec.domain.devices.interfaces`.
+  # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#networks
   networks:
-    # Use the default pod network
     - name: default
       pod: {}
 
-#########################
-# Create a Virtual Machine Pool
-# Vm pools should be used with ephemeral disks or containerdisks
-# otherwise they would all fight over the same PVC.
+  # @schema
+  # type: array
+  # default: [{name: default, bridge: {}}]
+  # @schema
+  # -- virtual interfaces to connect to the network.
+  # See: https://kubevirt.io/user-guide/network/interfaces_and_networks/#interfaces
+  interfaces:
+    - name: default
+      bridge: {}
+
+
+# @schema
+# type: object
+# @schema
+# -- Deploy multiple VMs as a pool
 virtualMachinePool:
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
+  # -- Create a Virtual Machine Pool
+  # Vm pools should be used with ephemeral disks or containerdisks
+  # otherwise they would all fight over the same PVC.
   enabled: false
-  # -- number of replicas to create.
+  # @schema
+  # type: integer
+  # default: 2
+  # @schema
+  # -- Number of replicas to create.
   # be sure to set RespectIgnoreDifferences in argocd when using autoscaling
   # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#respect-ignore-differences-configs
   replicas: 2
+  # TODO
+  maxUnavailable: 1
+  updateStrategy:
+    proactive:
+      selectionPolicy:
+        basePolicy: "Oldest"
+  scaleInStrategy:
+    proactive:
+      statePreservation: "Offline"
+      selectionPolicy:
+        basePolicy: "Oldest"
 
+  # @schema
+  # type: object
+  # @schema
+  # -- Configure Horizontal Pod Autoscaler
   hpa:
-    # -- Options for default K8s HPA
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
+    # -- Enable scaling the pool via the K8s HPA
     enabled: false
+    # @schema
+    # type: integer
+    # default: 5
+    # @schema
+    # -- Max number of replicas to allow
     maxReplicas: 5
+    # @schema
+    # type: integer
+    # default: 1
+    # @schema
+    # -- Minimum number of replicas to allow
     minReplicas: 1
 
 ###############################################################################
@@ -213,10 +559,18 @@ virtualMachinePool:
 # | |_| | \__ \   <\__ \
 # |____/|_|___/_|\_\___/
 ###############################################################################
-# -- controls hypervisor behavior when I/O errors occur on disk read or write.
-# Possible values are: 'report', 'ignore', 'enospace'
+# @schema
+# type: string
+# enum: [report, ignore, enospace]
+# @schema
+# -- Control hypervisor behavior when I/O errors occur on disk read or write.
 diskErrorPolicy: "report"
-# -- List of disks to create for the VM, Will be used to create Datavolumes or PVCs.
+
+# @schema
+# type: array
+# @schema
+# -- List of disks to create for the VM.
+# Will be used to create Datavolumes or PVCs.
 disks:
   #################################################
   # DataVolume disk with URL source example
@@ -239,7 +593,7 @@ disks:
   #   # -- source type of the disk image. One of `url`, `pvc`
   #   source: url
   #   # -- URL of cloud-image
-  #   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+  #   url: https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2
   #   # -- Optional, Specify a node to deploy this PVC to
   #   # nodePlacement: compufam
 
@@ -364,11 +718,22 @@ disks:
 #    secretName: test
 #    serialNumber: CVLY623300HK240D
 
+# @schema
+# type: object
+# @schema
 # -- Use an existing cloud-init userdata secret
 # ignored if cloudinit subchart is enabled.
 userDataSecret:
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   enabled: false
-  name: ""
+  # @schema
+  # type: string
+  # default: my-secret
+  # @schema
+  name: "my-secret"
 
 ################################################################################
 #   ____ _                 _ ___       _ _
@@ -377,57 +742,155 @@ userDataSecret:
 # | |___| | (_) | |_| | (_| || || | | | | |_
 #  \____|_|\___/ \__,_|\__,_|___|_| |_|_|\__|
 ################################################################################
-# Not all cloud-init modules are currently supported
-# https://cloudinit.readthedocs.io/en/latest/reference/modules.html
-# -- Enable or disable usage of cloud-init sub-chart
+# @schema
+# type: object
+# @schema
+# -- Set the values for the CloudInit sub-chart
+# Not all cloud-init modules are currently supported.
+# See https://cloudinit.readthedocs.io/en/latest/reference/modules.html for
+# more information about what each module does.
 cloudinit:
+
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
+  # -- Enable or disable usage of cloud-init sub-chart.
   enabled: false
 
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   # -- when enabled job sleeps to allow user to exec into the container
   debug: false
 
-  # Add ArgoCD annotations to generated secrets (optional)
+  # @schema
+  # type: object
+  # @schema
+  # -- Add ArgoCD-specific annotations to generated secrets (optional)
   argocd:
+    # @schema
+    # type: boolean
+    # default: false
+    # @schema
     enabled: false
+    # @schema
+    # type: string
+    # default: none
+    # @schema
     # -- ArgoCD App name for optional resource tracking
     appName: "none"
+    # @schema
+    # type: string
+    # default: "Prune=false,Delete=false"
+    # @schema
     # -- String containing ArgoCD resource sync options
     syncString: "Prune=false,Delete=false"
+    # @schema
+    # type: string
+    # enum: [IgnoreExtraneous]
+    # default: IgnoreExtraneous
+    # @schema
     # -- String containing ArgoCD comparison options
     compare: IgnoreExtraneous
 
+  # @schema
+  # type: string
+  # default: test-scrapmetal-user-data
+  # @schema
   # -- name of secret in which to save the user-data file
   secret_name: test-scrapmetal-user-data
 
+  # @schema
+  # type: boolean
+  # default: false
+  # @schema
   # -- overwrite any existing secrets matching `secret_name`
   force: true
 
+  # @schema
+  # type: string
+  # default: deserializeme/kv-cloud-init:1.0.0
+  # @schema
   # -- image version
   image: deserializeme/kv-cloud-init:1.0.0
 
+  # @schema
+  # type: string
+  # default: random
+  # @schema
   # -- virtual-machine hostname.
   # When set to 'random' a hostname will be generated using golang-petname.
   hostname: random
 
+  # @schema
+  # type: string
+  # default: default
+  # @schema
   # -- namespace in which to create resources
   namespace: default
 
-  # -- Choose weather to create a service-account or not. Once a SA has been created
-  # you should set this to false on subsequent runs.
+
+  # @schema
+  # type: object
+  # @schema
+  # -- Choose weather to create a service-account or not. Once a SA has been
+  # created you should set this to false on subsequent runs.
   serviceAccount:
+    # @schema
+    # type: boolean
+    # default: true
+    # @schema
+    # -- Enable/Disable creation of new ServiceAccount
     create: true
+    # @schema
+    # type: string
+    # default: cloud-init-sa
+    # @schema
+    # -- Name of the ServiceAccount to create
     name: cloud-init-sa
+    # @schema
+    # type: string
+    # default: cloud-init-sa
+    # @schema
+    # -- Name of existing ServiceAccount to use.
     # Ignored is `create` set to true
     existingServiceAccountName: "cloud-init-sa"
 
-  # -- Run envsubst against bootcmd and runcmd fields at the beginning of templating
-  # Not an official part of cloid-init
+  # @schema
+  # type: boolean
+  # default: true
+  # @schema
+  # -- Run envsubst against bootcmd and runcmd fields at the beginning of
+  # templating. Not an official part of cloid-init.
   envsubst: true
+
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  #   properties:
+  #     name:
+  #       type: string
+  #     value:
+  #       type: string
+  #     valueFrom:
+  #       type: object
+  #       properties:
+  #         secretKeyRef:
+  #           type: object
+  #           properties:
+  #             key:
+  #               type: string
+  #             name:
+  #               type: string
+  # @schema
+  # -- Set extra environment variables which will be pssed to the cloud-init
+  # templating job.
   extraEnvVars:
     - name: USER0_USERNAME
       value: test
-    - name: macaddress
-      value: 'b8:a3:86:70:cc:e6'
   # - name: USER0_PASSWORD
   #   valueFrom:
   #     secretKeyRef:
@@ -598,6 +1061,11 @@ cloudinit:
 #|____/ \___|_|    \_/ |_|\___\___|  \___/\/ |___|_| |_|\__, |_|  \___||___/___/
 #                                                       |___/
 ################################################################################
+# @schema
+# type: array
+# items:
+#   type: object
+# @schema
 # -- Service cinfiguration. Used to expose VM to the outside world.
 # Accepts a list of ports to open.
 service: []
@@ -611,16 +1079,29 @@ service: []
 #        targetPort: 8080
 #        protocol: TCP
 
+# @schema
+# type: object
+# @schema
 # -- Ingress configuration
 ingress:
   enabled: false
   className: "nginx"
   hostname: "novnc.buildstar.online"
+  # @schema
+  # type: object
+  # @schema
   annotations: {}
-  #  cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  # @schema
+  # type: object
+  # @schema
   tls:
     enabled: false
     secretName: "tls-kubevirt-manager"
+  # @schema
+  # type: array
+  # items:
+  #   type: object
+  # @schema
   paths:
   - path: /
     pathType: Prefix
@@ -629,6 +1110,7 @@ ingress:
         name: test-service
         port:
           number: 8080
+
 ################################################################################
 #  _   _      _                      _      ____       _ _      _
 # | \ | | ___| |___      _____  _ __| | __ |  _ \ ___ | (_) ___(_) ___  ___
@@ -636,6 +1118,9 @@ ingress:
 # | |\  |  __/ |_ \ V  V / (_) | |  |   <  |  __/ (_) | | | (__| |  __/\__ \
 # |_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\ |_|   \___/|_|_|\___|_|\___||___/
 ################################################################################
+# @schema
+# @schema
+# -- Setup kubernetes network policies
 networkPolicy:
   # -- Enable the creation of network policies
   enabled: false

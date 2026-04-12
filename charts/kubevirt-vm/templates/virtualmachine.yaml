@@ -28,6 +28,13 @@ spec:
       domain:
         machine:
           type: {{ .Values.virtualMachine.machine.machineType }}
+        {{- if .Values.virtualMachine.machine.ioThreads.enabled }}
+        ioThreadsPolicy: {{ .Values.virtualMachine.machine.ioThreads.policy }}
+        {{- if eq .Values.virtualMachine.machine.ioThreads.policy "supplementalPool"}}
+        ioThreads:
+          count: {{ .Values.virtualMachine.machine.ioThreads.count }}
+        {{- end }}
+        {{- end }}
         {{- if eq .Values.virtualMachine.clock.enabled true }}
         clock:
           {{- if eq .Values.virtualMachine.clock.timezone "utc" }}
@@ -94,7 +101,6 @@ spec:
           dedicatedCpuPlacement: true
           {{- if eq .Values.virtualMachine.machine.emulatorThread true }}
           isolateEmulatorThread: true
-          ioThreadsPolicy: auto
           {{- end }}
           {{- end }}
           model: {{ .Values.virtualMachine.machine.cpuModel }}
@@ -117,6 +123,9 @@ spec:
         {{- if .Values.virtualMachine.firmware.efi.enabled }}
           {{- if .Values.virtualMachine.firmware.uuid }}
           uuid: {{ .Values.virtualMachine.firmware.uuid }}
+          {{- end }}
+          {{- if .Values.virtualMachine.firmware.serial }}
+          serial: {{ .Values.virtualMachine.firmware.serial }}
           {{- end }}
           bootloader:
             efi:
@@ -216,7 +225,9 @@ spec:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       terminationGracePeriodSeconds: 0
+      {{- if .Values.virtualMachine.machine.priorityClassName }}
       priorityClassName: {{ .Values.virtualMachine.machine.priorityClassName }}
+      {{- end }}
       volumes:
         {{- range $reg, $props := .Values.disks }}
         {{- if ne "cloudinitvolume" $props.name }}
