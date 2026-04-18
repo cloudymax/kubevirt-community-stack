@@ -11,7 +11,7 @@ This is my installation process.
 
 - [MetalLB](https://metallb.io/) remains our load-balancer of choice. This choice was made due to Cilium's LB implementation not working well for non-contiguous IP ranges (https://github.com/cilium/cilium/issues/28637) Using MetalLb also allows us to maintain continuity with Smol-K8s-Lab, and leaves room to impliment BGP routing at a later date.
 
-- [Ingress-nginx](https://kubernetes.github.io/ingress-nginx/) remains the choice for ingress ad cilium's ingress did not work without manual intervention via changing annotations when using cert-manager and letsencrypt (https://github.com/cilium/cilium/issues/28852). Additionally, the built-in [ModSecurity WAF](https://kubernetes.github.io/ingress-nginx/user-guide/third-party-addons/modsecurity/), synergy with [Vouch-proxy](https://github.com/vouch/vouch-proxy) and [CertManager](https://cert-manager.io/) are very desireable features.
+- [Traefik](https://doc.traefik.io/traefik/) will be our replacement for Ingress-NGINX as it provides an easy migration path and will become the default for both K3s and RKE2.
 
 - [local-path-provisioner](https://github.com/rancher/local-path-provisioner) is provided as a quality-of-life feature. Operators may install additional storage systems at their own discretion.
 
