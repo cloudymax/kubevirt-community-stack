@@ -10,7 +10,7 @@ image:
   # -- image pull policy
   pullPolicy: IfNotPresent
   # -- image tag, use this to set the version of kubevirt
-  tag: "v1.2.0"
+  tag: "v1.8.1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -45,6 +45,42 @@ nodeSelector: {}
 tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
+
+rateLimits:
+  api:
+    burst: 10
+    qps: 5
+  controller:
+    burst: 30
+    qps: 20
+  handler:
+    burst: 10
+    qps: 5
+  webhook:
+    burst: 400
+    qps: 200
+
+migrations:
+  # -- AllowAutoConverge allows the platform to compromise
+  # performance/availability of VMIs to guarantee successful
+  # VMI live migrations. Defaults to false
+  allowAutoConverge: false
+  # -- AllowPostCopy enables post-copy live migrations.
+  # Such migrations allow even the busiest VMIs to successfully live-migrate.
+  # However, events like a network failure can cause a VMI crash.
+  # If set to true, migrations will still start in pre-copy, but switch
+  # to post-copy when CompletionTimeoutPerGiB triggers.
+  # Defaults to false
+  allowPostCopy: false
+  # --AllowWorkloadDisruption indicates that the migration shouldn't be
+  # canceled after acceptableCompletionTime is exceeded. Instead, if
+  # permitted, migration will be switched to post-copy or the VMI will be
+  # paused to allow the migration to complete
+  allowWorkloadDisruption: false
+  # -- BandwidthPerMigration limits the amount of network bandwidth live
+  # migrations are allowed to use. The value is in quantity per second.
+  # Defaults to 0 (no limit)
+  bandwidthPerMigration: 0
 
 # -- by default forces replicas to different knodes
 affinity:
@@ -83,16 +119,55 @@ monitorAccount: ""
 useEmulation: false
 
 featureGates:
+  - AlignCPUs
   - ExpandDisks
   - CPUManager
+  - DownwardMetrics
   - GPU
   - HostDevices
   - VMExport
-  - HotplugVolumes
+  - DeclarativeHotplugVolumes
   - HostDisk
   - Macvtap
+  - HotplugVolumes
   - Passt
   - HotplugNICs
   - clientPassthrough
   - Snapshot
   - CPUNodeDiscovery
+  - VideoConfig
+  - IncrementalBackup
+  - EnableVirtioFsStorageVolumes
+  - EnableVirtioFsConfigVolumes
+  - PasstBinding
+  - ObjectGraph
+  - IncrementalBackup
+  - VmiMemoryOverheadReport
+  #- ImageVolume
+  #- WorkloadEncryptionSEV
+  #- WorkloadEncryptionTDX
+  #- VSOCK
+  #- Root
+  #- KubevirtSeccompProfile
+  #- PersistentReservation
+  #- ExperimentalIgnitionSupport
+  #- HypervStrictCheck
+  #- Sidecar
+  #- UtilityVolumes
+  #- NodeRestriction
+  #- LibvirtHooksServerAndClient
+  #- GPUsWithDRA
+  #- HostDevicesWithDRA
+  #- PCINUMAAwareTopology
+  #- DecentralizedLiveMigration
+  #- SecureExecution
+  #- MigrationPriorityQueue
+  #- ConfigurableHypervisor
+  #- ExternalNetResourceInjection
+  #- RebootPolicy
+  #- Template
+  #- ContainerPathVolumes
+  #- ReservedOverheadMemlock
+  #- OptOutRoleAggregation
+  #- LiveUpdateNADRef
+  #- VGPULiveMigration
