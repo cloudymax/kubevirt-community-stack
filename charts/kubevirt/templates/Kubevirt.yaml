@@ -9,11 +9,15 @@ spec:
   monitorNamespace: {{ .Values.monitorNamespace }}
   monitorAccount: {{ .Values.monitorAccount }}
   configuration:
+    {{- with .Values.migrations }}
+    migrations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     permittedHostDevices:
       {{- if .Values.permittedHostDevices.pciHostDevices }}
       {{- with .Values.permittedHostDevices.pciHostDevices }}
       pciHostDevices:
-        {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- else }}
       pciHostDevices: []
@@ -21,7 +25,7 @@ spec:
       {{- if .Values.permittedHostDevices.mediatedDevices }}
       {{- with .Values.permittedHostDevices.mediatedDevices }}
       mediatedDevices:
-        {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- else }}
       mediatedDevices: []
@@ -33,6 +37,30 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- end }}
+    apiConfiguration:
+      restClient:
+        rateLimiter:
+          tokenBucketRateLimiter:
+            burst: {{ .Values.rateLimits.api.burst }}
+            qps: {{ .Values.rateLimits.api.qps }}
+    controllerConfiguration:
+      restClient:
+        rateLimiter:
+          tokenBucketRateLimiter:
+            burst: {{ .Values.rateLimits.controller.burst }}
+            qps: {{ .Values.rateLimits.controller.qps }}
+    handlerConfiguration:
+      restClient:
+        rateLimiter:
+          tokenBucketRateLimiter:
+            burst: {{ .Values.rateLimits.handler.burst }}
+            qps: {{ .Values.rateLimits.handler.qps }}
+    webhookConfiguration:
+      restClient:
+        rateLimiter:
+          tokenBucketRateLimiter:
+            burst: {{ .Values.rateLimits.webhook.burst }}
+            qps: {{ .Values.rateLimits.webhook.qps }}
     developerConfiguration:
       useEmulation: {{ .Values.useEmulation }}
       {{- with .Values.featureGates }}
