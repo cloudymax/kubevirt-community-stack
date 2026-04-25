@@ -6,7 +6,7 @@ version: 0.11.3
 appVersion: "0.1.0"
 maintainers:
   - name: "cloudymax"
-    email: "emax@cloudydev.net"
+    email: "maintainers@buildstars.online"
     url: "https://github.com/cloudymax/"
 dependencies:
   - name: cloud-init

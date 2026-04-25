@@ -152,7 +152,7 @@ spec:
           {{- if or (eq .Values.userDataSecret.enabled true) (eq .Values.cloudinit.enabled true) }}
           - name: cloudinitvolume
             cdrom:
-              bus: sata
+              bus: {{ .Values.cloudinit.volumeType }}
               readonly: true
             bootOrder: 1
             errorPolicy: report
