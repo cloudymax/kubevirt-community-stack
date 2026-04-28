@@ -6,7 +6,7 @@
 ###############################################################################
 virtualMachine:
   # -- name of the virtualMachine or virtualMachinePool object
-  name: test
+  name: my-vm
 
   # -- namespace to deploy to
   namespace: default
@@ -233,13 +233,13 @@ disks:
   #   # -- Size of disk in GB
   #   pvsize: 16Gi
   #   # -- Storage class to use for the pvc
-  #   pvstorageClassName: fast-raid
+  #   pvstorageClassName: fast-raid-rwx
   #   # -- Access mode for the PVC
   #   pvaccessMode: ReadWriteOnce
   #   # -- source type of the disk image. One of `url`, `pvc`
   #   source: url
   #   # -- URL of cloud-image
-  #   url: "https://buildstars.online/debian-12-generic-amd64-daily.qcow2"
+  #   url: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-arm64.qcow2
   #   # -- Optional, Specify a node to deploy this PVC to
   #   # nodePlacement: compufam
 
@@ -382,6 +382,9 @@ userDataSecret:
 # -- Enable or disable usage of cloud-init sub-chart
 cloudinit:
   enabled: false
+
+  # -- QEMU bus type to emulate for the cloudInit Volume
+  volumeType: scsi
 
   # -- when enabled job sleeps to allow user to exec into the container
   debug: false
@@ -560,13 +563,14 @@ cloudinit:
   package_reboot_if_required: false
   package_update: true
   package_upgrade: false
-  packages: []
-  #  - docker.io
+  packages:
+    - qemu-guest-agent
 
   # -- Run arbitrary commands
   # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#runcmd
-  runcmd: []
-  #  - docker run -d -p 8080:80 nginx
+  runcmd:
+    - systemctl enable qemu-guest-agent
+    - systemctl start qemu-guest-agent
 
   ################################################################################
   #  _   _      _                      _    ____        _
@@ -589,6 +593,9 @@ cloudinit:
           enp1s0:
             dhcp4: true
             dhcp6: false
+          nameservers:
+            addresses:
+            - "10.43.0.10/32"
 
 ################################################################################
 # ____                  _             ___     ___
@@ -602,13 +609,12 @@ cloudinit:
 # Accepts a list of ports to open.
 service: []
 #  - name: test-service
-#    type: NodePort
-#    externalTrafficPolicy: Cluster
+#    type: ClusterIP
 #    annotations: {}
 #    ports:
 #      - name: nginx
 #        port: 8080
-#        targetPort: 8080
+#        targetPort: 80
 #        protocol: TCP
 
 # -- Ingress configuration
