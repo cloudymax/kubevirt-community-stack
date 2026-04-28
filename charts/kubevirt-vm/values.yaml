@@ -526,8 +526,7 @@ cloudinit:
 
       # -- import user ssh public keys from github, gitlab, or launchpad
       # See https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh
-      ssh_import_id:
-        - gh:cloudymax
+      # ssh_import_id: []
 
       # -- provider user ssh pub key as plaintext
       # ssh_authorized_keys: []
@@ -585,7 +584,7 @@ cloudinit:
   # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v1.html#network-config-v1
   # https://cloudinit.readthedocs.io/en/latest/reference/network-config-format-v2.html#network-config-v2
   networkData:
-    enabled: true
+    enabled: false
     content: |-
       network:
         version: 2
