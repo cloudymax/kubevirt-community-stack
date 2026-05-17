@@ -1,3 +1,11 @@
+> [!WARNING]
+> This repo is migrating to [Codeberg](https://codeberg.org/small-hack/kubevirt-community-stack). 
+>
+> No further updates will be published to github.com.
+>
+> This repo will be archived once the migration is complete.
+
+
 <h1 align=center>
 Kubevirt Community Stack
 </h1>
