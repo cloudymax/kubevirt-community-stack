@@ -1,9 +1,9 @@
 > [!WARNING]
-> This repo is migrating to [Codeberg](https://codeberg.org/small-hack/kubevirt-community-stack). 
+> This repo is migrating to [Codeberg](https://codeberg.org/small-hack/kubevirt-community-stack) and will join the [Small-Hack](https://codeberg.org/small-hack) organization. We are currently in the process of recreating our CICD pipelines using Forgejo Actions.
 >
-> No further updates will be published to github.com.
+> No further updates will be published to Github.com.
 >
-> This repo will be archived once the migration is complete.
+> This repo will be archived once the migration is complete
 
 
 <h1 align=center>
