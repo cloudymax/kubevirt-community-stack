@@ -1,5 +1,5 @@
 > [!WARNING]
-> This repo is migrating to [Codeberg](https://codeberg.org/open-engineering/kubevirt-community-stack) and will join the [Open-Engineeringk](https://codeberg.org/open-engineering) organization. We are currently in the process of recreating our CICD pipelines using Forgejo Actions.
+> This repo is migrating to [Codeberg](https://codeberg.org/open-engineering/kubevirt-community-stack) and will join the [Open-Engineering](https://codeberg.org/open-engineering) organization. We are currently in the process of recreating our CICD pipelines using Forgejo Actions.
 >
 > No further updates will be published to Github.com.
 >
